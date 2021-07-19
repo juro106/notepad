@@ -1,3 +1,17 @@
+#nav {
+    display: flex;
+    padding: 10px;
+    margin: 0 0 20px;
+}
+#nav-left {
+    display: flex;
+}
+#nav-left div {
+    margin: 0 10px;
+}
+#nav-right {
+    margin: 0 0 0 auto;
+}
 .App {
   text-align: center;
 }
