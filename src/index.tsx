@@ -4,14 +4,34 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from 'context/authContext';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
-ReactDOM.render(
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      suspense: true,
+      retry: 0,
+      staleTime: 60 * 1000,
+    }
+  }
+});
+
+const rootdiv = document.getElementById('root') as HTMLElement;
+
+const root = ReactDOM.createRoot(rootdiv);
+
+root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <App />
+        {process.env.NODE_ENV === 'development' && (
+          <ReactQueryDevtools initialIsOpen={false} />
+        )}
+      </AuthProvider>
+    </QueryClientProvider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

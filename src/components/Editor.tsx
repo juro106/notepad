@@ -11,7 +11,7 @@ const MyEditor: FC = () => {
   return (
     <div className='wrapper'>
       <h3>編集可能です。</h3>
-      <main tabIndex={0} style={{width:"48em",margin:"0 auto",padding:"20px",textAlign:"left",border:"1px solid #ccc"}}>
+      <main tabIndex={0} style={{ width: "48em", margin: "0 auto", padding: "20px", textAlign: "left", border: "1px solid #ccc" }}>
         <Editor
           editorState={editorState}
           onChange={setEditorState}

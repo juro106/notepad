@@ -9,6 +9,7 @@ const Nav: FC = () => {
         <div><Link to='/'>Home</Link></div>
         <div><Link to='/about'>About</Link></div>
         <div><Link to='/editor'>Editor</Link></div>
+        <div><Link to='/demo'>Demo</Link></div>
       </div>
       <div id="nav-right">
         <Login />

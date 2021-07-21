@@ -4,7 +4,10 @@ const Home: FC = () => {
   return (
     <>
       <h1>NotePad</h1>
-      <div className="editable" contentEditable='true'>
+      <div
+        className="editable" contentEditable='true'
+        suppressContentEditableWarning={true}
+      >
         →この文章は自由に書き換えられます。←
       </div>
     </>

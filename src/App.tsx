@@ -8,6 +8,8 @@ import {
 import Home from 'components/Home';
 import About from 'components/About';
 import MyEditor from 'components/Editor';
+import Demo from 'components/Demo';
+import Demo2 from 'components/Demo2';
 import Login from 'components/Login';
 import Nav from 'components/Nav';
 import 'App.css';
@@ -20,6 +22,12 @@ const App: FC = () => {
         <Switch>
           <Route path='/login' exact>
             <Login />
+          </Route>
+          <Route path='/demo' exact>
+            <Demo />
+          </Route>
+          <Route path='/demo2' exact>
+            <Demo2 />
           </Route>
           <Route path='/about' exact>
             <About />
