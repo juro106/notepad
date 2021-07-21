@@ -2,8 +2,9 @@ import {
   FC,
   // useState, 
   // useContext,
+  // useEffect,
   useRef,
-  Suspense
+  Suspense,
 } from 'react';
 // import { AuthContext } from 'context/authContext';
 // import sendContent from 'services/send-content'
@@ -12,14 +13,20 @@ import getContent from 'services/get-content';
 import { useQuery } from 'react-query';
 import ErrorBoundary from 'ErrorBoundary';
 
+import { useParams } from 'react-router';
 
 const GetC: FC = () => {
+
 
   // const { currentUser: user } = useContext(AuthContext);
   // const refTitle = useRef<HTMLDivElement>(null);
   // const refBody = useRef<HTMLDivElement>(null);
   // console.log(results);
-  const { data } = useQuery(['page', 'メモ帳'], () => getContent('メモ帳'))
+  const { slug } = useParams(); // バケツリレー不要。必要なところで呼び出せば良い。
+  // let location = useLocation();
+  // const slug2 = location.pathname.slice(1).replace('demo2/', '');
+    // console.log(slug);
+  const { data } = useQuery(['page', slug], () => getContent(slug))
   // keepPreviousData: true,
   // });
   const fff = () => {
