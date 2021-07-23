@@ -10,6 +10,7 @@ const Nav: FC = () => {
         <div><Link to='/about'>About</Link></div>
         <div><Link to='/editor'>Editor</Link></div>
         <div><Link to='/demo'>Demo</Link></div>
+        <div><Link to='/example'>ContentEditableTest</Link></div>
       </div>
       <div id="nav-right">
         <Login />

@@ -10,6 +10,7 @@ import sendContent from 'services/send-content'
 const Demo: FC = () => {
   const { currentUser: user } = useContext(AuthContext);
   const refTitle = useRef<HTMLDivElement>(null);
+  const refTags = useRef<HTMLDivElement>(null);
   const refBody = useRef<HTMLDivElement>(null);
 
   const forceTab = (e: React.KeyboardEvent) => {
@@ -19,13 +20,15 @@ const Demo: FC = () => {
     }
   }
   const getText = () => {
-    if (refBody && refBody.current && refTitle && refTitle.current && user) {
+    if (refBody && refBody.current && refTitle && refTitle.current && refTags && refTags.current && user) {
       console.log(refTitle.current.innerText)
       console.log(refBody.current.innerText)
       const data = {
         user: user.uid,
-        title: refTitle.current.innerText,
-        content: refBody.current.innerText,
+        title: refTitle.current.innerText.trim(),
+        slug: refTitle.current.innerText.trim().replaceAll(' ', '_').replaceAll('　', ''),
+        tags: refTags.current.innerText.replaceAll(' ', '').split(","),
+        content: refBody.current.innerText.replaceAll('\n\n', '\n'),
       };
       console.log(data);
       sendContent(data);
@@ -41,6 +44,13 @@ const Demo: FC = () => {
           suppressContentEditableWarning={true}
           spellCheck={false}
           ref={refTitle}
+          onKeyPress={(e) => forceTab(e)}
+        ></div>
+        <div className='content-body'
+          contentEditable={user !== null ? true : false} // ログインユーザーのみ編集可能
+          suppressContentEditableWarning={true}
+          spellCheck={false}
+          ref={refTags}
           onKeyPress={(e) => forceTab(e)}
         ></div>
         <div className='content-body'

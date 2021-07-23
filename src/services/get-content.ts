@@ -8,7 +8,7 @@ const getContent = async (
 ): Promise<Content> => {
   const mergedOptions = {
     ...DEFAULT_API_OPTIONS,
-    ...{ json: { title: data } },
+    ...{ json: { slug: data } },
     ...options,
   }
   console.log(data)

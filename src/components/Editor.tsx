@@ -1,5 +1,5 @@
-import { FC, useState, useContext } from 'react';
-import { Editor, EditorState } from 'draft-js';
+import { FC, useState, useContext, useEffect } from 'react';
+import { Editor, EditorState, RichUtils, DraftEditorCommand } from 'draft-js';
 import { AuthContext } from 'context/authContext';
 
 const MyEditor: FC = () => {
@@ -7,14 +7,26 @@ const MyEditor: FC = () => {
   const [editorState, setEditorState] = useState(
     () => EditorState.createEmpty(),
   );
+  const handleKeyCommand = (command: DraftEditorCommand) => {
+    const newState = RichUtils.handleKeyCommand(editorState, command);
+    if (newState) {
+      setEditorState(newState);
+      return "handled";
+    }
+    return "not-handled";
+  };
+  useEffect(() => {
+    console.log(editorState);
+  }, [editorState])
 
   return (
     <div className='wrapper'>
-      <h3>編集可能です。</h3>
-      <main tabIndex={0} style={{ width: "48em", margin: "0 auto", padding: "20px", textAlign: "left", border: "1px solid #ccc" }}>
+      <main className='editable'>
+        <h3>編集可能です。</h3>
         <Editor
           editorState={editorState}
           onChange={setEditorState}
+          handleKeyCommand={handleKeyCommand}
           readOnly={user !== null ? false : true} // ログインユーザーのみ編集可能
         />
       </main>
