@@ -1,17 +1,18 @@
 import ky, { Options } from 'ky';
 import { DEFAULT_API_OPTIONS } from './config';
 import { Content } from 'models/content';
+import { Message, isMessage } from 'models/message';
 
-const sendContent = async (
-  data: Content,
+const postContent = async (
+  data: Content | undefined,
   options?: Options,
-): Promise<boolean> => {
+): Promise<Message> => {
   const mergedOptions = {
     ...DEFAULT_API_OPTIONS,
     ...{ json: data },
     ...options,
   }
-  console.log(data)
+  // console.log(data)
   const response = await ky.post(
     `${process.env.REACT_APP_API_URL}/api/post-content`,
     mergedOptions,
@@ -19,11 +20,11 @@ const sendContent = async (
 
   const results = (await response.json());
 
-  if (!results) {
+  if (!isMessage(results)) {
     throw Error('API type error');
   }
-  console.log(results)
+  // console.log(results)
 
   return results
 }
-export default sendContent;
+export default postContent;

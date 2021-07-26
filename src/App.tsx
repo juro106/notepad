@@ -9,6 +9,7 @@ import About from 'components/About';
 import MyEditor from 'components/Editor';
 import Demo from 'components/Demo';
 import Demo2 from 'components/Demo2';
+import MainContents from 'components/MainContents';
 import ContentEditable from 'components/ContentEditable';
 import 'App.css';
 
@@ -17,53 +18,21 @@ const App: FC = () => {
     <div className="App">
       <Router>
         <Nav />
-        <Routes>
-          <Route path='/login' element={<Login />} />
-          <Route path='/demo' element={<Demo />} />
-          <Route path='/about' element={<About />} />
-          <Route path='/editor' element={<MyEditor />} />
-          <Route path='/demo2/:slug' element={<Demo2 />} />
-          <Route path='/example' element={<ContentEditable />} />
-          <Route path='/' element={<Home />} />
-        </Routes>
+        <div id="wrapper">
+          <Routes>
+            <Route path='/login' element={<Login />} />
+            <Route path='/demo' element={<Demo />} />
+            <Route path='/about' element={<About />} />
+            <Route path='/editor' element={<MyEditor />} />
+            <Route path='/demo2/:slug' element={<Demo2 />} />
+            <Route path='/example' element={<ContentEditable />} />
+            <Route path='/v1/:slug' element={<MainContents />} />
+            <Route path='/' element={<Home />} />
+          </Routes>
+        </div>
       </Router>
     </div>
   );
 }
 export default App;
-// {
-//   // <Route path='/demo2' 
-//   //   <Demo2 />
-//   // </Route>
-// }
-// {
-//   //<Route path='/demo2/:slug' 
-//   //  <Demo2 />
-//   //</Route>
-// }
-//   //
-//   // const [user, setUser] = useState<firebase.User | null>(null);
-//   // useEffect(() => {
-//   //   return firebase.auth().onAuthStateChanged(user => {
-//   //     setUser(user);
-//   //     console.log(user);
-//   //   });
-//   // }, []);
-//   //
-//   // const login = () => {
-//   //   const provider = new firebase.auth.GoogleAuthProvider();
-//   //   firebase.auth().signInWithRedirect(provider);
-//   // }
-//   //
-//   // const logout = () => {
-//   //   firebase.auth().signOut();
-//   // }
-//   //
-//       // <div>
-//       //   <h3>UID: {user && user.uid}</h3>  
-//       // </div>
-//       // {user !== null ? (
-//       //   <button onClick={logout}>Google Logout</button>
-//       // ) : (
-//       //   <button onClick={login}>Google Login</button>
-//       // )}
+

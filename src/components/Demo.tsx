@@ -5,7 +5,7 @@ import {
   useRef,
 } from 'react';
 import { AuthContext } from 'context/authContext';
-import sendContent from 'services/send-content'
+import postContent from 'services/post-content'
 
 const Demo: FC = () => {
   const { currentUser: user } = useContext(AuthContext);
@@ -31,7 +31,7 @@ const Demo: FC = () => {
         content: refBody.current.innerText.replaceAll('\n\n', '\n'),
       };
       console.log(data);
-      sendContent(data);
+      postContent(data);
     }
   }
 

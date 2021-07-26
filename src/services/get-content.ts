@@ -11,7 +11,7 @@ const getContent = async (
     ...{ json: { slug: data } },
     ...options,
   }
-  console.log(data)
+  // console.log(data)
   const response = await ky.post(
     `${process.env.REACT_APP_API_URL}/api/get-content`,
     mergedOptions,
@@ -22,8 +22,9 @@ const getContent = async (
   if (!isContent(results)) {
     throw Error('API type error');
   }
+  console.log('get-content=>', results);
 
   return results
 }
-export default getContent;
 
+export default getContent;

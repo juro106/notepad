@@ -1,61 +1,37 @@
-import {
-  FC,
-  // useState, 
-  useContext,
-  // useEffect,
-  useRef,
-  Suspense,
-} from 'react';
-// import { Link } from 'react-router-dom';
+import { FC, useContext, useRef } from 'react';
 import { AuthContext } from 'context/authContext';
 import postContent from 'services/post-content'
-import getContent from 'services/get-content';
-// import { Content } from 'models/content';
-import ErrorBoundary from 'ErrorBoundary';
-import { useQuery } from 'react-query';
-import { useParams } from 'react-router';
-// import Related from 'components/Related';
+import { Content } from 'models/content';
 
-type Taglist = string[] | undefined;
-let taglist: Taglist = [];;
-const GetC: FC = () => {
+const Main: FC<{ data: Content | undefined, changeState: (flg: boolean) => void }> = ({ data, changeState }) => {
   const { currentUser: user } = useContext(AuthContext);
   const refTitle = useRef<HTMLDivElement>(null);
   const refTags = useRef<HTMLDivElement>(null);
   const refBody = useRef<HTMLDivElement>(null);
-  // console.log(results);
-  const { slug } = useParams(); // バケツリレー不要。必要なところで呼び出せば良い。
-  // let location = useLocation();
-  // const slug2 = location.pathname.slice(1).replace('demo2/', '');
-  // console.log(slug);
-  const { data } = useQuery(['page', slug], () => getContent(slug))
-  // keepPreviousData: true,
-  // });
-  if (data) {
-    taglist = data.tags;
-  }
-  const forceTab = (e: React.KeyboardEvent) => {
+
+  const Enter2Tab = (e: React.KeyboardEvent) => {
     if (e.code === 'Enter' && refBody.current) {
       e.preventDefault();
       refBody.current.focus();
     }
   }
-  const getText = () => {
+
+  const getText = async () => {
     if (refBody && refBody.current && refTitle && refTitle.current && refTags && refTags.current && user) {
-      console.log(refTitle.current.innerText)
-      console.log(refBody.current.innerText)
       const data = {
         user: user.uid,
         title: refTitle.current.innerText.trim(),
-        slug: refTitle.current.innerText.trim().replaceAll(' ', '_').replaceAll('　', ''),
-        tags: refTags.current.innerText.split(" "),
+        slug: refTitle.current.innerText.trim().replaceAll(' ', '_').replaceAll('　', '_'),
+        tags: refTags.current.innerText.replaceAll(' ', '').split(",").filter(v => v !== ''),
         content: refBody.current.innerText.replaceAll('\n\n', '\n'),
       };
-      taglist = refTags.current.innerText.split(" ");
-      console.log(data);
-      postContent(data);
+     
+      console.log('tags:', data.tags);
+      await postContent(data);
+      await changeState(true);
     }
   }
+
   if (data)
     return (
       <>
@@ -65,7 +41,8 @@ const GetC: FC = () => {
             suppressContentEditableWarning={true}
             spellCheck={false}
             ref={refTitle}
-            onKeyPress={(e) => forceTab(e)}
+            onKeyPress={(e) => Enter2Tab(e)}
+            data-text="Title"
           >
             {data && data.title}
           </div>
@@ -74,11 +51,12 @@ const GetC: FC = () => {
             suppressContentEditableWarning={true}
             spellCheck={false}
             ref={refTags}
-            onKeyPress={(e) => forceTab(e)}
+            onKeyPress={(e) => Enter2Tab(e)}
+            data-text="Tags"
           >
             {data && data.tags ? data.tags.map((v, k) => (
               data.tags !== undefined ?
-                data.tags.slice(-1)[0] === v ? `${v}` : `${v} `
+                data.tags.slice(-1)[0] === v ? `${v}` : `${v},`
                 : ''
             )) : ''}
           </div>
@@ -87,34 +65,17 @@ const GetC: FC = () => {
             suppressContentEditableWarning={true}
             spellCheck={false}
             ref={refBody}
+            data-text="Content"
           >
             {data && data.content}
           </div>
         </main>
-        <button onClick={getText}>getText</button>
+        <button className="save" onClick={() => getText()}>save</button>
       </>
     )
 
   return <></>
 }
 
-
-const Demo2: FC = () => {
-  console.log("taglist", taglist);
-  const ebKey = useRef(0);
-
-  return (
-    <>
-      <ErrorBoundary key={ebKey.current}>
-        <Suspense fallback={<p>...loading</p>}>
-          <div className='wrapper'>
-            <GetC />
-          </div>
-        </Suspense>
-      </ErrorBoundary>
-    </>
-  );
-}
-
-export default Demo2;
+export default Main;
 

@@ -7,12 +7,17 @@ import { AuthProvider } from 'context/authContext';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
+// redux
+// import { Provider } from 'react-redux';
+// import store from './store';
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       suspense: true,
       retry: 0,
-      staleTime: 60 * 1000,
+      staleTime: 1 * 1000,
+      // staleTime: 60 * 1000,
     }
   }
 });

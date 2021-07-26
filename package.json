@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@firebase/auth-types": "^0.10.3",
+    "@reduxjs/toolkit": "^1.6.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -13,6 +14,7 @@
     "@types/node": "^16.3.3",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.0",
+    "@types/react-redux": "^7.1.18",
     "@types/react-router-dom": "^5.1.8",
     "diagnostic-languageserver": "^1.11.0",
     "draft-js": "^0.11.7",
@@ -25,6 +27,7 @@
     "react-dom": "^0.0.0-experimental-3f62dec84-20210719",
     "react-query": "^3.19.0",
     "react-query-devtools": "^2.6.3",
+    "react-redux": "^7.2.4",
     "react-router": "^6.0.0-beta.0",
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "4.0.3",

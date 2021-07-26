@@ -1,3 +1,17 @@
+:root {
+    --my-background: #f9f5e5;
+    --hobo-white: #fefefa;
+    --brackgray: #4a4a56;
+    --gray: #ccc;
+    --gray2: #eee;
+    --link-blue: #004ad2;
+    --link-red:  #b22222;
+    --contents-width-s: 48em;
+    --contents-width-m: 54em;
+    --contents-width-l: 55em;
+    --font-sans-serif: -apple-system,Helvetica Neue,'Hiragino Kaku Gothic ProN','Noto Sans CJK JP',Meiryo,sans-serif;
+    --font-serif: 'Hiragino Mincho ProN', 'Noto Serif CJK JP',serif;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -6,6 +20,13 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    color: var(--link-blue);
+}
+a:hover {
+    color: var(--link-red);
 }
 
 code {
@@ -26,7 +47,19 @@ code {
 #nav-right {
     margin: 0 0 0 auto;
 }
+#wrapper {
+    width: 100%;
+    margin: 0 auto 20px;
+    text-align: left;
+}
+
 main {
+}    
+.editable {
+     margin: 0 auto 20px;
+     padding: 20px;
+     text-align: left;
+     border: 1px solid #ccc;
 }
 
 .item-list {
@@ -49,14 +82,6 @@ main {
     font-size: 15px;
     color: #666;
 }
-    
-.editable {
-     width: 48em;
-     margin: 0 auto 20px;
-     padding: 20px;
-     text-align: left;
-     border: 1px solid #ccc;
-}
 .content-title {
     padding: 10px;
     font-size: 20px;
@@ -76,6 +101,10 @@ main {
 }
 .tags {
     margin: 0 10px 0 0;
+}
+
+.message {
+    margin: 0 10px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -99,6 +128,11 @@ main {
   color: #61dafb;
 }
 
+[contentEditable=true]:empty:not(:focus):before {
+    content:attr(data-text);
+    color: #bbb;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -106,4 +140,17 @@ main {
   to {
     transform: rotate(360deg);
   }
+}
+@media only screen and (min-width: 750px) {
+    #wrapper {
+        width: 54em;
+    }
+    .editable {
+        width: auto;
+    }
+}
+@media only screen and (min-width: 1080px) {
+    #wrapper {
+        width: 54em;
+    }
 }

@@ -13,7 +13,7 @@ const ContentsList: FC = () => {
       <ul className="item-list">
         {data.map((v, k) => (
           <li key={`p_${k}`} className='item'>
-            <Link to={`/demo2/${v.slug.trim()}`} className="item-link">
+            <Link to={`/v1/${v.slug.trim()}`} className="item-link">
               <div className="item-title">{v.title}</div>
               <div className="item-dscr">{v.content.slice(0, 80)}</div>
             </Link>
@@ -31,11 +31,9 @@ const Home: FC = () => {
   return (
     <ErrorBoundary key={ebKey.current}>
       <Suspense fallback={<p>...loding</p>}>
-        <div className='wrapper'>
           <main>
             <ContentsList />
           </main>
-        </div>
       </Suspense>
     </ErrorBoundary>
   );
