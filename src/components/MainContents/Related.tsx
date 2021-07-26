@@ -14,7 +14,7 @@ const Related: FC<{ data: RelatedList | undefined, changeState: (flg: boolean) =
     )
   }
 
-  return <>まだメモがありません。</>
+  return <div>メモがありません。</div>
 }
 
 const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
@@ -23,7 +23,7 @@ const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
       <>
         {Object.entries(data).map(v => (
           <div className="item-block" key={`ul_${v[0]}`} >
-            <h3>{v[0]}</h3>
+            <h3 className="related-heading">{v[0]}</h3>
             <ul className="item-list">
               <Item data={v[1]} />
             </ul>

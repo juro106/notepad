@@ -46,7 +46,7 @@ const Main: FC<{ data: Content | undefined, changeState: (flg: boolean) => void 
           >
             {data && data.title}
           </div>
-          <div className='content-body'
+          <div className='content-tags'
             contentEditable={user !== null ? true : false} // ログインユーザーのみ編集可能
             suppressContentEditableWarning={true}
             spellCheck={false}
