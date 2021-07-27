@@ -6,8 +6,9 @@ import Nav from 'components/Nav';
 import Login from 'components/Login';
 import Home from 'components/Home';
 import About from 'components/About';
+import Edit from 'components/Edit';
 import MyEditor from 'components/Editor';
-import Demo from 'components/Demo';
+import NewPost from 'components/New';
 import Demo2 from 'components/Demo2';
 import MainContents from 'components/MainContents';
 import ContentEditable from 'components/ContentEditable';
@@ -21,9 +22,10 @@ const App: FC = () => {
         <div id="wrapper">
           <Routes>
             <Route path='/login' element={<Login />} />
-            <Route path='/demo' element={<Demo />} />
+            <Route path='/new' element={<NewPost />} />
             <Route path='/about' element={<About />} />
             <Route path='/editor' element={<MyEditor />} />
+            <Route path='/edit' element={<Edit />} />
             <Route path='/demo2/:slug' element={<Demo2 />} />
             <Route path='/example' element={<ContentEditable />} />
             <Route path='/v1/:slug' element={<MainContents />} />

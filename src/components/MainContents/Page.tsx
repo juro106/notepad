@@ -11,9 +11,11 @@ import getContent from 'services/get-content';
 import getRelated from 'services/get-related';
 import Main from './Main';
 import Related from './Related';
+import ResponseMessage from './ResponseMessage';
 import { 
   // Content,
   RelatedList } from 'models/content';
+import { Message } from 'models/message';
 // import { useForceUpdate } from 'hooks/useForceUpdate';
 
 const Page: FC<{ slug: string }> = ({ slug }) => {
@@ -21,11 +23,20 @@ const Page: FC<{ slug: string }> = ({ slug }) => {
   const [error, setError] = useState<Error>();
   // const [d1, setD1] = useState<Content | undefined>(undefined);
   const [d2, setD2] = useState<RelatedList | undefined>(undefined);
+  const [msg, setMsg] = useState<Message | undefined>(undefined);
   //
   const changeState = (arg: boolean) => {
     setFlg(arg);
   }
   console.log("flg: ", flg);
+
+  const setResMsg= (arg: Message) => {
+    setMsg(arg);
+  }
+
+  useEffect(() => {
+    setMsg(undefined)
+  },[slug]);
 
   useEffect(() => {
     let abortCtrl = new AbortController();
@@ -59,7 +70,10 @@ const Page: FC<{ slug: string }> = ({ slug }) => {
   return (
     <SuspenseList>
       <Suspense fallback={<p>...loading</p>}>
-        <Main data={d1} changeState={changeState} />
+        <Main data={d1} changeState={changeState} setResMsg={setResMsg} />
+      </Suspense>
+      <Suspense fallback={<p>...loading</p>}>
+        <ResponseMessage data={msg} />
       </Suspense>
       <Suspense fallback={<p>...loading</p>}>
         <Related data={d2} changeState={changeState} />

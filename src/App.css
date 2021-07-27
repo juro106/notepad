@@ -63,16 +63,26 @@ main {
     text-align: left;
     border: 1px solid #ccc;
 }
+.info {
+    margin: 0 10px;
+}
 .save {
     display: block;
     color: #333;
     font-size: 18px;
     font-weight: bold;
 }
-.save:hover {
+button:hover {
     cursor: pointer;
 }
-
+.delete-button {
+    display: block;
+    color: #f00; 
+    font-size: 18px;
+    font-weight: bold;
+    padding: 5px;
+    margin: 0 auto;
+}
 .related-contents {
     margin: 20px 0;
     padding: 0 10px;
@@ -108,9 +118,10 @@ main {
 .item-dscr {
     font-size: 15px;
     color: #555;
+    min-height: 1em;
 }
 .content-title {
-    padding: 5px 10px;
+    padding: 5px;
     box-sizing: border-box;
     font-size: 22px;
     color: #333;
@@ -119,21 +130,23 @@ main {
     white-space: pre-wrap;
 }
 .content-tags {
-    padding: 5px 10px;
+    position: relative;
+    padding: 5px 5px 5px 11px;
     box-sizing: border-box;
     line-height: 1.5;
     white-space: pre-wrap;
 }
 .content-tags::before {
+    position: absolute;
     content: '[';
-    margin: 0 3px 0 0;
+    left: 3px;
 }
 .content-tags::after {
     content: ']';
     margin: 0 0 0 3px;
 }
 .content-body {
-    padding: 10px;
+    padding: 5px;
     box-sizing: border-box;
     line-height: 1.6;
     white-space: pre-wrap;
@@ -149,29 +162,10 @@ main {
 }
 
 .message {
-    margin: 0 10px;
+    margin: 0 10px 0 0;
+    color: green; 
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
-}
-
-.App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-}
-
-.App-link {
-    color: #61dafb;
-}
 
 [contentEditable=true]:empty:not(:focus)::before {
     content:attr(data-text);
@@ -182,14 +176,19 @@ main {
     content:none;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+table {
+    border-collapse: collapse;
 }
+
+.edit-table {
+    width: 100%;
+}
+.edit-tr {
+    border-bottom: 1px solid #ccc;
+}
+.edit-td {
+}
+
 @media only screen and (min-width: 750px) {
 }
 @media only screen and (min-width: 1080px) {

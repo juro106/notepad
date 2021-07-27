@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Content, RelatedContents, RelatedList } from 'models/content';
 
 // const Related: FC<{data: Content[] | undefined }> = ({ data }) => {
-const Related: FC<{ data: RelatedList | undefined, changeState: (flg: boolean) => void }> = ({ data, changeState }) => {
+const Related: FC<{ data: RelatedList | undefined }> = ({ data }) => {
   if (data && data.length > 0) {
     return (
       <div className="related-contents">
@@ -57,17 +57,3 @@ const Item: FC<{ data: Content[] }> = ({ data }) => {
 
 export default Related;
 
-    // return (
-    //   <>
-    //     {data.map((v, k) => (
-    //       <div key={`p_${k}`} className='item'>
-    //         <Link to={`/v1/${v.slug.trim()}`} className="item-link">
-    //           {v.user === 'tagName' 
-    //           ?  <h3 className="related-items-heading">{v.title}</h3>
-    //           :  <div className="item-title">{v.title}</div>}
-    //           <div className="item-dscr">{v.content.slice(0, 80)}</div>
-    //         </Link>
-    //       </div>
-    //     ))}
-    //     </>
-    // )
