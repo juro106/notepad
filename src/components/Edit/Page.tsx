@@ -5,14 +5,15 @@ import DeleteContent from 'services/delete-content';
 
 const Page: FC<{
   data: Content[] | undefined,
+  uid: string,
   changeState: (flg: boolean) => void,
 }> = ({
   data,
+  uid,
   changeState,
 }) => {
-
-    const deleteItem = async (arg: string) => {
-      const msg = await DeleteContent(arg);
+    const deleteItem = async (slug: string) => {
+      const msg = await DeleteContent({uid, slug});
       console.log(msg);
       changeState(true);
     }
@@ -24,7 +25,7 @@ const Page: FC<{
             {data.map((v, k) => (
               <tr key={`t_${k}`} className='edit-tr'>
                 <td className='edit-td'>
-                  <Link to={`/v1/${v.slug.trim()}`} className="item-link">
+                  <Link to={`/${v.slug.trim()}`} className="item-link">
                     <div className="item-title">{v.title}</div>
                     <div className="item-dscr">{v.content.slice(0, 50)}</div>
                   </Link>

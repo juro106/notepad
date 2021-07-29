@@ -2,16 +2,19 @@ import {
   FC,
   useState,
   useEffect,
+  useContext,
   Suspense,
   SuspenseList
 } from 'react';
 import getRelatedOnly from 'services/get-related-only';
+import { AuthContext } from 'contexts/authContext';
 import Main from './Main';
 import Related from 'components/Related';
 import { RelatedList } from 'models/content';
 
 const NewPost: FC = () => {
   const [tags, setTags] = useState<string[]>([])
+  const { uid } = useContext(AuthContext);
   const [error, setError] = useState<Error>();
   const [d2, setD2] = useState<RelatedList | undefined>(undefined);
 
@@ -23,7 +26,7 @@ const NewPost: FC = () => {
     let abortCtrl = new AbortController();
     const fetch = async () => {
       try {
-        const d2 = await getRelatedOnly(tags);
+        const d2 = await getRelatedOnly({uid, tags});
         setD2(d2);
       } catch (e) {
         if (e.name !== 'AbortError') setError(e)
@@ -33,10 +36,8 @@ const NewPost: FC = () => {
     return () => {
       abortCtrl.abort();
     }
-  }, [tags]);
+  }, [uid, tags]);
 
-
-  
   if (error) return <div>{error.toString()}</div>
 
   return (

@@ -1,5 +1,6 @@
 import { FC, useContext, useRef } from 'react';
-import { AuthContext } from 'context/authContext';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { AuthContext } from 'contexts/authContext';
 import postContent from 'services/post-content'
 import { Content } from 'models/content';
 import { Message } from 'models/message';
@@ -13,7 +14,8 @@ const Main: FC<{
   changeState,
   setResMsg,
 }) => {
-    const { currentUser: user } = useContext(AuthContext);
+    const { uid } = useContext(AuthContext);
+    // const uid = user ? md5(user.uid) : '';
     const refTitle = useRef<HTMLDivElement>(null);
     const refTags = useRef<HTMLDivElement>(null);
     const refBody = useRef<HTMLDivElement>(null);
@@ -32,12 +34,12 @@ const Main: FC<{
     }
 
     const slug = data ? data.slug : '';
-    console.log('slug:', slug);
+    // console.log('slug:', slug);
 
     const update = async () => {
-      if (refBody && refBody.current && refTitle && refTitle.current && refTags && refTags.current && user) {
+      if (refBody && refBody.current && refTitle && refTitle.current && refTags && refTags.current && uid) {
         const data = {
-          user: user.uid,
+          user: uid, 
           title: refTitle.current.innerText.trim(),
           // slug: refTitle.current.innerText.trim().replaceAll(' ', '_').replaceAll('　', '_'),
           slug: slug,
@@ -46,6 +48,7 @@ const Main: FC<{
         };
 
         console.log('tags:', data.tags);
+
         const res = await postContent(data);
         changeState(true);
         setResMsg(res);
@@ -55,12 +58,16 @@ const Main: FC<{
 
     if (data)
       return (
-        <>
+        <HelmetProvider>
+          <Helmet>
+            <title>{data.title}</title>
+            <link rel="canonical" href={`${process.env.REACT_APP_BASE_URL}/${slug}`} />
+          </Helmet>
           <main className="editable"
               onKeyDown={(e) => KeyBinding(e)}
           >
-            <div className='content-title'
-              contentEditable={user !== null ? true : false} // ログインユーザーのみ編集可能
+            <h1 className='content-title'
+              contentEditable={uid !== null ? true : false} // ログインユーザーのみ編集可能
               suppressContentEditableWarning={true}
               spellCheck={false}
               ref={refTitle}
@@ -68,9 +75,9 @@ const Main: FC<{
               data-text="Title"
             >
               {data && data.title}
-            </div>
+            </h1>
             <div className='content-tags'
-              contentEditable={user !== null ? true : false} // ログインユーザーのみ編集可能
+              contentEditable={uid !== null ? true : false} // ログインユーザーのみ編集可能
               suppressContentEditableWarning={true}
               spellCheck={false}
               ref={refTags}
@@ -80,12 +87,12 @@ const Main: FC<{
             >
               {data && data.tags ? data.tags.map((v, k) => (
                 data.tags !== undefined ?
-                  data.tags.slice(-1)[0] === v ? `${v}` : `${v},`
+                  data.tags.slice(-1)[0] === v ? `${v}` : `${v}, `
                   : ''
               )) : ''}
             </div>
             <div className='content-body'
-              contentEditable={user !== null ? true : false} // ログインユーザーのみ編集可能
+              contentEditable={uid !== null ? true : false} // ログインユーザーのみ編集可能
               suppressContentEditableWarning={true}
               spellCheck={false}
               ref={refBody}
@@ -98,7 +105,7 @@ const Main: FC<{
           <div className="info">
             <button className="save" onClick={update}>save</button>
           </div>
-        </>
+        </HelmetProvider>
       )
 
     return <></>

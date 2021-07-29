@@ -28,7 +28,7 @@ const App: FC = () => {
             <Route path='/edit' element={<Edit />} />
             <Route path='/demo2/:slug' element={<Demo2 />} />
             <Route path='/example' element={<ContentEditable />} />
-            <Route path='/v1/:slug' element={<MainContents />} />
+            <Route path='/:slug' element={<MainContents />} />
             <Route path='/' element={<Home />} />
           </Routes>
         </div>

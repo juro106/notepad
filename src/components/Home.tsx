@@ -1,12 +1,31 @@
-import { FC, useRef, Suspense, } from 'react';
+import { FC, useRef, Suspense, useContext } from 'react';
 import { Link } from 'react-router-dom';
-
+import { AuthContext } from 'contexts/authContext';
 import getContentsAll from 'services/get-contents-all';
 import { useQuery } from 'react-query';
 import ErrorBoundary from 'ErrorBoundary';
 
-const ContentsList: FC = () => {
-  const { data } = useQuery(['home'], () => getContentsAll());
+const Home: FC = () => {
+  const ebKey = useRef(0);
+  const { uid } = useContext(AuthContext);
+
+  if (uid) {
+    return (
+      <ErrorBoundary key={ebKey.current}>
+        <Suspense fallback={<p>...loding</p>}>
+            <main>
+              <ContentsList uid={uid}/>
+            </main>
+        </Suspense>
+      </ErrorBoundary>
+    );
+  }
+
+  return <></>
+}
+
+const ContentsList: FC<{uid: string}> = ({ uid }) => {
+  const { data } = useQuery(['home'], () => getContentsAll({uid}));
 
   if (data && data.length > 0) {
     return (
@@ -15,7 +34,7 @@ const ContentsList: FC = () => {
           v.content.length > 0 
           ?
           <li key={`p_${k}`} className='item'>
-            <Link to={`/v1/${v.slug.trim()}`} className="item-link">
+            <Link to={`/${v.slug.trim()}`} className="item-link">
               <div className="item-title">{v.title}</div>
               <div className="item-dscr">{v.content.slice(0, 80)}</div>
             </Link>
@@ -26,20 +45,6 @@ const ContentsList: FC = () => {
     )
   }
   return <>まだメモがありません。</>
-}
-
-const Home: FC = () => {
-  const ebKey = useRef(0);
-
-  return (
-    <ErrorBoundary key={ebKey.current}>
-      <Suspense fallback={<p>...loding</p>}>
-          <main>
-            <ContentsList />
-          </main>
-      </Suspense>
-    </ErrorBoundary>
-  );
 }
 
 export default Home;

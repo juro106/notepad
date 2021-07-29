@@ -2,6 +2,7 @@ export type Message = {
   message: string;
   updated_at: string;
 }
+
 const isMessage = (arg: unknown): arg is Message => {
   const c = arg as Message;
   return (

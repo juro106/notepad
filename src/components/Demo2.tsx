@@ -7,7 +7,7 @@ import {
   Suspense,
 } from 'react';
 // import { Link } from 'react-router-dom';
-import { AuthContext } from 'context/authContext';
+import { AuthContext } from 'contexts/authContext';
 import postContent from 'services/post-content'
 import getContent from 'services/get-content';
 // import { Content } from 'models/content';
@@ -19,7 +19,7 @@ import { useParams } from 'react-router';
 type Taglist = string[] | undefined;
 let taglist: Taglist = [];;
 const GetC: FC = () => {
-  const { currentUser: user } = useContext(AuthContext);
+  const { currentUser: user, uid } = useContext(AuthContext);
   const refTitle = useRef<HTMLDivElement>(null);
   const refTags = useRef<HTMLDivElement>(null);
   const refBody = useRef<HTMLDivElement>(null);
@@ -28,7 +28,8 @@ const GetC: FC = () => {
   // let location = useLocation();
   // const slug2 = location.pathname.slice(1).replace('demo2/', '');
   // console.log(slug);
-  const { data } = useQuery(['page', slug], () => getContent(slug))
+  const query = { slug, uid }
+  const { data } = useQuery(['page', slug], () => getContent(query))
   // keepPreviousData: true,
   // });
   if (data) {

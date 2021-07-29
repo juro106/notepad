@@ -1,6 +1,6 @@
 import { FC, useState, useEffect, useContext } from 'react';
 import firebase from 'auth/firebase';
-import { AuthContext } from 'context/authContext';
+import { AuthContext } from 'contexts/authContext';
 const Login: FC = () => {
   const { currentUser } = useContext(AuthContext);
   const [user, setUser] = useState<firebase.User | null>(null);
@@ -24,7 +24,8 @@ const Login: FC = () => {
       ) : (
         <button onClick={login}>Login</button>
       )}
-      <div>UID: {user && user.uid}</div>
+      {/*<div>UID: {user && uid}</div>
+      */}
     </>
   );
 }

@@ -4,17 +4,18 @@
   "private": true,
   "dependencies": {
     "@firebase/auth-types": "^0.10.3",
-    "@reduxjs/toolkit": "^1.6.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@types/draft-js": "^0.11.4",
     "@types/firebase": "^3.2.1",
     "@types/jest": "^26.0.15",
+    "@types/md5": "^2.3.1",
     "@types/node": "^16.3.3",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.0",
-    "@types/react-redux": "^7.1.18",
+    "@types/react-helmet-async": "^1.0.3",
+    "@types/react-query": "^1.2.9",
     "@types/react-router-dom": "^5.1.8",
     "diagnostic-languageserver": "^1.11.0",
     "draft-js": "^0.11.7",
@@ -23,11 +24,12 @@
     "global": "^4.4.0",
     "history": "^5.0.0",
     "ky": "^0.28.5",
+    "md5": "^2.3.0",
     "react": "^0.0.0-experimental-3f62dec84-20210719",
     "react-dom": "^0.0.0-experimental-3f62dec84-20210719",
+    "react-helmet-async": "^1.0.9",
     "react-query": "^3.19.0",
     "react-query-devtools": "^2.6.3",
-    "react-redux": "^7.2.4",
     "react-router": "^6.0.0-beta.0",
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "4.0.3",
@@ -59,8 +61,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://127.0.0.1:9999",
-  "devDependencies": {
-    "@types/react-query": "^1.2.9"
-  }
+  "proxy": "http://127.0.0.1:9999"
 }

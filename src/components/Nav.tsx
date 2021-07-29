@@ -1,7 +1,7 @@
 import { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Login from 'components/Login';
-import { AuthContext } from 'context/authContext';
+import { AuthContext } from 'contexts/authContext';
 
 const Nav: FC = () => {
   const { currentUser: user } = useContext(AuthContext);
@@ -12,8 +12,8 @@ const Nav: FC = () => {
         <div><Link to='/'>Home</Link></div>
         <div><Link to='/about'>About</Link></div>
         <div><Link to='/editor'>Editor</Link></div>
-        {user ? <div><Link to='/new'>New</Link></div> : ''}
-        {user ?<div><Link to='/edit'>Edit</Link></div> : ''}
+        {user ? <div><Link to='/edit'>Edit</Link></div> : ''}
+        {user ?<div className="edit-new"><Link to='/new'>＋</Link></div> : ''}
       </div>
       <div id="nav-right">
         <Login />

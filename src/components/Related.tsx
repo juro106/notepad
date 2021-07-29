@@ -14,7 +14,7 @@ const Related: FC<{ data: RelatedList | undefined }> = ({ data }) => {
     )
   }
 
-  return <div className="related-contents">メモがありません。</div>
+  return <></>
 }
 
 const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
@@ -42,7 +42,7 @@ const Item: FC<{ data: Content[] }> = ({ data }) => {
       <>
         {data.map(v => (
           <li key={`li_${v.title}`} className="item">
-            <Link to={`/v1/${v.slug.trim()}`} className="item-link">
+            <Link to={`/${v.slug.trim()}`} className="item-link">
               <div className='item-title'>{v.title}</div>
               <div className='item-dscr'>{v.content.slice(0, 80)}</div>
             </Link>

@@ -3,12 +3,15 @@ import { DEFAULT_API_OPTIONS } from './config';
 import { Content, isContent } from 'models/content';
 
 const getContent = async (
-  data: string,
+  data: {
+    slug: string;
+    uid: string;
+  },
   options?: Options,
 ): Promise<Content> => {
   const mergedOptions = {
     ...DEFAULT_API_OPTIONS,
-    ...{ json: { slug: data } },
+    ...{ json: data },
     ...options,
   }
   // console.log(data)
@@ -22,7 +25,7 @@ const getContent = async (
   if (!isContent(results)) {
     throw Error('API type error');
   }
-  console.log('get-content=>', results);
+  // console.log('get-content=>', results);
 
   return results
 }

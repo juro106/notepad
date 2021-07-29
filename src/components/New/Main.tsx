@@ -6,12 +6,12 @@ import {
   useRef,
 } from 'react';
 import { useNavigate } from 'react-router';
-import { AuthContext } from 'context/authContext';
+import { AuthContext } from 'contexts/authContext';
 import postContent from 'services/post-content';
 import { generateUuid } from 'services/functions';
 
 const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) => {
-  const { currentUser: user } = useContext(AuthContext);
+  const { uid } = useContext(AuthContext);
   const [uuid, setUuid] = useState<string>('');
   const refTitle = useRef<HTMLDivElement>(null);
   const refTags = useRef<HTMLDivElement>(null);
@@ -29,12 +29,17 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
       refBody.current.focus();
     }
   }
+  const KeyBinding = (e: React.KeyboardEvent) => {
+    if (e.code === 'Enter' && e.altKey) {
+      firstPost();
+    }
+  }
 
   const setTags = () => {
     if (refTags && refTags.current) {
-      console.log('setTags start');
+      // console.log('setTags start');
       const tags = refTags.current.innerText.replaceAll(' ', '').split(',');
-      console.log(tags);
+      // console.log(tags);
 
       setTagsState(tags);
     }
@@ -42,48 +47,50 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
 
   // 初回投稿のみ使われる
   const firstPost = async () => {
-    if (refBody && refBody.current && refTitle && refTitle.current && refTags && refTags.current && user) {
-      console.log(refTitle.current.innerText)
-      console.log(refBody.current.innerText)
+    if (refBody && refBody.current && refTitle && refTitle.current && refTags && refTags.current && uid) {
+      // console.log(refTitle.current.innerText)
+      // console.log(refBody.current.innerText)
       const data = {
-        user: user.uid,
+        user: uid,
         title: refTitle.current.innerText.trim(),
         // slug: refTitle.current.innerText.trim().replaceAll(' ', '_').replaceAll('　', ''),
         slug: uuid, // <- ここが通常のページと違う
         tags: refTags.current.innerText.replaceAll(' ', '').split(","),
         content: refBody.current.innerText.replaceAll('\n\n', '\n'),
       };
-      console.log('content data', data);
-      console.log('uuid', uuid);
+      // console.log('content data', data);
+      // console.log('uuid', uuid);
 
       await postContent(data);
-      navigate(`/v1/${data.slug}`);
+      navigate(`/${data.slug}`);
     }
   }
 
   return (
     <div className='content'>
-      <main className="editable">
+      <main className="editable"
+      onKeyDown={(e) => KeyBinding(e)}
+      >
         <div className='content-title'
-          contentEditable={user !== null ? true : false} // ログインユーザーのみ編集可能
+          contentEditable={uid !== null ? true : false} // ログインユーザーのみ編集可能
           suppressContentEditableWarning={true}
           spellCheck={false}
           ref={refTitle}
           data-text="Title"
-          onKeyPress={(e) => forceTab(e)}
+          onKeyDown={(e) => forceTab(e)}
         ></div>
         <div className='content-tags'
-          contentEditable={user !== null ? true : false} // ログインユーザーのみ編集可能
+          contentEditable={uid !== null ? true : false} // ログインユーザーのみ編集可能
           suppressContentEditableWarning={true}
           spellCheck={false}
           ref={refTags}
           data-text="[ Tags ]"
-          onKeyPress={(e) => forceTab(e)}
+          onKeyDown={(e) => forceTab(e)}
           onBlur={setTags}
         ></div>
         <div className='content-body'
           tabIndex={0}
-          contentEditable={user !== null ? true : false} // ログインユーザーのみ編集可能
+          contentEditable={uid !== null ? true : false} // ログインユーザーのみ編集可能
           suppressContentEditableWarning={true}
           spellCheck={false}
           ref={refBody}

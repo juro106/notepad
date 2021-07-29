@@ -3,12 +3,15 @@ import { DEFAULT_API_OPTIONS } from './config';
 import { Message, isMessage } from 'models/message';
 
 const DeleteContent = async (
-  data: string,
+  data: {
+    uid: string,
+    slug: string,
+  },
   options?: Options,
 ): Promise<Message> => {
   const mergedOptions = {
     ...DEFAULT_API_OPTIONS,
-    ...{ json: { slug: data } },
+    ...{ json: data },
     ...options,
   }
   // console.log(data)
@@ -26,4 +29,6 @@ const DeleteContent = async (
 
   return results
 }
+
 export default DeleteContent;
+

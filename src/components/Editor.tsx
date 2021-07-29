@@ -1,6 +1,6 @@
 import { FC, useState, useContext, useEffect } from 'react';
 import { Editor, EditorState, RichUtils, DraftEditorCommand } from 'draft-js';
-import { AuthContext } from 'context/authContext';
+import { AuthContext } from 'contexts/authContext';
 
 const MyEditor: FC = () => {
   const { currentUser: user } = useContext(AuthContext);

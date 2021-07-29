@@ -3,12 +3,15 @@ import { DEFAULT_API_OPTIONS } from './config';
 import { RelatedList } from 'models/content';
 
 const getRelatedOnly = async (
-  data: string[],
+  data: {
+    uid: string;
+    tags: string[];
+  },
   options?: Options,
 ): Promise<RelatedList> => {
   const mergedOptions = {
     ...DEFAULT_API_OPTIONS,
-    ...{ json: { tags: data } },
+    ...{ json: data },
     ...options,
   }
   const response = await ky.post(

@@ -3,9 +3,11 @@ import { DEFAULT_API_OPTIONS } from './config';
 import { Content, isContentsList } from 'models/content';
 
 const getContentsAll = async (
+  data: { uid: string },
   options?: Options,
 ): Promise<Content[]> => {
   const mergedOptions = {
+    ...{ json: data },
     ...DEFAULT_API_OPTIONS,
     ...options,
   }

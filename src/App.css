@@ -38,15 +38,27 @@ code {
     display: flex;
     padding: 10px;
     margin: 0 0 20px;
+    align-items: center;
 }
 #nav-left {
     display: flex;
+    align-items: center;
 }
 #nav-left div {
     margin: 0 10px;
 }
 #nav-right {
     margin: 0 0 0 auto;
+    font-size: .7em;
+    align-items: center;
+}
+.edit-new a {
+   padding: 3px;
+   color: #fff;
+   background: green;
+   font-weight: bold;
+   font-size: 20px;
+   text-decoration: none;
 }
 #wrapper {
     width: 100%;
@@ -55,6 +67,7 @@ code {
 }
 
 main {
+    background: var(--hobo-white);
 }    
 /* editor */
 .editable {
@@ -72,6 +85,10 @@ main {
     font-size: 18px;
     font-weight: bold;
 }
+button {
+    border: solid 1px #aaa;
+    border-radius: 3px;
+}
 button:hover {
     cursor: pointer;
 }
@@ -81,7 +98,7 @@ button:hover {
     font-size: 18px;
     font-weight: bold;
     padding: 5px;
-    margin: 0 auto;
+    margin: 0 5px 0 auto;
 }
 .related-contents {
     margin: 20px 0;
@@ -122,6 +139,7 @@ button:hover {
 }
 .content-title {
     padding: 5px;
+    margin: 0;
     box-sizing: border-box;
     font-size: 22px;
     color: #333;
