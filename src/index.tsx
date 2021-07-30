@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from 'contexts/authContext';
@@ -28,12 +29,14 @@ const root = ReactDOM.createRoot(rootdiv);
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
+      <Router>
       <AuthProvider>
         <App />
         {process.env.NODE_ENV === 'development' && (
           <ReactQueryDevtools initialIsOpen={false} />
         )}
       </AuthProvider>
+      </Router>
     </QueryClientProvider>
   </React.StrictMode>
 );

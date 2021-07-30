@@ -41,7 +41,7 @@ const Item: FC<{ data: Content[] }> = ({ data }) => {
     return (
       <>
         {data.map(v => (
-          <li key={`li_${v.title}`} className="item">
+          <li key={`li_${v.title}`} className="item-arrow">
             <Link to={`/${v.slug.trim()}`} className="item-link">
               <div className='item-title'>{v.title}</div>
               <div className='item-dscr'>{v.content.slice(0, 80)}</div>

@@ -20,9 +20,9 @@ const Login: FC = () => {
   return (
     <>
       {user !== null ? (
-        <button onClick={logout}>Logout</button>
+        <button className='login-button' onClick={logout}>Logout</button>
       ) : (
-        <button onClick={login}>Login</button>
+        <button className='login-button' onClick={login}>Login</button>
       )}
       {/*<div>UID: {user && uid}</div>
       */}

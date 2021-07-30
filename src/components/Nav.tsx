@@ -9,16 +9,17 @@ const Nav: FC = () => {
   return (
     <nav id="nav">
       <div id="nav-left">
-        <div><Link to='/'>Home</Link></div>
-        <div><Link to='/about'>About</Link></div>
-        <div><Link to='/editor'>Editor</Link></div>
-        {user ? <div><Link to='/edit'>Edit</Link></div> : ''}
-        {user ?<div className="edit-new"><Link to='/new'>＋</Link></div> : ''}
+        <Link className='nav-item-link' to='/'>Home</Link>
+        {user ? <Link className='nav-item-link' to='/about'>About</Link> : ''}
+        {user ? <Link className='nav-item-link' to='/edit'>Edit</Link> : ''}
+        {user ? <Link className='nav-item-link' to='/new'>New</Link> : ''}
       </div>
+      {user ?<div className="edit-new"><Link to='/new' className="edit-new-link">＋</Link></div> : ''}
       <div id="nav-right">
         <Login />
       </div>
     </nav>
   );
 }
+
 export default Nav;

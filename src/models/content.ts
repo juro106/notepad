@@ -2,6 +2,7 @@ export type Content = {
   user: string;
   title: string;
   slug: string;
+  updated_at?: string;
   tags?: string[];
   content: string;
 }
@@ -15,6 +16,7 @@ const isContent = (arg: unknown): arg is Content => {
     typeof c?.user === 'string' &&
     typeof c?.title === 'string' &&
     typeof c?.slug === 'string' &&
+    (typeof c?.updated_at === 'string' || c?.updated_at === undefined) &&
     (Array.isArray(c?.tags) || c?.tags === undefined) &&
     typeof c?.content === 'string'
   );

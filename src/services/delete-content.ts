@@ -16,7 +16,7 @@ const DeleteContent = async (
   }
   // console.log(data)
   const response = await ky.post(
-    `${process.env.REACT_APP_API_URL}/api/delete-content`,
+    `${process.env.REACT_APP_API_URL}/delete-content`,
     mergedOptions,
   );
 

@@ -15,7 +15,7 @@ const getRelatedOnly = async (
     ...options,
   }
   const response = await ky.post(
-    `${process.env.REACT_APP_API_URL}/api/get-related-only`,
+    `${process.env.REACT_APP_API_URL}/get-related-only`,
     mergedOptions,
   );
 

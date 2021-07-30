@@ -23,15 +23,15 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
     setUuid(generateUuid())
   }, [])
 
-  const forceTab = (e: React.KeyboardEvent) => {
-    if (e.code === 'Enter' && refBody.current) {
-      e.preventDefault();
-      refBody.current.focus();
-    }
-  }
+  // const forceTab = (e: React.KeyboardEvent) => {
+  //   if (e.code === 'Enter' && refBody.current) {
+  //     e.preventDefault();
+  //     refBody.current.focus();
+  //   }
+  // }
   const KeyBinding = (e: React.KeyboardEvent) => {
     if (e.code === 'Enter' && e.altKey) {
-      firstPost();
+      setPost();
     }
   }
 
@@ -46,7 +46,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
   }
 
   // 初回投稿のみ使われる
-  const firstPost = async () => {
+  const setPost = async () => {
     if (refBody && refBody.current && refTitle && refTitle.current && refTags && refTags.current && uid) {
       // console.log(refTitle.current.innerText)
       // console.log(refBody.current.innerText)
@@ -72,34 +72,31 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
       onKeyDown={(e) => KeyBinding(e)}
       >
         <div className='content-title'
-          contentEditable={uid !== null ? true : false} // ログインユーザーのみ編集可能
+          contentEditable={uid !== '' ? true : false} // ログインユーザーのみ編集可能
           suppressContentEditableWarning={true}
           spellCheck={false}
           ref={refTitle}
           data-text="Title"
-          onKeyDown={(e) => forceTab(e)}
         ></div>
         <div className='content-tags'
-          contentEditable={uid !== null ? true : false} // ログインユーザーのみ編集可能
+          contentEditable={uid !== '' ? true : false} // ログインユーザーのみ編集可能
           suppressContentEditableWarning={true}
           spellCheck={false}
           ref={refTags}
           data-text="[ Tags ]"
-          onKeyDown={(e) => forceTab(e)}
           onBlur={setTags}
         ></div>
         <div className='content-body'
           tabIndex={0}
-          contentEditable={uid !== null ? true : false} // ログインユーザーのみ編集可能
+          contentEditable={uid !== '' ? true : false} // ログインユーザーのみ編集可能
           suppressContentEditableWarning={true}
           spellCheck={false}
           ref={refBody}
           data-text="Content"
+          onBlur={setPost}
         ></div>
       </main>
-      <div className="info">
-        <button className="save" onClick={firstPost}>save</button>
-      </div>
+      <button className="save" onClick={setPost}>save</button>
     </div>
   );
 }

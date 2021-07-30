@@ -1,6 +1,6 @@
 import {
   FC, useRef, useContext, Suspense,
-  // useEffect,
+  useState, useEffect,
 } from 'react';
 import ErrorBoundary from 'ErrorBoundary';
 import { useParams } from 'react-router';
@@ -11,12 +11,21 @@ const MainContents: FC = () => {
   const { slug } = useParams();
   const { uid } = useContext(AuthContext);
   const ebKey = useRef(0);
+  const [user, setUser] = useState('');
+  const [flg, setFlg] = useState(false);
 
-  if (uid) {
+  useEffect(() => {
+    const data = uid ? uid : '';
+    setUser(data);
+    setFlg(true);
+  },[uid, flg]);
+
+  if (flg && user !== undefined) {
+  // if (uid) {
     return (
       <ErrorBoundary key={`eb_1_${ebKey.current}`}>
         <Suspense fallback={<p>...Loading</p>}>
-          <Page slug={slug} uid={uid} />
+          <Page slug={slug} uid={user} />
         </Suspense>
       </ErrorBoundary>
     );

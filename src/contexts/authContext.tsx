@@ -1,5 +1,6 @@
 import { FC, createContext, useState, useContext, useEffect } from 'react';
 import firebase from 'firebase/app';
+// import { useNavigate } from 'react-router';
 import md5 from 'md5';
 
 type AuthContextProps = {
@@ -16,6 +17,7 @@ export const useAuthContext = () => {
 const AuthProvider: FC = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<firebase.User | null | undefined>(undefined);
   const [md5uid, setMd5uid] = useState<string>('');
+  // const navigate = useNavigate();
 
   useEffect(() => {
     // ログイン状態が変化すると firebase の auth メソッドを呼び出す
@@ -24,7 +26,9 @@ const AuthProvider: FC = ({ children }) => {
         setCurrentUser(user);
         setMd5uid(md5(user.uid));
       }
+      // navigate('/');
     })
+  // }, [currentUser, navigate]);
   }, []);
 
   // 下層コンポーネントをラップする

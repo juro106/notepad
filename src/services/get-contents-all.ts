@@ -12,7 +12,7 @@ const getContentsAll = async (
     ...options,
   }
   const response = await ky.post(
-    `${process.env.REACT_APP_API_URL}/api/get-contents-all`,
+    `${process.env.REACT_APP_API_URL}/get-contents-all`,
     mergedOptions,
   );
 

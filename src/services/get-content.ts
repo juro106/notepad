@@ -16,7 +16,7 @@ const getContent = async (
   }
   // console.log(data)
   const response = await ky.post(
-    `${process.env.REACT_APP_API_URL}/api/get-content`,
+    `${process.env.REACT_APP_API_URL}/get-content`,
     mergedOptions,
   );
 

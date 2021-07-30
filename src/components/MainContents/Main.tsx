@@ -20,12 +20,12 @@ const Main: FC<{
     const refTags = useRef<HTMLDivElement>(null);
     const refBody = useRef<HTMLDivElement>(null);
 
-    const Enter2Tab = (e: React.KeyboardEvent) => {
-      if (e.code === 'Enter' && refBody.current) {
-        e.preventDefault();
-        refBody.current.focus();
-      }
-    }
+    // const Enter2Tab = (e: React.KeyboardEvent) => {
+    //   if (e.code === 'Enter' && refBody.current) {
+    //     e.preventDefault();
+    //     refBody.current.focus();
+    //   }
+    // }
 
     const KeyBinding = (e: React.KeyboardEvent) => {
       if (e.code === 'Enter' && e.altKey) {
@@ -47,7 +47,7 @@ const Main: FC<{
           content: refBody.current.innerText.replaceAll('\n\n\n', '\n\n'),
         };
 
-        console.log('tags:', data.tags);
+        // console.log('tags:', data.tags);
 
         const res = await postContent(data);
         changeState(true);
@@ -67,21 +67,20 @@ const Main: FC<{
               onKeyDown={(e) => KeyBinding(e)}
           >
             <h1 className='content-title'
-              contentEditable={uid !== null ? true : false} // ログインユーザーのみ編集可能
+              contentEditable={uid !== '' ? true : false} // ログインユーザーのみ編集可能
               suppressContentEditableWarning={true}
               spellCheck={false}
               ref={refTitle}
-              onKeyDown={(e) => Enter2Tab(e)}
               data-text="Title"
+              onBlur={update}
             >
               {data && data.title}
             </h1>
             <div className='content-tags'
-              contentEditable={uid !== null ? true : false} // ログインユーザーのみ編集可能
+              contentEditable={uid !== '' ? true : false} // ログインユーザーのみ編集可能
               suppressContentEditableWarning={true}
               spellCheck={false}
               ref={refTags}
-              onKeyDown={(e) => Enter2Tab(e)}
               data-text="[ Tags ]"
               onBlur={update}
             >
@@ -92,19 +91,20 @@ const Main: FC<{
               )) : ''}
             </div>
             <div className='content-body'
-              contentEditable={uid !== null ? true : false} // ログインユーザーのみ編集可能
+              contentEditable={uid !== '' ? true : false} // ログインユーザーのみ編集可能
               suppressContentEditableWarning={true}
               spellCheck={false}
               ref={refBody}
               data-text="Content"
               tabIndex={0}
+              onBlur={update}
             >
               {data && data.content}
             </div>
           </main>
-          <div className="info">
+          {uid !== '' &&
             <button className="save" onClick={update}>save</button>
-          </div>
+          }
         </HelmetProvider>
       )
 
