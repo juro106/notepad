@@ -12,9 +12,10 @@ import getRelated from 'services/get-related';
 import Main from './Main';
 import Related from './Related';
 import ResponseMessage from './ResponseMessage';
-import { 
+import {
   // Content,
-  RelatedList } from 'models/content';
+  RelatedList
+} from 'models/content';
 import { Message } from 'models/message';
 // import { useForceUpdate } from 'hooks/useForceUpdate';
 
@@ -25,26 +26,26 @@ const Page: FC<{ slug: string, uid: string }> = ({ slug, uid }) => {
   const [d2, setD2] = useState<RelatedList | undefined>(undefined);
   const [msg, setMsg] = useState<Message | undefined>(undefined);
   //
-  
+
   const changeState = (arg: boolean) => {
     setFlg(arg);
   }
   // console.log("flg: ", flg);
 
-  const setResMsg= (arg: Message) => {
+  const setResMsg = (arg: Message) => {
     setMsg(arg);
   }
 
   useEffect(() => {
     setMsg(undefined)
-  },[slug]);
+  }, [slug]);
 
   useEffect(() => {
     let abortCtrl = new AbortController();
     const fetch = async () => {
       try {
         // const d1 = await getContent(slug);
-        const d2 = await getRelated({slug, uid});
+        const d2 = await getRelated({ slug, uid });
         // setD1(d1);
         setD2(d2);
 
@@ -63,9 +64,9 @@ const Page: FC<{ slug: string, uid: string }> = ({ slug, uid }) => {
   }, [flg, slug, uid, setD2]);
 
 
-  const { data: d1 } = useQuery(['page', slug], () => getContent({slug, uid}));
+  const { data: d1 } = useQuery(['page', slug], () => getContent({ slug, uid }));
   // const { data: d2 } = useQuery(['related', slug], () => getRelated(slug));
-  
+
   if (error) return <div>{error.toString()}</div>
 
   return (

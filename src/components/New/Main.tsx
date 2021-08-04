@@ -62,7 +62,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
       // console.log('uuid', uuid);
 
       await postContent(data);
-      navigate(`/${data.slug}`);
+      navigate(`/local/${data.slug}`);
     }
   }
 
@@ -95,8 +95,8 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
           data-text="Content"
           onBlur={setPost}
         ></div>
+        <button className="save" onClick={setPost}>save</button>
       </main>
-      <button className="save" onClick={setPost}>save</button>
     </div>
   );
 }

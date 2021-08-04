@@ -107,7 +107,7 @@ const Demo2: FC = () => {
   return (
     <>
       <ErrorBoundary key={ebKey.current}>
-        <Suspense fallback={<p>...loading</p>}>
+        <Suspense fallback={<div className="spinner"></div>}>
           <div className='wrapper'>
             <GetC />
           </div>

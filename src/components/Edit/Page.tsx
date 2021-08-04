@@ -13,39 +13,32 @@ const Page: FC<{
   changeState,
 }) => {
     const deleteItem = async (slug: string) => {
-      const msg = await DeleteContent({uid, slug});
+      const msg = await DeleteContent({ uid, slug });
       console.log(msg);
       changeState(true);
     }
 
     if (data && data.length > 0) {
       return (
-        <table className='edit-table'>
-          <tbody>
-            {data.map((v, k) => (
-              <tr key={`t_${k}`} className='edit-tr'>
-                <td className='edit-td'>
-                  <Link to={`/${v.slug.trim()}`} className="item-link">
-                    <div className="item-title">{v.title}</div>
-                    <div className="item-dscr">{v.content.slice(0, 50)}</div>
-                  </Link>
-                </td>
-                <td className='edit-td'>
-                  <button
-                    className='delete-button'
-                    onClick={() => deleteItem(`${v.slug}`)}
-                  >
-                    delete ☒
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ul className='edit-list'>
+          {data.map((v, k) => (
+            <li key={`t_${k}`} className='edit-list-item'>
+              <Link to={`/local/${v.slug.trim()}`} className="edit-item-link">
+                <div className="item-title">{v.title}</div>
+                <div className="item-dscr">{v.content.slice(0, 50)}</div>
+              </Link>
+              <div className="edit-delete">
+                <div className='delete-button' onClick={() => deleteItem(`${v.slug}`)}>
+                  delete ☒
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       );
     }
 
-    return <></>;
+    return <div className='spinner'></div>
   }
 
 export default Page;

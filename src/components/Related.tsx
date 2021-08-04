@@ -23,7 +23,11 @@ const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
       <>
         {Object.entries(data).map(v => (
           <div className="item-block" key={`ul_${v[0]}`} >
-            <h3 className="related-heading">{v[0]}</h3>
+            <h3 className='related-heading'>
+              <Link to={`/local/${v[0]}`} className='related-heading-link'>
+                {v[0]}
+              </Link>
+            </h3>
             <ul className="item-list">
               <Item data={v[1]} />
             </ul>
@@ -42,7 +46,7 @@ const Item: FC<{ data: Content[] }> = ({ data }) => {
       <>
         {data.map(v => (
           <li key={`li_${v.title}`} className="item-arrow">
-            <Link to={`/${v.slug.trim()}`} className="item-link">
+            <Link to={`/local/${v.slug.trim()}`} className="item-link">
               <div className='item-title'>{v.title}</div>
               <div className='item-dscr'>{v.content.slice(0, 80)}</div>
             </Link>

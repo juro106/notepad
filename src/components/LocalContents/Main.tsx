@@ -61,8 +61,8 @@ const Main: FC<{
         <HelmetProvider>
           <Helmet>
             <title>{data.title}</title>
+            {uid ? <meta name='robots' content='noindex nofollow' /> : ''}
             <link rel="canonical" href={`${process.env.REACT_APP_BASE_URL}/${slug}`} />
-            {uid !== process.env.REACT_APP_DEFAULT_USER ? <meta name='robot' content='noindex nofollow' /> : ''}
           </Helmet>
           <main className="editable"
               onKeyDown={(e) => KeyBinding(e)}
@@ -97,6 +97,7 @@ const Main: FC<{
               spellCheck={false}
               ref={refBody}
               data-text="Content"
+              tabIndex={0}
               onBlur={update}
             >
               {data && data.content}

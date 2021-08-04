@@ -1,12 +1,12 @@
-import { 
-  FC, 
-  useRef, 
-  useContext, 
+import {
+  FC,
+  useRef,
+  useContext,
   useState,
   useEffect,
   Suspense,
 } from 'react';
-
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { AuthContext } from 'contexts/authContext';
 import ErrorBoundary from 'ErrorBoundary';
 import getContentsAll from 'services/get-contents-all';
@@ -23,18 +23,21 @@ const Edit: FC = () => {
     setFlg(arg);
   }
 
+
   useEffect(() => {
     const fetch = async () => {
-      const d = await getContentsAll({uid})
-      setData(d);
+      if (uid !== '') {
+        const d = await getContentsAll({ uid })
+        setData(d);
+      }
     }
     fetch();
-  },[uid])
+  }, [uid])
 
   useEffect(() => {
     let abortCtrl = new AbortController();
     const fetch = async () => {
-      const d = await getContentsAll({uid})
+      const d = await getContentsAll({ uid })
       setData(d);
     }
     if (flg) {
@@ -44,11 +47,16 @@ const Edit: FC = () => {
       setFlg(false);
       abortCtrl.abort();
     }
-  },[flg, uid])
+  }, [flg, uid])
 
   return (
     <ErrorBoundary key={ebKey.current}>
-      <Suspense fallback={<p>...loding</p>}>
+      <Suspense fallback={<div className="spinner"></div>}>
+        <HelmetProvider>
+          <Helmet>
+            {uid ? <meta name='robots' content='noindex nofollow' /> : ''}
+          </Helmet>
+        </HelmetProvider>
         <Page data={data} uid={uid} changeState={changeState} />
       </Suspense>
     </ErrorBoundary>

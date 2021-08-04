@@ -1,21 +1,33 @@
-import {
-  FC, useRef, Suspense
-  // , useContext, useState, useEffect 
-} from 'react';
+import { FC, useRef, Suspense, useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-// import { AuthContext } from 'contexts/authContext';
+import { AuthContext } from 'contexts/authContext';
 import getContentsAll from 'services/get-contents-all';
 import { useQuery } from 'react-query';
 import ErrorBoundary from 'ErrorBoundary';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 
-const PublicHome: FC = () => {
+const LocalHome: FC = () => {
   const ebKey = useRef(0);
-  const user = `${process.env.REACT_APP_DEFAULT_USER}`;
+  const { currentUser, uid } = useContext(AuthContext);
+  const [user, setUser] = useState<string | undefined>(undefined);
+  const [flg, setFlg] = useState(false);
 
-  if (user) {
+  useEffect(() => {
+    const data = uid && currentUser ? uid : '';
+    setUser(data);
+    setFlg(true);
+  }, [uid, flg, currentUser])
+
+  if (flg && user) {
     return (
       <ErrorBoundary key={ebKey.current}>
         <Suspense fallback={<div className="spinner"></div>}>
+          <HelmetProvider>
+            <Helmet>
+              <title>Home</title>
+              {uid ? <meta name='robots' content='noindex nofollow' /> : ''}
+            </Helmet>
+          </HelmetProvider>
           <main>
             <div className="related-contents">
               <ContentsList uid={user} />
@@ -39,7 +51,7 @@ const ContentsList: FC<{ uid: string }> = ({ uid }) => {
           v.content.length > 0
             ?
             <li key={`p_${k}`} className='item'>
-              <Link to={`/${v.slug.trim()}`} className="item-link">
+              <Link to={`/local/${v.slug.trim()}`} className="item-link">
                 <div className="item-title">{v.title}</div>
                 <div className="item-dscr">
                   {v.updated_at ? `${v.updated_at}: ` : ''}
@@ -55,5 +67,5 @@ const ContentsList: FC<{ uid: string }> = ({ uid }) => {
   return <>まだメモがありません。</>
 }
 
-export default PublicHome;
+export default LocalHome;
 
