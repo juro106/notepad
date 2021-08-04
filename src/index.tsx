@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from 'contexts/authContext';
+import { ProjectProvider } from 'contexts/projectContext';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
@@ -30,12 +31,14 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <Router>
-      <AuthProvider>
-        <App />
-        {process.env.NODE_ENV === 'development' && (
-          <ReactQueryDevtools initialIsOpen={false} />
-        )}
-      </AuthProvider>
+        <AuthProvider>
+          <ProjectProvider>
+            <App />
+            {process.env.NODE_ENV === 'development' && (
+              <ReactQueryDevtools initialIsOpen={false} />
+            )}
+          </ProjectProvider>
+        </AuthProvider>
       </Router>
     </QueryClientProvider>
   </React.StrictMode>

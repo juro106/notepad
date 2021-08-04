@@ -53,7 +53,7 @@ code {
     display: flex;
     height: var(--nav-height);
     padding: 0;
-    margin: 0 0 20px;
+    margin: 0 0 10px;
     align-items: center;
     overflow: auto;
     background: #555;
@@ -102,6 +102,15 @@ code {
     margin: 0 10px;
     padding: 5px;
     background: #eee;
+}
+#header {
+    padding: 0 10px;
+    margin: 10px 0;
+}
+.project-name {
+    padding: 0;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 #wrapper {
@@ -290,6 +299,30 @@ button:hover {
   100% { 
     transform: rotate(360deg); 
   }
+}
+
+.project-list {
+   padding: 0; 
+   margin: 20px 0;
+   list-style-type: none;
+}
+.project-item {
+    border-bottom: dotted 1px #ccc;
+}
+.project-link {
+    display: block;
+    padding: 5px;
+    font-weight: bold;
+    text-decoration: none;
+}
+.project-link::before {
+    content: '▶';
+    margin: 0 5px 0 0;
+    font-size: .5rem;
+}
+.project-link:hover {
+    cursor: pointer;
+    background: #eee;
 }
 
 [contentEditable=true]:empty:not(:focus)::before {
