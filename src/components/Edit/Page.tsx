@@ -5,15 +5,15 @@ import DeleteContent from 'services/delete-content';
 
 const Page: FC<{
   data: Content[] | undefined,
-  uid: string,
+  project: string,
   changeState: (flg: boolean) => void,
 }> = ({
   data,
-  uid,
+  project,
   changeState,
 }) => {
     const deleteItem = async (slug: string) => {
-      const msg = await DeleteContent({ uid, slug });
+      const msg = await DeleteContent({ project, slug });
       console.log(msg);
       changeState(true);
     }
@@ -23,7 +23,7 @@ const Page: FC<{
         <ul className='edit-list'>
           {data.map((v, k) => (
             <li key={`t_${k}`} className='edit-list-item'>
-              <Link to={`/local/${v.slug.trim()}`} className="edit-item-link">
+              <Link to={`/local/${project}/${v.slug.trim()}`} className="edit-item-link">
                 <div className="item-title">{v.title}</div>
                 <div className="item-dscr">{v.content.slice(0, 50)}</div>
               </Link>
@@ -35,6 +35,13 @@ const Page: FC<{
             </li>
           ))}
         </ul>
+      );
+    } else if (data && data.length === 0) {
+      return (
+        <div className='info-nocontent'>
+          <p>メモがありません</p>
+          <Link to='/home'>Homeへ戻る</Link>
+        </div>
       );
     }
 

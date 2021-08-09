@@ -5,6 +5,8 @@ export type Content = {
   updated_at?: string;
   tags?: string[];
   content: string;
+  project?: string;
+  image?: string;
 }
 export type RelatedContents = {[s: string]: Content[]};
 
@@ -18,7 +20,9 @@ const isContent = (arg: unknown): arg is Content => {
     typeof c?.slug === 'string' &&
     (typeof c?.updated_at === 'string' || c?.updated_at === undefined) &&
     (Array.isArray(c?.tags) || c?.tags === undefined) &&
-    typeof c?.content === 'string'
+    typeof c?.content === 'string' &&
+    (typeof c?.project === 'string' || c?.project === undefined) &&
+    (typeof c?.image === 'string' || c?.image === undefined || c?.image === null)
   );
 }
 

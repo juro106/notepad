@@ -6,61 +6,87 @@ import {
   Suspense,
   SuspenseList
 } from 'react';
+import { ImgSelectProvider } from 'contexts/imgSelectContext';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import getRelatedOnly from 'services/get-related-only';
 import { AuthContext } from 'contexts/authContext';
+import { ProjectContext } from 'contexts/projectContext';
 import Main from './Main';
 import Related from 'components/Related';
 import { RelatedList } from 'models/content';
+import Projcets from 'components/UserHome/Projects';
 
 const NewPost: FC = () => {
+  const [load, setLoad] = useState<boolean>(false);
   const [tags, setTags] = useState<string[]>([])
-  const { token, uid } = useContext(AuthContext);
+  const [isEmptyProject, setIsEmptyProject] = useState<boolean>(false);
   const [error, setError] = useState<Error>();
   const [d2, setD2] = useState<RelatedList | undefined>(undefined);
+  const { currentUser } = useContext(AuthContext);
+  const { project } = useContext(ProjectContext);
 
   const setTagsState = (arg: string[]) => {
     setTags(arg);
   }
-  const idToken = token;
+
+  const changeState = (arg: boolean) => {
+    setIsEmptyProject(false);
+  }
   // const idToken = 'hoge';
 
   useEffect(() => {
     let abortCtrl = new AbortController();
-    const fetch = async (v: string) => {
-        try {
-          const d2 = await getRelatedOnly({ uid, tags }, { Authorization: v });
-          setD2(d2);
-        } catch (e) {
-          if (e.name !== 'AbortError') setError(e)
-        }
+    const fetch = async () => {
+      try {
+        const d2 = await getRelatedOnly({ project, tags });
+        setD2(d2);
+      } catch (e) {
+        if (e.name !== 'AbortError') setError(e)
       }
-    if (idToken) {
-      const v = String(idToken);
-    fetch(v);
     }
+    fetch();
+    project === '' && setIsEmptyProject(true);
+    setLoad(true);
     return () => {
       abortCtrl.abort();
     }
-  }, [uid, tags, idToken]);
+  }, [project, tags, isEmptyProject]);
 
   if (error) return <div>{error.toString()}</div>
 
-  return (
-    <SuspenseList>
+  if (currentUser) {
+    return (
       <HelmetProvider>
         <Helmet>
-          {uid ? <meta name='robots' content='noindex nofollow' /> : ''}
+          {load &&
+            <>
+              <title>Create New Contents</title>
+              <meta name='robots' content='noindex nofollow' />
+            </>
+          }
         </Helmet>
+        <SuspenseList>
+          <Suspense fallback={<p>...loading</p>}>
+            {isEmptyProject
+              ? <>
+                <div className='info'><p className='red'>プロジェクト選択してください</p></div>
+                <Projcets refer={'new'} changeState={changeState} />
+              </>
+              :
+              <ImgSelectProvider>
+                <Main setTagsState={setTagsState} />
+              </ImgSelectProvider>
+            }
+          </Suspense>
+          <Suspense fallback={<p>...loading</p>}>
+            <Related data={d2} />
+          </Suspense>
+        </SuspenseList>
       </HelmetProvider>
-      <Suspense fallback={<p>...loading</p>}>
-        <Main setTagsState={setTagsState} />
-      </Suspense>
-      <Suspense fallback={<p>...loading</p>}>
-        <Related data={d2} />
-      </Suspense>
-    </SuspenseList>
-  );
+    );
+  }
+
+  return <></>
 }
 
 export default NewPost;

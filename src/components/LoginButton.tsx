@@ -2,6 +2,8 @@ import { FC, useState, useEffect, useContext } from 'react';
 import firebase from 'auth/firebase';
 import { useNavigate } from 'react-router';
 import { AuthContext } from 'contexts/authContext';
+import Logout from 'services/logout';
+
 const LoginButton: FC = () => {
   const { currentUser } = useContext(AuthContext);
   const [user, setUser] = useState<firebase.User | null>(null);
@@ -15,12 +17,14 @@ const LoginButton: FC = () => {
   const login = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
-    navigate('/user', {state: {loginflg: true}})
+    navigate('/home', {state: {loginflg: true}})
   }
-  const logout = () => {
+  const logout = async () => {
     firebase.auth().signOut();
+    const res = await Logout();
+    console.log(res);
     setUser(null);
-    navigate('/user', {state: {loginflg: false}})
+    navigate('/home', {state: {loginflg: false}})
   }
   return (
     <>
@@ -29,8 +33,6 @@ const LoginButton: FC = () => {
       ) : (
         <button className='login-button' onClick={login}>Login</button>
       )}
-      {/*<div>UID: {user && uid}</div>
-      */}
     </>
   );
 }

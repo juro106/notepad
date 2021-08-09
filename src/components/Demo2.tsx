@@ -8,7 +8,7 @@ import {
 } from 'react';
 // import { Link } from 'react-router-dom';
 import { AuthContext } from 'contexts/authContext';
-import postContent from 'services/post-content'
+// import postContent from 'services/post-content'
 import getContent from 'services/get-content';
 // import { Content } from 'models/content';
 import ErrorBoundary from 'ErrorBoundary';
@@ -24,12 +24,13 @@ const GetC: FC = () => {
   const refTags = useRef<HTMLDivElement>(null);
   const refBody = useRef<HTMLDivElement>(null);
   // console.log(results);
-  const { slug } = useParams(); // バケツリレー不要。必要なところで呼び出せば良い。
+  const { projectName, slug } = useParams(); // バケツリレー不要。必要なところで呼び出せば良い。
   // let location = useLocation();
   // const slug2 = location.pathname.slice(1).replace('demo2/', '');
   // console.log(slug);
-  const query = { slug, uid }
-  const { data } = useQuery(['page', slug], () => getContent(query))
+  const query = { slug, uid };
+  console.log(query);
+  const { data } = useQuery(['page', slug], () => getContent(projectName, slug));
   // keepPreviousData: true,
   // });
   if (data) {
@@ -54,7 +55,7 @@ const GetC: FC = () => {
       };
       taglist = refTags.current.innerText.split(" ");
       console.log(data);
-      postContent(data);
+      // postContent(data);
     }
   }
   if (data)

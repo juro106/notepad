@@ -5,6 +5,7 @@ import {
   Suspense,
   SuspenseList
 } from 'react';
+import { ImgSelectProvider } from 'contexts/imgSelectContext';
 import { useQuery } from 'react-query';
 import getContent from 'services/get-content';
 // import postContent from 'services/post-content';
@@ -19,7 +20,7 @@ import {
 import { Message } from 'models/message';
 // import { useForceUpdate } from 'hooks/useForceUpdate';
 
-const Page: FC<{ slug: string, uid: string }> = ({ slug, uid }) => {
+const Page: FC<{ slug: string, project: string }> = ({ slug, project }) => {
   const [flg, setFlg] = useState<boolean>(false);
   const [error, setError] = useState<Error>();
   // const [d1, setD1] = useState<Content | undefined>(undefined);
@@ -45,7 +46,7 @@ const Page: FC<{ slug: string, uid: string }> = ({ slug, uid }) => {
     const fetch = async () => {
       try {
         // const d1 = await getContent(slug);
-        const d2 = await getRelated({ slug, uid });
+        const d2 = await getRelated(project, slug);
         // setD1(d1);
         setD2(d2);
 
@@ -59,12 +60,11 @@ const Page: FC<{ slug: string, uid: string }> = ({ slug, uid }) => {
     return () => {
       setFlg(false);
       abortCtrl.abort();
-      window.scrollTo(0, 0);
     }
-  }, [flg, slug, uid, setD2]);
+  }, [flg, slug, project, setD2]);
 
 
-  const { data: d1 } = useQuery(['page', slug], () => getContent({ slug, uid }));
+  const { data: d1 } = useQuery(['page', slug], () => getContent(project, slug));
   // const { data: d2 } = useQuery(['related', slug], () => getRelated(slug));
 
   if (error) return <div>{error.toString()}</div>
@@ -72,7 +72,9 @@ const Page: FC<{ slug: string, uid: string }> = ({ slug, uid }) => {
   return (
     <SuspenseList>
       <Suspense fallback={<div className="spinner"></div>}>
-        <Main data={d1} changeState={changeState} setResMsg={setResMsg} />
+        <ImgSelectProvider>
+          <Main data={d1} changeState={changeState} setResMsg={setResMsg} />
+        </ImgSelectProvider>
       </Suspense>
       <Suspense fallback={<div className="spinner"></div>}>
         <ResponseMessage data={msg} />

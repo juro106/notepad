@@ -3,16 +3,18 @@ import { DEFAULT_API_OPTIONS } from './config';
 import { Content, isContentsList } from 'models/content';
 
 const getContentsAll = async (
-  data: { uid: string },
+  project?: string,
+  pub?: boolean,
   options?: Options,
 ): Promise<Content[]> => {
   const mergedOptions = {
-    ...{ json: data },
     ...DEFAULT_API_OPTIONS,
     ...options,
   }
-  const response = await ky.post(
-    `${process.env.REACT_APP_API_URL}/get-contents-all`,
+  const response = await ky.get(
+    pub 
+    ? `${process.env.REACT_APP_API_URL}/public/contents-all`
+    : `${process.env.REACT_APP_API_URL}/pages/${project}/`,
     mergedOptions,
   );
 
@@ -27,5 +29,6 @@ const getContentsAll = async (
 
   return results;
 }
+
 export default getContentsAll;
 

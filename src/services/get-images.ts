@@ -1,29 +1,27 @@
 import ky, { Options } from 'ky';
 import { DEFAULT_API_OPTIONS } from './config';
 
-const getProjects = async (
+const getImages = async (
+  project?: string,
   options?: Options,
 ): Promise<string[]> => {
   const mergedOptions = {
     ...DEFAULT_API_OPTIONS,
     ...options,
   }
-  const response = await ky(
-    `${process.env.REACT_APP_API_URL}/projects-list`,
+  const response = await ky.get(
+    `${process.env.REACT_APP_API_URL}/images/${project}/all`,
     mergedOptions,
   );
 
   let results = (await response.json());
-  // console.log(results);
   if (results === null) {
     results = [];
   }
 
-  // if (!isContentsList(results)) {
-  //   throw Error('API type error');
-  // }
-
   return results;
 }
-export default getProjects;
+
+export default getImages;
+
 

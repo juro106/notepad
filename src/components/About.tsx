@@ -1,11 +1,17 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 const About: FC = () => {
+  const [title, setTitle] = useState('');
+
+  useEffect(() => {
+    setTitle('About');
+  },[]);
+  
   return (
     <HelmetProvider>
       <Helmet>
-        <title>About</title>
+        <title>{title}</title>
         <meta name="description" content="メモ帳アプリの使い方。" />
       </Helmet>
       <div className="fixed-content">

@@ -17,6 +17,7 @@
     "@types/react-helmet-async": "^1.0.3",
     "@types/react-query": "^1.2.9",
     "@types/react-router-dom": "^5.1.8",
+    "compressorjs": "^1.0.7",
     "diagnostic-languageserver": "^1.11.0",
     "draft-js": "^0.11.7",
     "eslint_d": "^10.1.3",

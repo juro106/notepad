@@ -17,7 +17,8 @@ const queryClient = new QueryClient({
     queries: {
       suspense: true,
       retry: 0,
-      staleTime: 1 * 1000,
+      // cacheTime: 1,
+      // staleTime: 1 * 1000,
       // staleTime: 60 * 1000,
     }
   }
@@ -33,10 +34,10 @@ root.render(
       <Router>
         <AuthProvider>
           <ProjectProvider>
-            <App />
-            {process.env.NODE_ENV === 'development' && (
-              <ReactQueryDevtools initialIsOpen={false} />
-            )}
+              <App />
+              {process.env.NODE_ENV === 'development' && (
+                <ReactQueryDevtools initialIsOpen={false} />
+              )}
           </ProjectProvider>
         </AuthProvider>
       </Router>

@@ -19,7 +19,7 @@ const NewProcject: FC = () => {
         const msg = await createTable({ name: value });
         console.log(msg);
         if (msg.message === 'success') {
-          navigate('/user');
+          navigate('/home');
         } else {
           setNG(true);
           setProjectName(msg.message.slice(11));
@@ -37,6 +37,7 @@ const NewProcject: FC = () => {
       <p>新しいプロジェクト（カテゴリー？ ページ？）を作成します。</p>
       <input className='create-project-input' onChange={(e) => setValue(e.target.value)} type='text' />
       <button className='create-project-button' onClick={submit}>Create</button>
+        <p>半角アルファベット小文字と半角数字、-(ハイフン)と_(アンダーバー)が使えます。</p>
       {NG ? <div className='red'>{projectName}</div> : ''}
     </main>
   );

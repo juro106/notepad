@@ -4,19 +4,19 @@ import { DEFAULT_API_OPTIONS } from './config';
 import { RelatedList } from 'models/content';
 
 const getRelated = async (
-  data: {
-    slug: string;
-    uid: string;
-  },
+  project?: string,
+  slug?: string,
+  pub?: boolean,
   options?: Options,
 ): Promise<RelatedList> => {
   const mergedOptions = {
     ...DEFAULT_API_OPTIONS,
-    ...{ json: data },
     ...options,
   }
-  const response = await ky.post(
-    `${process.env.REACT_APP_API_URL}/get-related`,
+  const response = await ky.get(
+    pub
+    ? `${process.env.REACT_APP_API_URL}/public/related/${slug}`
+    : `${process.env.REACT_APP_API_URL}/related/${project}/${slug}`,
     mergedOptions,
   );
 

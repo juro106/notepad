@@ -30,7 +30,7 @@ const PublicHome: FC = () => {
 }
 
 const ContentsList: FC<{ uid: string }> = ({ uid }) => {
-  const { data } = useQuery([uid], () => getContentsAll({ uid }));
+  const { data } = useQuery([uid], () => getContentsAll( uid ));
 
   if (data && data.length > 0) {
     return (

@@ -8,7 +8,7 @@ type ProjectProps = {
 
 // default
 const ProjectContext = createContext<ProjectProps>({
-  project: 'default', 
+  project: '', 
   setCurrentProject: () => {},
 });
 
@@ -18,9 +18,9 @@ export const useProjectContext = () => {
 
 export const useProject = (): ProjectProps => {
   // state名 ProjectContex type のプロパティに合わせる
-  const [project, setProject] = useState('default');
+  const [project, setProject] = useState('');
   // 関数名は ProjectContexy type のプロパティに合わせる
-  const setCurrentProject = useCallback(( current: string): void => {
+  const setCurrentProject = useCallback((current: string): void => {
     setProject(current);
   }, []);
   return {

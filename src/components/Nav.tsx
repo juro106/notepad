@@ -16,6 +16,7 @@ const Nav: FC = () => {
           <Link className='nav-item-link' to={isLoggedIn ? '/home' : '/'}>Home</Link>
           {isLoggedIn ? <Link className='nav-item-link' to='/about'>About</Link> : ''}
           {isLoggedIn ? <Link className='nav-item-link' to='/edit'>Edit</Link> : ''}
+          {isLoggedIn ? <Link className='nav-item-link' to='/image-manager'>Images</Link> : ''}
           {isLoggedIn ? <Link className='nav-item-link' to='/new'>New</Link> : ''}
         </div>
         {isLoggedIn ? <div className="edit-new"><Link to='/new' className="edit-new-link">＋</Link></div> : ''}
@@ -23,7 +24,7 @@ const Nav: FC = () => {
           <LoginButton />
         </div>
       </nav>
-      <header id="header">current project: <span className="project-name">{project}</span></header>
+      {isLoggedIn ? <header id="header">current project:<Link to={`/local/${project}/`} className="nav-project-name">{project}</Link></header> : ''}
     </>
   );
 }

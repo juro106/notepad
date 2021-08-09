@@ -5,6 +5,7 @@ import {
   useEffect,
   Suspense,
 } from 'react';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import ErrorBoundary from 'ErrorBoundary';
 import { AuthContext } from 'contexts/authContext';
 import Projects from './Projects';
@@ -14,14 +15,13 @@ const UserHome: FC = () => {
   console.log("loading: ", loading);
   console.log("isLoaded: ", isLoaded);
 
-  // プロジェクト一覧の読み込み
   if (isLoggedIn && isLoaded) {
     return <Page />;
   } else if (!isLoaded) {
     return <div className='spinner'></div>;
+  } else {
+    return <main><h1 className='hi-people'>Hi People!!</h1></main>;
   }
-
-  return <main><h1>Hi People!!</h1></main>;
 }
 
 const Page: FC = () => {
@@ -37,15 +37,20 @@ const Page: FC = () => {
 
   if (user) {
     return (
-      <main>
-        <p>こんにちは！ {user}さん。ようこそ！</p>
-
-        <ErrorBoundary key={`eb_1_${ebKey.current}`}>
-          <Suspense fallback={<div className='spinner'></div>}>
-            <Projects />
-          </Suspense>
-        </ErrorBoundary>
-      </main>
+      <HelmetProvider>
+        <Helmet>
+          <title>Home</title>
+          <meta name='robots' content='noindex nofollow' />
+        </Helmet>
+        <main className='user-home'>
+          <header className='user-home-header'><p>こんにちは！ {user}さん。ようこそ！</p></header>
+          <ErrorBoundary key={`eb_1_${ebKey.current}`}>
+            <Suspense fallback={<div className='spinner'></div>}>
+              <Projects />
+            </Suspense>
+          </ErrorBoundary>
+        </main>
+      </HelmetProvider>
     );
   }
 
