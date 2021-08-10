@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import createTable from 'services/create-table';
 
@@ -9,10 +9,16 @@ const NewProcject: FC = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    console.log('scroll');
+  }, [])
+
   const hasLowerCase = (str: string) => {
     str = (str == null) ? '' : str;
     return (/^[a-z0-9_-]+$/.test(str));
   }
+
   const submit = () => {
     if (hasLowerCase(value)) {
       (async () => {

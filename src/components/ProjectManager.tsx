@@ -33,6 +33,7 @@ const Contents: FC = () => {
       setData(res);
     }
     fetch();
+    window.scrollTo(0, 0);
   }, []);
   // 2回目以降。変更があったとき
   useEffect(() => {
