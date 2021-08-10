@@ -1,6 +1,7 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Content, RelatedContents, RelatedList } from 'models/content';
+import { ProjectContext } from 'contexts/projectContext';
 
 // const Related: FC<{data: Content[] | undefined }> = ({ data }) => {
 const Related: FC<{ data: RelatedList | undefined }> = ({ data }) => {
@@ -41,12 +42,14 @@ const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
 }
 
 const Item: FC<{ data: Content[] }> = ({ data }) => {
+  const { project } = useContext(ProjectContext);
+
   if (data && data.length > 0) {
     return (
       <>
         {data.map(v => (
           <li key={`li_${v.title}`} className="item-arrow">
-            <Link to={`/local/${v.slug.trim()}`} className="item-link">
+            <Link to={`/local/${project}/${v.slug.trim()}`} className="item-link">
               <div className='item-title'>{v.title}</div>
               <div className='item-dscr'>{v.content.slice(0, 80)}</div>
             </Link>

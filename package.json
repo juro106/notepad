@@ -29,6 +29,7 @@
     "react": "^0.0.0-experimental-3f62dec84-20210719",
     "react-dom": "^0.0.0-experimental-3f62dec84-20210719",
     "react-helmet-async": "^1.0.9",
+    "react-icons": "^4.2.0",
     "react-query": "^3.19.0",
     "react-query-devtools": "^2.6.3",
     "react-router": "^6.0.0-beta.0",

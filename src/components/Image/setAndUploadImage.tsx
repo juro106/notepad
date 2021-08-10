@@ -1,10 +1,12 @@
 import { FC, useContext } from 'react';
 import Compressor from 'compressorjs';
 import { ProjectContext } from 'contexts/projectContext';
+import { useImgSelectContext } from 'contexts/imgSelectContext';
 
 // const Image: FC<{ setImageURL: (arg: string) => void, url?: string }> = ({ setImageURL, url }) => {
-const ImageUploader: FC<{changeState: (arg: boolean) => void}> = ({changeState}) => {
+const Image: FC = () => {
   const { project } = useContext(ProjectContext);
+  const ctx = useImgSelectContext();
 
   const imageHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files === null) {
@@ -14,13 +16,13 @@ const ImageUploader: FC<{changeState: (arg: boolean) => void}> = ({changeState})
     if (file === null) {
       return;
     }
-    // const imgTag = document.getElementById('preview') as HTMLImageElement;
+    const imgTag = document.getElementById('preview') as HTMLImageElement;
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    // reader.onload = () => {
-    //   const result: string = reader.result as string;
-    //   imgTag.src = result;
-    // }
+    reader.onload = () => {
+      const result: string = reader.result as string;
+      imgTag.src = result;
+    }
     await submitImage(file, encodeURI(file.name));
   }
 
@@ -52,7 +54,7 @@ const ImageUploader: FC<{changeState: (arg: boolean) => void}> = ({changeState})
           console.log('upload success');
         }).then(() => {
           // setImageURL(`/images/${project}/${fileName}`);
-          changeState(true);
+          ctx.setCurrentImgURL(`/images/${project}/${fileName}`);
         });
       },
       error(err: Error): void {
@@ -64,10 +66,10 @@ const ImageUploader: FC<{changeState: (arg: boolean) => void}> = ({changeState})
   return (
     <label htmlFor='upload-img' className='for-upload-img'>
       <input id='upload-img' type="file" name='select' accept="image/*" onChange={imageHandler} />
-      upload new image
+      upload image
     </label>
   );
 }
 
-export default ImageUploader;
+export default Image;
 

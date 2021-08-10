@@ -11,10 +11,12 @@ import { ProjectContext } from 'contexts/projectContext';
 import { ImgSelectContext, useImgSelectContext } from 'contexts/imgSelectContext';
 import postContent from 'services/post-content';
 import { generateUuid } from 'services/functions';
-import Image from 'components/Image';
-import ImageSelector from 'components/ImageSelector';
+import ImageComponent from 'components/Image/ImageComponent';
+import ImageSelector from 'components/Image/ImageSelector';
+import ImageUploader from 'components/Image/ImageUploader';
 
 const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) => {
+  const [imgURL, setImgURL] = useState<string | undefined>(undefined);
   const { uid } = useContext(AuthContext);
   const { project } = useContext(ProjectContext)
   const { ctxImgURL } = useContext(ImgSelectContext)
@@ -26,9 +28,15 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
   const navigate = useNavigate();
 
   useEffect(() => {
-    setUuid(generateUuid())
+    setUuid(generateUuid());
     // ctx.setCurrentImgURL('');
+    window.scrollTo(0, 0);
   }, [])
+
+    // upload or select で画像をセット
+    useEffect(() => {
+      ctxImgURL !== '' && setImgURL(ctxImgURL)
+    },[ctxImgURL]);
 
   const KeyBinding = (e: React.KeyboardEvent) => {
     if (e.code === 'Enter' && e.altKey) {
@@ -48,7 +56,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
   // 初回投稿のみ使われる
   const setPost = async () => {
     if (refBody && refBody.current && refTitle && refTitle.current && refTags && refTags.current && uid) {
-      if (refTitle.current.innerText.length === 0 || refBody.current.innerText.length === 0) return; // タイトルとコンテンツがなければ登録しない
+      if (refTitle.current.innerText.length === 0) return; // タイトルが入力されていなければ登録しない
       // console.log(refTitle.current.innerText)
       // console.log(refBody.current.innerText)
       const data = {
@@ -70,11 +78,13 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
   }
 
   const DeleteImage = () => {
-    const input = document.getElementById('upload-img') as HTMLInputElement;
+    const input = document.getElementById('upload-image') as HTMLInputElement;
     const imgTag = document.getElementById('preview') as HTMLImageElement;
     input.value = '';
     imgTag.src = '';
     ctx.setCurrentImgURL('');
+    setImgURL(undefined);
+    window.scrollTo(0, 0);
   }
 
   return (
@@ -106,17 +116,9 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
           data-text="Content"
           onBlur={setPost}
         ></div>
-        <div className="img-preview-box">
-          <img id='preview' alt={ctxImgURL} src={ctxImgURL} />
-          {ctxImgURL !== '' &&
-            <>
-              <div className='filename'>{ctxImgURL}</div>
-              <div className='delete-img-button' onClick={DeleteImage}>☓</div>
-            </>
-          }
-        </div>
+        <ImageComponent imgURL={imgURL} DeleteImage={DeleteImage} />
         <div className='editable-option'>
-          <Image />
+          <ImageUploader isSetter={true} />
           <ImageSelector />
           <button className="save" onClick={setPost}>save</button>
         </div>

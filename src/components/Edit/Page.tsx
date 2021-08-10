@@ -29,7 +29,7 @@ const Page: FC<{
               </Link>
               <div className="edit-delete">
                 <div className='delete-button' onClick={() => deleteItem(`${v.slug}`)}>
-                  delete ☒
+                  ☓ delete
                 </div>
               </div>
             </li>

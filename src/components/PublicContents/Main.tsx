@@ -12,7 +12,7 @@ const Main: FC<{ data: Content | undefined, }> = ({ data }) => {
         </Helmet>
         <main className="main-contents">
           <h1 className='content-title'>{data.title}</h1>
-          {data.tags && data.tags.length > 1
+          {data.tags && data.tags.length > 0
             ?
             <div className='content-tags'>
               {data.tags.map((v, k) => (
@@ -23,6 +23,7 @@ const Main: FC<{ data: Content | undefined, }> = ({ data }) => {
             </div>
             : ''}
           {data.content && data.content.length > 0 ? <div className='content-body'>{data.content}</div> : ''}
+          {data.image && <img id='content-img' src={data.image} alt={data.image} decoding='async' />}
         </main>
       </HelmetProvider>
     )

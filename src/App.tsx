@@ -8,9 +8,10 @@ import LocalHome from 'components/LocalHome';
 import About from 'components/About';
 import Edit from 'components/Edit';
 import MyEditor from 'components/Editor';
-import ImageManager from 'components/ImageManager';
+import ImageManager from 'components/Image/ImageManager';
 import NewPost from 'components/New';
 import NewProject from 'components/NewProject';
+import ProjectManager from 'components/ProjectManager';
 import UserHome from 'components/UserHome';
 import Demo2 from 'components/Demo2';
 import PublicContents from 'components/PublicContents';
@@ -32,6 +33,7 @@ const App: FC = () => {
           <Route path='/editor' element={<MyEditor />} />
           <Route path='/edit' element={<Edit />} />
           <Route path='/image-manager' element={<ImageManager />} />
+          <Route path='/project-manager' element={<ProjectManager />} />
           <Route path='/demo2/:slug' element={<Demo2 />} />
           <Route path='/example' element={<ContentEditable />} />
           <Route path='/:slug' element={<PublicContents />} />

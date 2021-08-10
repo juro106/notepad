@@ -5,11 +5,10 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 // import { useQuery } from 'react-query';
 import getImages from 'services/get-images';
 import deleteImage from 'services/delete-image';
-import { useCloseModal } from 'hooks/useCloseModal';
-import Overlay from 'components/Overlay';
-import ModalContents from 'components/ModalContents';
 import Projcets from 'components/UserHome/Projects';
-import ImageUploader from 'components/ImageUploader';
+import ImageUploader from './ImageUploader';
+import ImagePreviewer from './ImagePreviewer';
+import ToastWarning from 'components/ToastWarning';
 
 const ImageManager: FC = () => {
   const [load, setLoad] = useState<boolean>(false);
@@ -37,6 +36,7 @@ const ImageManager: FC = () => {
     }
     fetch();
     setLoad(true);
+    window.scrollTo(0, 0);
   }, [project, isEmptyProject])
 
 
@@ -95,62 +95,65 @@ const ImageManager: FC = () => {
 
 const Images: FC<{ data: string[] | undefined, changeState: (arg: boolean) => void }> = ({ data, changeState }) => {
   const [url, setUrl] = useState<string>('');
-  const [on, setOn] = useState(false);
-  const showPreview = (arg: string) => {
-    setOn(true);
-    setUrl(arg)
-  }
-  const setPreviewState = () => {
-    setOn(false);
+  const [isPreview, setIsPreview] = useState(false);
+  const [isToast, setIsToast] = useState(false);
+
+  const openPreview = (arg: string) => {
+    setIsPreview(true);
+    setUrl(arg);
   }
 
-  const DeleteImage = async (arg: string) => {
-    const res = await deleteImage(arg);
-    console.log(res);
-    changeState(true);
+  const closePreview = () => {
+    setIsPreview(false);
   }
 
+  const openToast = (arg: string) => {
+    setIsToast(true);
+    setUrl(arg);
+  }
+  const closeToast = () => {
+    setIsToast(false);
+  }
+
+  // const DeleteImage = async (arg: string) => {
+  //   const res = await deleteImage(arg);
+  //   console.log(res);
+  //   changeState(true);
+  // }
+  //
   if (data) {
     return (
       <>
         <ul className='image-list'>
           {data.map((v, k) => (
             <li key={`img_${k}`} className='image-list-item'>
-              <div className="image-item-box" onClick={() => showPreview(v)}>
+              {/*
+              <a className="image-item-box" href={v} target='_blank' rel='noopenner noreferrer'>
                 <img src={v} alt={v} decoding='async' className='image-item' />
+              </a>
+              */}
+              <div className="image-item-box" onClick={() => openPreview(v)}>
+                <img src={v} alt={v} title={v} decoding='async' className='image-item' />
               </div>
               <div className="image-list-menu">
-                <div className="image-list-menu-button" onClick={() => DeleteImage(v)}>delete</div>
+                <div className="image-list-menu-button-delete" onClick={() => openToast(v)}>☓ delete</div>
               </div>
             </li>
           ))}
         </ul>
-        <Preview url={url} on={on} setPreviewState={setPreviewState} />
+        <ImagePreviewer url={url} isPreview={isPreview} closePreview={closePreview} />
+        <ToastWarning
+          itemName={url}
+          isToast={isToast}
+          changeState={changeState}
+          closeToast={closeToast}
+          deleteFunc={deleteImage}
+        />
       </>
     );
   }
 
   return <div className="spinner"></div>
-}
-
-const Preview: FC<{ url: string, on: boolean, setPreviewState: () => void }> = ({ url, on, setPreviewState }) => {
-
-  const { elementRef, closeModal } = useCloseModal(setPreviewState);
-
-  if (on) {
-    return (
-      <Overlay id='modal-preview-wrapper' onClose={closeModal}>
-        <ModalContents id='modal-preview-inner' elRef={elementRef}>
-          <div id="modal-preview-img-outer">
-            <img id='modal-preview-img' src={url && url} alt='' />
-          </div>
-          <div className="button-preview-close" onClick={() => setPreviewState()}>close</div>
-        </ModalContents>
-      </Overlay>
-    );
-  }
-
-  return <></>;
 }
 
 export default ImageManager;

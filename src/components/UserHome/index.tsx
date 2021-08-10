@@ -9,6 +9,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import ErrorBoundary from 'ErrorBoundary';
 import { AuthContext } from 'contexts/authContext';
 import Projects from './Projects';
+import Menu from 'components/Menu';
 
 const UserHome: FC = () => {
   const { loading, isLoggedIn, isLoaded } = useContext(AuthContext);
@@ -43,12 +44,17 @@ const Page: FC = () => {
           <meta name='robots' content='noindex nofollow' />
         </Helmet>
         <main className='user-home'>
-          <header className='user-home-header'><p>こんにちは！ {user}さん。ようこそ！</p></header>
+          <header className='user-home-header'>
+          <h1>Welcome!!!</h1>
+          <p>こんにちは！ {user}さん。</p>
+          <p>まずはプロジェクトを選択してください。</p>
+          </header>
           <ErrorBoundary key={`eb_1_${ebKey.current}`}>
             <Suspense fallback={<div className='spinner'></div>}>
               <Projects />
             </Suspense>
           </ErrorBoundary>
+          <Menu />
         </main>
       </HelmetProvider>
     );

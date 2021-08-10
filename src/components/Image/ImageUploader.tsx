@@ -2,9 +2,11 @@ import { FC, useContext } from 'react';
 import Compressor from 'compressorjs';
 import { ProjectContext } from 'contexts/projectContext';
 import { useImgSelectContext } from 'contexts/imgSelectContext';
+import { ImFilePicture } from 'react-icons/im';
 
-// const Image: FC<{ setImageURL: (arg: string) => void, url?: string }> = ({ setImageURL, url }) => {
-const Image: FC = () => {
+// if new or edit contents -> mode isSetter
+// else if image manager -> mode off
+const ImageUploader: FC<{ isSetter?: boolean, changeState?: (arg: boolean) => void }> = ({ isSetter, changeState }) => {
   const { project } = useContext(ProjectContext);
   const ctx = useImgSelectContext();
 
@@ -16,13 +18,8 @@ const Image: FC = () => {
     if (file === null) {
       return;
     }
-    const imgTag = document.getElementById('preview') as HTMLImageElement;
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => {
-      const result: string = reader.result as string;
-      imgTag.src = result;
-    }
     await submitImage(file, encodeURI(file.name));
   }
 
@@ -53,8 +50,9 @@ const Image: FC = () => {
         fetch(`${process.env.REACT_APP_API_URL}/images/upload`, options).then(() => {
           console.log('upload success');
         }).then(() => {
-          // setImageURL(`/images/${project}/${fileName}`);
-          ctx.setCurrentImgURL(`/images/${project}/${fileName}`);
+          isSetter
+            ? ctx.setCurrentImgURL(`/images/${project}/${fileName}`)
+            : changeState && changeState(true);
         });
       },
       error(err: Error): void {
@@ -64,12 +62,13 @@ const Image: FC = () => {
   }
 
   return (
-    <label htmlFor='upload-img' className='for-upload-img'>
-      <input id='upload-img' type="file" name='select' accept="image/png, image/jpeg, image/gif" onChange={imageHandler} />
-      upload image
+    <label htmlFor='upload-image' className='for-upload-image-icon' title='upload new image from your computer'>
+      <input id='upload-image' type="file" name='select' accept="image/*" onChange={imageHandler} />
+      <ImFilePicture size={36} color={'#666'} />
+      {!isSetter && <div className='for-upload-image-text'>画像をアップロード</div>}
     </label>
   );
 }
 
-export default Image;
+export default ImageUploader;
 

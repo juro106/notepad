@@ -6,8 +6,9 @@ import { ImgSelectContext, useImgSelectContext } from 'contexts/imgSelectContext
 import postContent from 'services/post-content'
 import { Content } from 'models/content';
 import { Message } from 'models/message';
-import Image from 'components/Image';
-import ImageSelector from 'components/ImageSelector';
+import ImageComponent from 'components/Image/ImageComponent';
+import ImageUploader from 'components/Image/ImageUploader';
+import ImageSelector from 'components/Image/ImageSelector';
 
 const Main: FC<{
   data: Content | undefined,
@@ -18,13 +19,13 @@ const Main: FC<{
   changeState,
   setResMsg,
 }) => {
+    const [imgURL, setImgURL] = useState<string | undefined>(undefined);
     const { uid } = useContext(AuthContext);
     const { project } = useContext(ProjectContext)
+    const { ctxImgURL } = useContext(ImgSelectContext)
     const refTitle = useRef<HTMLDivElement>(null);
     const refTags = useRef<HTMLDivElement>(null);
     const refBody = useRef<HTMLDivElement>(null);
-    const [imgURL, setImgURL] = useState<string | undefined>(undefined);
-    const { ctxImgURL } = useContext(ImgSelectContext)
     const ctx = useImgSelectContext();
 
     const KeyBinding = (e: React.KeyboardEvent) => {
@@ -33,19 +34,17 @@ const Main: FC<{
       }
     }
 
+    // 初回読み込み時
     useEffect(() => {
-      if (ctxImgURL !== '') {
-        setImgURL(ctxImgURL);
-      }
+      data && data.image
+        ? setImgURL(data.image) // 既に画像があるならそれをセットする
+        : setImgURL(undefined); // 別なページに移動したときに画像が残らないようにするため
+    }, [data])
+
+    // upload or select で画像をセット
+    useEffect(() => {
+      ctxImgURL !== '' && setImgURL(ctxImgURL)
     }, [ctxImgURL])
-    // const setImageURL = (arg: string) => {
-    //   setImgURL(arg);
-    // }
-    useEffect(() => {
-      if (data && data.image) {
-        setImgURL(data.image);
-      }
-    },[data])
 
     const slug = data ? data.slug : '';
     // const presetImg = data && data.image;
@@ -62,7 +61,6 @@ const Main: FC<{
           project: project,
           tags: refTags.current.innerText.replaceAll(' ', '').split(",").filter(v => v !== ''),
           content: refBody.current.innerText.replaceAll('\n\n\n', '\n\n'),
-          // image: ctxImgURL ? ctxImgURL : presetImg ? presetImg : '',
           image: imgURL,
         };
 
@@ -71,7 +69,7 @@ const Main: FC<{
         const res = await postContent(data);
         changeState(true);
         setResMsg(res);
-        ctx.setCurrentImgURL('');
+        // setImgURL(undefined);
         // console.log(res);
       }
     }
@@ -82,12 +80,13 @@ const Main: FC<{
     }, [slug])
 
     const DeleteImage = () => {
-      const input = document.getElementById('upload-img') as HTMLInputElement;
+      const input = document.getElementById('upload-image') as HTMLInputElement;
       const imgTag = document.getElementById('preview') as HTMLImageElement;
       input.value = '';
       imgTag.src = '';
       ctx.setCurrentImgURL('');
       setImgURL(undefined);
+      window.scrollTo(0, 0);
     }
 
     if (data) {
@@ -134,13 +133,9 @@ const Main: FC<{
             >
               {data && data.content}
             </div>
-            <div className="img-preview-box">
-              <img id='preview' alt={ctxImgURL} src={imgURL} />
-              <div className='filename'>{imgURL}</div>
-              {imgURL ? <div className='delete-img-button' onClick={DeleteImage}>☓</div> : ''}
-            </div>
+            <ImageComponent imgURL={imgURL} DeleteImage={DeleteImage} />
             <div className='editable-option'>
-              <Image />
+              <ImageUploader isSetter={true} />
               <ImageSelector />
               <button className="save" onClick={update}>save</button>
             </div>
