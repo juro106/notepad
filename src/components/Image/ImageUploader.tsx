@@ -62,9 +62,13 @@ const ImageUploader: FC<{ isSetter?: boolean, changeState?: (arg: boolean) => vo
   }
 
   return (
-    <label htmlFor='upload-image' className='for-upload-image-icon' title='upload new image from your computer'>
+    <label
+      htmlFor='upload-image'
+      className='for-upload-image-icon'
+      data-tooltip='upload a new image&#13;&#10;新規画像アップロード'
+    >
       <input id='upload-image' type="file" name='select' accept="image/*" onChange={imageHandler} />
-      <ImFilePicture size={36} color={'#666'} />
+      <ImFilePicture size={28} color={'#666'} />
       {!isSetter && <div className='for-upload-image-text'>画像をアップロード</div>}
     </label>
   );

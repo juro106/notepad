@@ -21,7 +21,7 @@ const NewPost: FC = () => {
   const [tags, setTags] = useState<string[]>([])
   const [isEmptyProject, setIsEmptyProject] = useState<boolean>(false);
   const [error, setError] = useState<Error>();
-  const [d2, setD2] = useState<RelatedList | undefined>(undefined);
+  const [relatedData, setRelatedData] = useState<RelatedList | undefined>(undefined);
   const { currentUser } = useContext(AuthContext);
   const { project } = useContext(ProjectContext);
 
@@ -32,14 +32,13 @@ const NewPost: FC = () => {
   const changeState = (arg: boolean) => {
     setIsEmptyProject(false);
   }
-  // const idToken = 'hoge';
 
   useEffect(() => {
     let abortCtrl = new AbortController();
     const fetch = async () => {
       try {
-        const d2 = await getRelatedOnly({ project, tags });
-        setD2(d2);
+        const response = await getRelatedOnly({ project, tags });
+        setRelatedData(response);
       } catch (e) {
         if (e.name !== 'AbortError') setError(e)
       }
@@ -79,7 +78,7 @@ const NewPost: FC = () => {
             }
           </Suspense>
           <Suspense fallback={<p>...loading</p>}>
-            <Related data={d2} />
+            <Related data={relatedData} />
           </Suspense>
         </SuspenseList>
       </HelmetProvider>

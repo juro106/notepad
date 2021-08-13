@@ -6,7 +6,7 @@ export const useCloseModal = (closeAction: () => void) => {
   const closeModal = (element: HTMLElement) => {
     if (elementRef.current && !elementRef.current.contains(element)) {
       closeAction();
-      window.scrollTo(0, 0);
+      // window.scrollTo(0, 0);
     }
   };
 

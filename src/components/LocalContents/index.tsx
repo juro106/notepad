@@ -16,20 +16,6 @@ const MainContents: FC = () => {
   const { project } = useContext(ProjectContext);
   const ctx = useProjectContext();
   const ebKey = useRef(0);
-  // const imgCtx = useImgSelectContext();
-
-  // useEffect(() => {
-  //   imgCtx.setCurrentImgURL('');
-  // }, [slug])
-  // const history = window.history;
-  // console.log(history.scrollRestoration);
-  // useEffect(() => {
-  //   if (history.scrollRestoration) {
-  //     history.scrollRestoration = 'manual';
-  //   }
-  //   console.log('scroll!!!');
-  // }, [history]);
-
 
   // 直接アクセスした場合、URLのパラメーターからカレントプロジェクトを設定する
   useEffect(() => {
@@ -38,6 +24,13 @@ const MainContents: FC = () => {
     }
     setParam(projectName);
   }, [project, ctx, projectName, param])
+
+  useEffect(() => {
+    let abortCtrl = new AbortController();
+    return () => {
+      abortCtrl.abort();
+    }
+  }, []);
 
   if (currentUser && param) {
     return (
@@ -51,7 +44,6 @@ const MainContents: FC = () => {
 
   return <TimeOut />
 }
-
 
 const TimeOut: FC = () => {
   const [flg, setFlg] = useState(false);

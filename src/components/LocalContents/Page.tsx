@@ -12,44 +12,40 @@ import getContent from 'services/get-content';
 import getRelated from 'services/get-related';
 import Main from './Main';
 import Related from './Related';
-import ResponseMessage from './ResponseMessage';
+// import ResponseMessage from './ResponseMessage';
 import {
   // Content,
   RelatedList
 } from 'models/content';
-import { Message } from 'models/message';
+// import { Message } from 'models/message';
 // import { useForceUpdate } from 'hooks/useForceUpdate';
 
-const Page: FC<{ slug: string, project: string }> = ({ slug, project }) => {
+const Page: FC<{ slug: string | undefined, project: string }> = ({ slug, project }) => {
   const [flg, setFlg] = useState<boolean>(false);
   const [error, setError] = useState<Error>();
   // const [d1, setD1] = useState<Content | undefined>(undefined);
-  const [d2, setD2] = useState<RelatedList | undefined>(undefined);
-  const [msg, setMsg] = useState<Message | undefined>(undefined);
-  //
+  const [relatedData, setRelatedData] = useState<RelatedList | undefined>(undefined);
+  // const [msg, setMsg] = useState<Message | undefined>(undefined);
 
   const changeState = (arg: boolean) => {
     setFlg(arg);
   }
   // console.log("flg: ", flg);
 
-  const setResMsg = (arg: Message) => {
-    setMsg(arg);
-  }
-
-  useEffect(() => {
-    setMsg(undefined)
-  }, [slug]);
+  // const setResMsg = (arg: Message) => {
+  //   setMsg(arg);
+  // }
+  //
+  // useEffect(() => {
+  //   return () => setMsg(undefined);
+  // }, [slug]);
 
   useEffect(() => {
     let abortCtrl = new AbortController();
     const fetch = async () => {
       try {
-        // const d1 = await getContent(slug);
-        const d2 = await getRelated(project, slug);
-        // setD1(d1);
-        setD2(d2);
-
+        const response = await getRelated(project, slug);
+        setRelatedData(response);
       } catch (e) {
         if (e.name !== 'AbortError') setError(e)
       }
@@ -61,10 +57,9 @@ const Page: FC<{ slug: string, project: string }> = ({ slug, project }) => {
       setFlg(false);
       abortCtrl.abort();
     }
-  }, [flg, slug, project, setD2]);
+  }, [flg, slug, project, setRelatedData]);
 
-
-  const { data: d1 } = useQuery(['page', slug], () => getContent(project, slug));
+  const { data: mainData } = useQuery(['page', slug], () => getContent(project, slug));
   // const { data: d2 } = useQuery(['related', slug], () => getRelated(slug));
 
   if (error) return <div>{error.toString()}</div>
@@ -73,14 +68,11 @@ const Page: FC<{ slug: string, project: string }> = ({ slug, project }) => {
     <SuspenseList>
       <Suspense fallback={<div className="spinner"></div>}>
         <ImgSelectProvider>
-          <Main data={d1} changeState={changeState} setResMsg={setResMsg} />
+          <Main data={mainData} changeState={changeState} />
         </ImgSelectProvider>
       </Suspense>
       <Suspense fallback={<div className="spinner"></div>}>
-        <ResponseMessage data={msg} />
-      </Suspense>
-      <Suspense fallback={<div className="spinner"></div>}>
-        <Related data={d2} changeState={changeState} />
+        <Related data={relatedData} changeState={changeState} />
       </Suspense>
     </SuspenseList>
   );
@@ -88,3 +80,6 @@ const Page: FC<{ slug: string, project: string }> = ({ slug, project }) => {
 
 export default Page;
 
+      // <Suspense fallback={<div className="spinner"></div>}>
+      //   {msg && <ResponseMessage data={msg} />}
+      // </Suspense>

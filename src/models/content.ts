@@ -40,3 +40,4 @@ const isContentsList = (arg: unknown[]): arg is Content[] =>
 //   !arg.some((arg) => !isRelated(arg)); // return を 省略している
 
 export { isContent, isContentsList };
+

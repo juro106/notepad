@@ -45,7 +45,7 @@ const Page: FC = () => {
         </Helmet>
         <main className='user-home'>
           <header className='user-home-header'>
-          <h1>Welcome!!!</h1>
+          <h1 id='page-title'>Welcome!!!</h1>
           <p>こんにちは！ {user}さん。</p>
           <p>まずはプロジェクトを選択してください。</p>
           </header>

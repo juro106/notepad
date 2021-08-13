@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Content } from 'models/content';
-import DeleteContent from 'services/delete-content';
+import deleteContent from 'services/delete-content';
 
 const Page: FC<{
   data: Content[] | undefined,
@@ -13,7 +13,7 @@ const Page: FC<{
   changeState,
 }) => {
     const deleteItem = async (slug: string) => {
-      const msg = await DeleteContent({ project, slug });
+      const msg = await deleteContent( project, slug );
       console.log(msg);
       changeState(true);
     }

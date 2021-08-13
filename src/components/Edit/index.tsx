@@ -60,9 +60,12 @@ const Edit: FC = () => {
   }, [flg, project])
 
   useEffect(() => {
+    let abortCtrl = new AbortController();
     window.scrollTo(0, 0);
-    console.log('scroll');
-  }, [])
+    return () => {
+      abortCtrl.abort();
+    }
+  }, []);
 
   if (isLoggedIn) {
     return (
@@ -76,17 +79,20 @@ const Edit: FC = () => {
           }
         </Helmet>
         <ErrorBoundary key={ebKey.current}>
-          {isEmptyProject
-            ?
-            <Suspense fallback={<div className="spinner"></div>}>
-              <div className='info'><p className='red'>プロジェクト選択してください</p></div>
-              <Projcets refer={'edit'} changeState={changeState} />
-            </Suspense>
-            :
-            <Suspense fallback={<div className="spinner"></div>}>
-              <Page data={data} project={project} changeState={changeState} />
-            </Suspense>
-          }
+          <main>
+            {isEmptyProject
+              ?
+              <Suspense fallback={<div className="spinner"></div>}>
+                <div className='info'><p className='red'>プロジェクト選択してください</p></div>
+                <Projcets refer={'edit'} changeState={changeState} />
+              </Suspense>
+              :
+              <Suspense fallback={<div className="spinner"></div>}>
+                <h1 id='page-title'>メモを編集</h1>
+                <Page data={data} project={project} changeState={changeState} />
+              </Suspense>
+            }
+          </main>
         </ErrorBoundary>
       </HelmetProvider>
     );

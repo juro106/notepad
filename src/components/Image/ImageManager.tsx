@@ -78,7 +78,7 @@ const ImageManager: FC = () => {
           <Suspense fallback={<div className="spinner"></div>}>
             <div id="image-manager-wrapper">
               <main id='image-manager-inner'>
-                <h1>画像を管理</h1>
+                <h1 id='page-title'>画像を管理</h1>
                 <ImageUploader changeState={changeState} />
                 <p>画像クリックで原寸大表示</p>
                 <Images data={data} changeState={changeState} />

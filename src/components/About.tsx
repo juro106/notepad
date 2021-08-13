@@ -15,7 +15,7 @@ const About: FC = () => {
         <meta name="description" content="メモ帳アプリの使い方。" />
       </Helmet>
       <div className="fixed-content">
-        <h1>About</h1>
+        <h1 id='page-title'>About</h1>
         <p>これはメモ帳アプリです。</p>
         <h2>使い方</h2>
         <h3>新規投稿 </h3>

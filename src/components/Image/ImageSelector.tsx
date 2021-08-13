@@ -23,8 +23,13 @@ const ImageSelector: FC = () => {
 
   return (
     <>
-      <div className='image-selector-icon' title='select image from server' onClick={openSelector}>
-        <ImImages size={36} color={'#666'} />
+      <div
+        className='image-selector-icon'
+        role='button'
+        onClick={openSelector}
+        data-html={true}
+        data-tooltip='select an image&#13;&#10;画像を選択'>
+        <ImImages size={30} color={'#666'} />
       </div>
       {show && <Contents />}
     </>
