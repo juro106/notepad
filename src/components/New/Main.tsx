@@ -67,12 +67,15 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
   const setPost = async () => {
     if (refTitle && refTitle.current && refBody && refBody.current && refTags && refTags.current && uid) {
       if (refTitle.current.innerText.length === 0) return; // タイトルが入力されていなければ登録しない
+
+      const tagText = refTags.current.innerText.replaceAll(' ', '');
+
       const data = {
         user: uid,
         title: refTitle.current.innerText.trim(),
         slug: generateUuid(), // <- ここが通常のページと違う
         project: project,
-        tags: refTags.current.innerText.replaceAll(' ', '').split(","),
+        tags: tagText.length === 0 ? ['_notag'] : tagText.split(",").filter(v => v !== ''),
         content: refBody.current.innerText.replaceAll('\n\n', '\n'),
         image: ctxImgURL,
       };
@@ -101,7 +104,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
           spellCheck={false}
           ref={refTitle}
           data-text="Title"
-          // onInput={characterCount}
+        // onInput={characterCount}
         ></div>
         <div className='content-tags'
           contentEditable={true}

@@ -81,12 +81,15 @@ const Main: FC<{
     const update = async () => {
       if (refTitle && refTitle.current && refBody && refBody.current && refTags && refTags.current && uid && project) {
         if (refTitle.current.innerText.length === 0) return; // タイトルがなければ登録しない
+
+        const tagText = refTags.current.innerText.replaceAll(' ', '');
+
         const data: Content = {
           user: uid,
           title: refTitle.current.innerText.trim(),
           slug: slug,
           project: project,
-          tags: refTags.current.innerText.replaceAll(' ', '').split(",").filter(v => v !== ''),
+          tags: tagText.length === 0 ? ['_notag'] : tagText.split(",").filter(v=> v !==''),
           content: refBody.current.innerText.replaceAll('\n\n\n', '\n\n'),
           image: imgURL,
         };
@@ -151,12 +154,12 @@ const Main: FC<{
                 onBlur={update}
               >
                 {data.tags.map((v, k) => (
-                data.tags !== undefined ?
-                data.tags.slice(-1)[0] === v ? `${v}` : `${v}, `
-                : ''
+                  data.tags !== undefined ?
+                    data.tags.slice(-1)[0] === v ? `${v}` : `${v}, `
+                    : ''
 
                 ))}
-              </div> : '' }
+              </div> : ''}
             <div className='content-body'
               contentEditable={true}
               suppressContentEditableWarning={true}

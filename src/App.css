@@ -118,7 +118,7 @@ code {
     width: 40px;
     z-index: 1;
 }
-.edit-new-link {
+.create-new-link {
     display: flex;
     padding: 0;
     color: #fff;
@@ -127,7 +127,6 @@ code {
     font-weight: bold;
     font-size: 28px;
     text-decoration: none;
-    margin: 0 10px 0 0;
     justify-content: center;
     align-items: center;
 }
@@ -145,6 +144,7 @@ code {
 .header-item {
     display: flex;
     align-items: center;
+    margin: 0 10px 0 0;
 }
 .nav-project-name {
     padding: 0;
@@ -695,9 +695,9 @@ table {
 }
 #image-selector-contents {
     position: relative;
-    width: 90%;
+    width: 100%;
     height: 90%;
-    padding: 10px 20px;
+    padding: 10px;
     background: #fff;
     z-index: 3;
     overflow-y: scroll;
@@ -756,16 +756,16 @@ table {
 
 .image-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
     padding: 0;
     margin: 0;
-    gap: 10px;
+    gap: 5px;
 }
 .image-list-item {
     display: block;
 }
 .image-item-box {
-    width: 150px;
+    width: auto;
     height: 100px;
     overflow: hidden;
     margin: 0 auto;
@@ -994,7 +994,6 @@ table {
     border-radius: 3px;
     height: 32px;
     padding: 2px;
-    margin: 0 10px;
 }
 #search-input {
     display: block;
@@ -1028,6 +1027,11 @@ table {
 @media only screen and (min-width: 415px) {
     .menu-list {
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+    #image-selector-contents {
+        width: 90%;
+        height: 90%;
+        padding: 10px 20px;
     }
     .image-list {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
