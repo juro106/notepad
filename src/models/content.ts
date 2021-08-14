@@ -8,6 +8,12 @@ export type Content = {
   project?: string;
   image?: string;
 }
+
+export type TagNum = {
+  name: string;
+  number: number;
+}
+
 export type RelatedContents = {[s: string]: Content[]};
 
 export type RelatedList = RelatedContents[]
@@ -18,9 +24,9 @@ const isContent = (arg: unknown): arg is Content => {
     typeof c?.user === 'string' &&
     typeof c?.title === 'string' &&
     typeof c?.slug === 'string' &&
-    (typeof c?.updated_at === 'string' || c?.updated_at === undefined) &&
-    (Array.isArray(c?.tags) || c?.tags === undefined) &&
     typeof c?.content === 'string' &&
+    (typeof c?.updated_at === 'string' || c?.updated_at === undefined) &&
+    (Array.isArray(c?.tags) || c?.tags === undefined || c?.tags === null) &&
     (typeof c?.project === 'string' || c?.project === undefined) &&
     (typeof c?.image === 'string' || c?.image === undefined || c?.image === null)
   );

@@ -21,21 +21,20 @@ const Tags: FC = () => {
 }
 
 const ContentsList: FC<{ project: string }> = ({ project }) => {
-  const { data } = useQuery([`/tags`], () => getTags(project));
+  const { data } = useQuery(['tags'], () => getTags(project));
 
   if (data && data.length > 0) {
     return (
-      <div className="related-contents">
         <ul className="item-list">
           {data.map((tag, k) => (
-            <li key={`p_${k}`} className='item'>
-              <Link to={`/local/${project}/${tag}`} className="item-link">
-                <div className="item-title">{tag}</div>
+            <li key={`p_${k}`} className='edit-list-item'>
+              <Link to={`/local/${project}/${tag.name}`} className="edit-item-link-tag">
+                <div className="edit-list-tag-title">{tag.name}</div>
+                <div className="edit-list-tag-number">({tag.number})</div>
               </Link>
             </li>
           ))}
         </ul>
-      </div>
     )
   } else {
     return (

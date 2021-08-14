@@ -12,6 +12,7 @@ import Overlay from 'components/Overlay';
 import ModalContents from 'components/ModalContents';
 // import ImagePreview from 'components/ImagePreview';
 import { ImImages } from 'react-icons/im'
+import { ImageFile } from 'models/image-file'
 
 const ImageSelector: FC = () => {
   const ctx = useImgSelectContext();
@@ -65,8 +66,7 @@ const Contents: FC = () => {
   return <></>
 }
 
-
-const Images: FC<{ data: string[] | undefined }> = ({ data }) => {
+const Images: FC<{ data: ImageFile[] | undefined }> = ({ data }) => {
   const ctx = useImgSelectContext();
   const setImage = (arg: string) => {
     ctx.setCurrentImgURL(arg);
@@ -89,8 +89,8 @@ const Images: FC<{ data: string[] | undefined }> = ({ data }) => {
         <ul className='image-list'>
           {data.map((v, k) => (
             <li key={`img_${k}`} className='image-list-item'>
-              <div className="image-item-box" onClick={() => setImage(v)}>
-                <img src={v} alt={v} title={v} decoding='async' className='image-item' />
+              <div className="image-item-box" onClick={() => setImage(v.name)}>
+                <img src={v.name} alt={v.name} title={v.name} decoding='async' className='image-item' />
               </div>
               {/* プレビューは不要だと感じたので消去 2021/08/10
               <div className="image-list-menu">

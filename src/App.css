@@ -602,6 +602,25 @@ table {
 .edit-item-link:hover {
     background: #eee;
 }
+
+/* edit-list tag */
+.edit-item-link-tag {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    width: 100%;
+    padding: 10px 5px;
+}
+.edit-item-link-tag:hover {
+    background: #eee;
+}
+.edit-list-tag-title {
+    font-weight: bold;
+}
+.edit-list-tag-number {
+    margin: 0 0 0 10px;
+}
+
 .edit-delete {
     display: flex;
     align-items: center;
@@ -630,8 +649,14 @@ table {
     align-items: center;
     margin: 0 10px
 }
+.content-edit-trash-icon:hover,
 .trash-icon:hover {
    cursor: pointer; 
+}
+.content-edit-trash-icon {
+    display: flex;
+    align-items: center;
+    margin: 0 0 0 auto;
 }
 
 .user-home { /*main*/
@@ -663,7 +688,7 @@ table {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.5);
-    z-index: 1;
+    z-index: 2;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -674,7 +699,7 @@ table {
     height: 90%;
     padding: 10px 20px;
     background: #fff;
-    z-index: 2;
+    z-index: 3;
     overflow-y: scroll;
 }
 .image-selector-button-open {

@@ -1,10 +1,11 @@
 import ky, { Options } from 'ky';
 import { DEFAULT_API_OPTIONS } from './config';
+import { ImageFile } from 'models/image-file'
 
 const getImages = async (
   project?: string,
   options?: Options,
-): Promise<string[]> => {
+): Promise<ImageFile[]> => {
   const mergedOptions = {
     ...DEFAULT_API_OPTIONS,
     ...options,

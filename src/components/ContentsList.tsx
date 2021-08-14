@@ -11,9 +11,9 @@ const ContentsList: FC<{ project: string }> = ({ project }) => {
   const [list, setList] = useState<Content[] | undefined>(undefined);
   const { data } = useQuery(['project-contents'], () => getContentsAll(project));
 
-  useEffect(()=> {
+  useEffect(() => {
     setList(data);
-  },[data])
+  }, [data])
 
   // console.log(param);
   const deleteItem = async (slug: string) => {
@@ -25,36 +25,34 @@ const ContentsList: FC<{ project: string }> = ({ project }) => {
 
   if (list) {
     return (
-      <div className="related-contents">
-        <ul className="item-list">
-          {list.map(v => (
-            v.content.length > 0
-              ?
-              <li key={`p_${v.slug}`} className='edit-list-item'>
-                <Link to={`/local/${project}/${v.slug.trim()}`} className="edit-item-link">
-                  <div className="item-title">{v.title}</div>
-                  <div className="item-dscr">
-                    {v.updated_at ? `${v.updated_at}: ` : ''}
-                    {v.content.slice(0, 80)}
-                  </div>
-                </Link>
-                <div className='delete-button' onClick={() => deleteItem(v.slug)}>
-                  <TrashIcon />
+      <ul className="item-list">
+        {list.map(v => (
+          v.content.length > 0
+            ?
+            <li key={`p_${v.slug}`} className='edit-list-item'>
+              <Link to={`/local/${project}/${v.slug.trim()}`} className="edit-item-link">
+                <div className="item-title">{v.title}</div>
+                <div className="item-dscr">
+                  {v.updated_at ? `${v.updated_at}: ` : ''}
+                  {v.content.slice(0, 80)}
                 </div>
-              </li>
-              : ''
-          ))}
-        </ul>
-      </div>
+              </Link>
+              <div className='delete-button' onClick={() => deleteItem(v.slug)}>
+                <TrashIcon />
+              </div>
+            </li>
+            : ''
+        ))}
+      </ul>
     )
-  } else {
-    return (
-      <div className='info-nocontent'>
-        <p>メモがありません</p>
-        <Link to='/home'>Homeへ戻る</Link>
-      </div>
-    );
   }
+
+  return (
+    <div className='info-nocontent'>
+      <p>メモがありません</p>
+      <Link to='/home'>Homeへ戻る</Link>
+    </div>
+  );
 }
 
 export default ContentsList;

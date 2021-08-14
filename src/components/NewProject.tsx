@@ -16,7 +16,7 @@ const NewProcject: FC = () => {
 
   const hasLowerCase = (str: string) => {
     str = (str == null) ? '' : str;
-    return (/^[a-z0-9_-]+$/.test(str));
+    return (/^[a-zA-z0-9_]+$/.test(str));
   }
 
   const submit = () => {
@@ -43,7 +43,7 @@ const NewProcject: FC = () => {
       <p>新しいプロジェクト（カテゴリー？ ページ？）を作成します。</p>
       <input className='create-project-input' onChange={(e) => setValue(e.target.value)} type='text' />
       <button className='create-project-button' onClick={submit}>Create</button>
-        <p>半角アルファベット小文字と半角数字、-(ハイフン)と_(アンダーバー)が使えます。</p>
+        <p>半角アルファベットと数字、_(アンダーバー)が使えます。</p>
       {NG ? <div className='red'>{projectName}</div> : ''}
     </main>
   );

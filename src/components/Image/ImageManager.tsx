@@ -5,6 +5,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 // import { useQuery } from 'react-query';
 import getImages from 'services/get-images';
 import deleteImage from 'services/delete-image';
+import { ImageFile } from 'models/image-file';
 import Projcets from 'components/UserHome/Projects';
 import ImageUploader from './ImageUploader';
 import ImagePreviewer from './ImagePreviewer';
@@ -12,7 +13,7 @@ import ToastWarning from 'components/ToastWarning';
 
 const ImageManager: FC = () => {
   const [load, setLoad] = useState<boolean>(false);
-  const [data, setData] = useState<string[] | undefined>(undefined);
+  const [data, setData] = useState<ImageFile[] | undefined>(undefined);
   const [flg, setFlg] = useState<boolean>(false);
   const { isLoggedIn } = useContext(AuthContext);
   const [isEmptyProject, setIsEmptyProject] = useState<boolean>(false);
@@ -93,7 +94,7 @@ const ImageManager: FC = () => {
   return <></>
 }
 
-const Images: FC<{ data: string[] | undefined, changeState: (arg: boolean) => void }> = ({ data, changeState }) => {
+const Images: FC<{ data: ImageFile[] | undefined, changeState: (arg: boolean) => void }> = ({ data, changeState }) => {
   const [url, setUrl] = useState<string>('');
   const [isPreview, setIsPreview] = useState(false);
   const [isToast, setIsToast] = useState(false);
@@ -132,11 +133,11 @@ const Images: FC<{ data: string[] | undefined, changeState: (arg: boolean) => vo
                 <img src={v} alt={v} decoding='async' className='image-item' />
               </a>
               */}
-              <div className="image-item-box" onClick={() => openPreview(v)}>
-                <img src={v} alt={v} title={v} decoding='async' className='image-item' />
+              <div className="image-item-box" onClick={() => openPreview(v.name)}>
+                <img src={v.name} alt={v.name} title={v.name} decoding='async' className='image-item' />
               </div>
               <div className="image-list-menu">
-                <div className="image-list-menu-button-delete" onClick={() => openToast(v)}>☓ delete</div>
+                <div className="image-list-menu-button-delete" onClick={() => openToast(v.name)}>☓ delete</div>
               </div>
             </li>
           ))}

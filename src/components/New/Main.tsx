@@ -53,7 +53,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
   }
 
   const setTags = () => {
-    if (refTags && refTags.current) {
+    if (refTags && refTags.current && refTags.current.innerText.length > 0) {
       const tags = refTags.current.innerText.replaceAll(' ', '').split(',');
       setTagsState(tags);
     }

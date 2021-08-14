@@ -1,10 +1,11 @@
 import ky, { Options } from 'ky';
 import { DEFAULT_API_OPTIONS } from './config';
+import { TagNum } from 'models/content';
 
 const getTags = async (
   project: string,
   options?: Options,
-): Promise<string[]> => {
+): Promise<TagNum[]> => {
   const mergedOptions = {
     ...DEFAULT_API_OPTIONS,
     ...options,

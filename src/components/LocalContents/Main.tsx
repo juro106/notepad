@@ -117,9 +117,9 @@ const Main: FC<{
       setIsToast(false);
     }
 
-            // <div className="button-save-box">
-            //   <div role='button' className={isPostable ? 'save_isActive' : 'save_isNotActive'} onClick={update} tabIndex={0}>save</div>
-            // </div>
+    // <div className="button-save-box">
+    //   <div role='button' className={isPostable ? 'save_isActive' : 'save_isNotActive'} onClick={update} tabIndex={0}>save</div>
+    // </div>
     if (data) {
       return (
         <HelmetProvider>
@@ -140,20 +140,23 @@ const Main: FC<{
             >
               {data.title}
             </h1>
-            <div className='content-tags'
-              contentEditable={true}
-              suppressContentEditableWarning={true}
-              spellCheck={false}
-              ref={refTags}
-              data-text="[ Tags ]"
-              onBlur={update}
-            >
-              {data.tags ? data.tags.map((v, k) => (
+            {data.tags && data.tags.length > 0
+              ?
+              <div className='content-tags'
+                contentEditable={true}
+                suppressContentEditableWarning={true}
+                spellCheck={false}
+                ref={refTags}
+                data-text="[ Tags ]"
+                onBlur={update}
+              >
+                {data.tags.map((v, k) => (
                 data.tags !== undefined ?
-                  data.tags.slice(-1)[0] === v ? `${v}` : `${v}, `
-                  : ''
-              )) : ''}
-            </div>
+                data.tags.slice(-1)[0] === v ? `${v}` : `${v}, `
+                : ''
+
+                ))}
+              </div> : '' }
             <div className='content-body'
               contentEditable={true}
               suppressContentEditableWarning={true}
@@ -169,7 +172,7 @@ const Main: FC<{
             <div className='editable-option'>
               <ImageUploader isSetter={true} />
               <ImageSelector />
-              <div role='button' className='trash-icon' onClick={() => setIsToast(true)}>
+              <div role='button' className='content-edit-trash-icon' onClick={() => setIsToast(true)}>
                 <HiOutlineTrash size={26} color={'#f00'} />
               </div>
               <ToastWarning
