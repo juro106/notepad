@@ -13,7 +13,7 @@ import getContentsAll from 'services/get-contents-all';
 import { Content } from 'models/content';
 import Page from './Page';
 
-const Edit: FC = () => {
+const ContentsManager: FC = () => {
   const [data, setData] = useState<Content[] | undefined>(undefined);
   const [flg, setFlg] = useState<boolean>(false);
   const { project } = useContext(ProjectContext);
@@ -56,22 +56,23 @@ const Edit: FC = () => {
     }
   }, []);
 
-    return (
-      <>
-        <Helmet>
-              <title>Edit</title>
-              <meta name='robots' content='noindex nofollow' />
-        </Helmet>
-        <ErrorBoundary key={ebKey.current}>
-          <main>
-            <Suspense fallback={<div className="spinner"></div>}>
-              <h1 id='page-title'>メモを編集</h1>
-              <Page data={data} project={project} changeState={changeState} />
-            </Suspense>
-          </main>
-        </ErrorBoundary>
-      </>
-    );
+  return (
+    <>
+      <Helmet>
+        <title>Edit</title>
+        <meta name='robots' content='noindex nofollow' />
+      </Helmet>
+      <ErrorBoundary key={ebKey.current}>
+        <main>
+          <Suspense fallback={<div className="spinner"></div>}>
+            <h1 id='page-title'>メモを編集</h1>
+            <Page data={data} project={project} changeState={changeState} />
+          </Suspense>
+        </main>
+      </ErrorBoundary>
+    </>
+  );
 }
 
-export default Edit;
+export default ContentsManager;
+

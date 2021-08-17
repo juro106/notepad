@@ -3,10 +3,10 @@ import { Helmet } from 'react-helmet-async';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import getTags from 'services/get-tags';
-import ListSwitcher from 'components/ListSwitcher';
+import ListSwitcher from 'components/Common/ListSwitcher';
 import ErrorBoundary from 'ErrorBoundary';
 
-const Tags: FC = () => {
+const PublicTags: FC = () => {
   const ebKey = useRef(0);
 
   return (
@@ -53,5 +53,5 @@ const ContentsList: FC = () => {
   }
 }
 
-export default Tags;
+export default PublicTags;
 

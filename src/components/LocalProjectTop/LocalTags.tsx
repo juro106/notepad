@@ -5,11 +5,11 @@ import getTags from 'services/get-tags';
 import deleteContent from 'services/delete-content';
 import { TagNum } from 'models/content';
 import { ProjectContext } from 'contexts/projectContext';
-import ListSwitcher from 'components/ListSwitcher';
-import LocalPageOuter from 'components/LocalPageOuter';
+import ListSwitcher from 'components/Common/ListSwitcher';
+import LocalPageOuter from 'components/Local/LocalPageOuter';
 import TrashIcon from 'components/Button/TrashIcon';
 
-const Tags: FC = () => {
+const LocalTags: FC = () => {
   const { project } = useContext(ProjectContext);
 
   return (
@@ -67,5 +67,5 @@ const ContentsList: FC<{ project: string }> = ({ project }) => {
   }
 }
 
-export default Tags;
+export default LocalTags;
 

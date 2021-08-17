@@ -8,8 +8,8 @@ import { ProjectContext } from 'contexts/projectContext';
 import { useQuery } from 'react-query';
 import getImages from 'services/get-images';
 import { useCloseModal } from 'hooks/useCloseModal';
-import Overlay from 'components/Overlay';
-import ModalContents from 'components/ModalContents';
+import Overlay from 'components/Modal/Overlay';
+import ModalContents from 'components/Modal/ModalContents';
 // import ImagePreview from 'components/ImagePreview';
 import { ImImages } from 'react-icons/im'
 import { ImageFile } from 'models/image-file'

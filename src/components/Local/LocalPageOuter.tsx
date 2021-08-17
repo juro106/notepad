@@ -11,7 +11,7 @@ import { Helmet } from 'react-helmet-async';
 import { AuthContext } from 'contexts/authContext';
 import { ProjectContext, useProjectContext } from 'contexts/projectContext';
 import ErrorBoundary from 'ErrorBoundary';
-import TimeOut from 'components/TimeOut';
+import TimeOut from 'components/Local/TimeOut';
 
 // ローカルページ共通部分
 type Props = {
@@ -26,7 +26,7 @@ const LocalPageOuter: FC<Props> = ({ title, children, suspense }) => {
   const { currentUser } = useContext(AuthContext);
   const { project } = useContext(ProjectContext);
   const ctx = useProjectContext();
-  const { projectName } = useParams(); // App.tsx で設定している url :xxxx の部分。ここでは projectName
+  const { projectName } = useParams(); // App.tsx のreact-routerで設定している url ':xxxx' の部分。ここでは projectName
 
   // 直接アクセスした場合、URLのパラメーターからカレントプロジェクトを設定する
   useEffect(() => {

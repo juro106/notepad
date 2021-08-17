@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import Search from 'components/Search';
-import LoginButton from 'components/LoginButton';
+import LoginButton from 'components/Login/LoginButton';
 import { AiFillHome } from 'react-icons/ai';
 
 type NavProps = {

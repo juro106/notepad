@@ -1,8 +1,8 @@
 import { FC, memo, useContext, Suspense } from 'react';
 import { ProjectContext } from 'contexts/projectContext';
-import ContentsList from 'components/ContentsList';
-import ListSwitcher from 'components/ListSwitcher';
-import LocalPageOuter from 'components/LocalPageOuter';
+import ContentsList from './ContentsList';
+import ListSwitcher from 'components/Common/ListSwitcher';
+import LocalPageOuter from 'components/Local/LocalPageOuter';
 
 const LocalProjectTop: FC = memo(() => {
   const { project } = useContext(ProjectContext);

@@ -11,8 +11,8 @@ import getProjects from 'services/get-projects';
 import deleteProject from 'services/delete-project';
 import { useProjectContext } from 'contexts/projectContext';
 import { useCloseModal } from 'hooks/useCloseModal';
-import Overlay from 'components/Overlay';
-import ModalContents from 'components/ModalContents';
+import Overlay from 'components/Modal/Overlay';
+import ModalContents from 'components/Modal/ModalContents';
 
 const ProjectManager: FC = () => {
   return (

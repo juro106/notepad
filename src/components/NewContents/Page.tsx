@@ -11,7 +11,7 @@ import {
 import getRelatedOnly from 'services/get-related-only';
 import { ProjectContext } from 'contexts/projectContext';
 import Main from './Main';
-import Related from 'components/Related';
+import Related from 'components/Local/Related';
 import { RelatedList } from 'models/content';
 
 const Page: FC = memo(() => {

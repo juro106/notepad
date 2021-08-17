@@ -11,7 +11,7 @@ import ImageUploader from 'components/Image/ImageUploader';
 import ImageSelector from 'components/Image/ImageSelector';
 // import ResponseMessage from './ResponseMessage';
 import deleteContent from 'services/delete-content';
-import ToastWarning from 'components/ToastWarning';
+import ToastWarning from 'components/Local/ToastWarning';
 import TrashIcon from 'components/Button/TrashIcon'
 
 const Main: FC<{

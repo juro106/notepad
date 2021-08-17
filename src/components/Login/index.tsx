@@ -1,6 +1,7 @@
 import { FC, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router';
 import { AuthContext } from 'contexts/authContext';
+
 const Login: FC = () => {
 
   const { isLoggedIn } = useContext(AuthContext);

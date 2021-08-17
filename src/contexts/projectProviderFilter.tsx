@@ -8,11 +8,12 @@ const ProjectFilter: FC = ({ children }) => {
   const pathname = useLocation().pathname;
   const pathArray = pathname.split('/');
 
-  if (pathArray[0] === "" || pathArray[1] !== 'local') return <>{children}</>;
-
-  if (pathname === '/local/new-project' || pathname === '/local/home' || pathArray.length > 3) return <>{children}</>;
-
-
+  if (pathArray[0] === ""
+    || pathArray[1] !== 'local'
+    || pathname === '/local/new-project'
+    || pathname === '/local/home'
+    || pathArray.length > 3
+  ) return <>{children}</>;
 
   if (!project) {
     return (

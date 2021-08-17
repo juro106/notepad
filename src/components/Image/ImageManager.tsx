@@ -7,7 +7,7 @@ import deleteImage from 'services/delete-image';
 import { ImageFile } from 'models/image-file';
 import ImageUploader from './ImageUploader';
 import ImagePreviewer from './ImagePreviewer';
-import ToastWarning from 'components/ToastWarning';
+import ToastWarning from 'components/Local/ToastWarning';
 
 const ImageManager: FC = () => {
   const [data, setData] = useState<ImageFile[] | undefined>(undefined);

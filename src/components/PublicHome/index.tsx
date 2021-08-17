@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import getContentsAll from 'services/get-contents-all';
 import { useQuery } from 'react-query';
 import ErrorBoundary from 'ErrorBoundary';
-import ListSwitcher from 'components/ListSwitcher';
+import ListSwitcher from 'components/Common/ListSwitcher';
 
 const PublicHome: FC = () => {
   const ebKey = useRef(0);

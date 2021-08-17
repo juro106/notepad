@@ -1,7 +1,7 @@
 import { FC, useState, useCallback, useRef, Suspense } from 'react';
 import { Content } from 'models/content';
 import getContentsAll from 'services/get-contents-all';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ErrorBoundary from 'ErrorBoundary';
 import { FiSearch } from 'react-icons/fi';
 import { AiFillCloseCircle } from 'react-icons/ai';
@@ -23,15 +23,12 @@ const Search: FC<{ project: string, isLoggedIn: boolean }> = ({ project, isLogge
   // 検索結果に使う resource
   const [resource, setResource] = useState<Content[] | undefined>(undefined);
 
-  const navigate = useNavigate();
-
   const reset = useCallback((path?: string) => {
-    path && navigate(path);
     setQuery('');
     setResource(undefined);
     setData(undefined);
     setFocus(false);
-  }, [navigate, setQuery, setFocus, setResource, setData]);
+  }, [setQuery, setFocus, setResource, setData]);
   // },[navigate]);
   const resetf = useCallback(() => {
     if (query === '') { // 0文字だったらフォーカスを外したときに検索をキャンセル

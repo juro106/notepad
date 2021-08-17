@@ -2,8 +2,8 @@ import { FC, useContext, Suspense } from 'react';
 import { AuthContext } from 'contexts/authContext';
 import { ProjectContext } from 'contexts/projectContext';
 import ProjectFilter from 'contexts/projectProviderFilter';
-import Nav from 'components/Nav';
-import Header from 'components/Header';
+import Nav from './Nav';
+import Header from './Header';
 
 const Layout: FC = ({ children }) => {
   const { isLoggedIn } = useContext(AuthContext);

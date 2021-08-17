@@ -10,9 +10,9 @@ import ErrorBoundary from 'ErrorBoundary';
 import { AuthContext } from 'contexts/authContext';
 import { ProjectContext } from 'contexts/projectContext';
 import ProjectSelector from 'components/Project/ProjectSelector';
-import Menu from 'components/Menu';
+import Menu from './Menu';
 
-const UserHome: FC = () => {
+const LocalHome: FC = () => {
   const { loading, isLoggedIn, isLoaded } = useContext(AuthContext);
   console.log("loading: ", loading);
   console.log("isLoaded: ", isLoaded);
@@ -68,4 +68,4 @@ const Page: FC = () => {
   return <div className='spinner'></div>;
 }
 
-export default UserHome;
+export default LocalHome;

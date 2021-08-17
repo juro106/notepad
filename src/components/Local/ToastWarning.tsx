@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useCloseModal } from 'hooks/useCloseModal';
-import Overlay from 'components/Overlay';
-import ModalContents from 'components/ModalContents';
+import Overlay from 'components/Modal/Overlay';
+import ModalContents from 'components/Modal/ModalContents';
 import { Message } from 'models/message';
 import { useNavigate } from 'react-router-dom';
 
