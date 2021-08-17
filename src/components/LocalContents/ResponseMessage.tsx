@@ -1,11 +1,12 @@
 import { FC } from 'react';
 import { Message } from 'models/message';
 
-const ResponseMessage: FC<{ data: Message | undefined }> = ({ data }) => {
+const ResponseMessage: FC<{ data: Message }> = ({ data }) => {
+  const { updated_at } = data;
 
   return (
     <div className="update-info">
-      {data && <span className="message">last update: {data.updated_at}</span>}
+      {updated_at && <span className="message">🆙:{updated_at.slice(0, 19)}</span>}
     </div>
   );
 

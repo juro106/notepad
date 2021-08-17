@@ -1,11 +1,11 @@
 import { FC } from 'react';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { Content } from 'models/content';
 
 const Main: FC<{ data: Content | undefined, }> = ({ data }) => {
   if (data)
     return (
-      <HelmetProvider>
+      <>
         <Helmet>
           <title>{data.title}</title>
           <link rel="canonical" href={`${process.env.REACT_APP_BASE_URL}/${data.slug}`} />
@@ -15,7 +15,7 @@ const Main: FC<{ data: Content | undefined, }> = ({ data }) => {
           {data.tags && data.tags.length > 0
             ?
             <div className='content-tags'>
-              {data.tags.map((v, k) => (
+              {data.tags.map(v => (
                 data.tags !== undefined ?
                   data.tags.slice(-1)[0] === v ? `${v}` : `${v}, `
                   : ''
@@ -25,7 +25,7 @@ const Main: FC<{ data: Content | undefined, }> = ({ data }) => {
           {data.content && data.content.length > 0 ? <div className='content-body'>{data.content}</div> : ''}
           {data.image && <img id='content-img' src={data.image} alt={data.image} decoding='async' />}
         </main>
-      </HelmetProvider>
+      </>
     )
 
   return <></>

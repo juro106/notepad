@@ -1,15 +1,16 @@
 import { FC, useRef, Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import getContentsAll from 'services/get-contents-all';
 import { useQuery } from 'react-query';
 import ErrorBoundary from 'ErrorBoundary';
+import ListSwitcher from 'components/ListSwitcher';
 
 const PublicHome: FC = () => {
   const ebKey = useRef(0);
 
   return (
-    <HelmetProvider>
+    <>
       <Helmet>
         <title>Sasa-Box</title>
         <link rel="canonical" href={`${process.env.REACT_APP_BASE_URL}/`} />
@@ -17,12 +18,13 @@ const PublicHome: FC = () => {
       <ErrorBoundary key={ebKey.current}>
         <Suspense fallback={<div className="spinner"></div>}>
           <main>
+            <ListSwitcher production={true} />
             <h1>一覧</h1>
             <ContentsList />
           </main>
         </Suspense>
       </ErrorBoundary>
-    </HelmetProvider>
+    </>
   );
 }
 

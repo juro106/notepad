@@ -18,7 +18,7 @@ const PublicHome: FC = () => {
         <Suspense fallback={<div className="spinner"></div>}>
           <main>
             <div className="related-contents">
-              <ContentsList uid={user} />
+              <ContentsList />
             </div>
           </main>
         </Suspense>
@@ -29,8 +29,9 @@ const PublicHome: FC = () => {
   }
 }
 
-const ContentsList: FC<{ uid: string }> = ({ uid }) => {
-  const { data } = useQuery([uid], () => getContentsAll( uid ));
+// const ContentsList: FC<{ uid: string }> = ({ uid }) => {
+const ContentsList: FC = () => {
+  const { data } = useQuery(['publicHome'], () => getContentsAll('public', true));
 
   if (data && data.length > 0) {
     return (

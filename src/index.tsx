@@ -3,10 +3,9 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { AuthProvider } from 'contexts/authContext';
-import { ProjectProvider } from 'contexts/projectContext';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { HelmetProvider } from 'react-helmet-async';
 
 // redux
 // import { Provider } from 'react-redux';
@@ -24,23 +23,21 @@ const queryClient = new QueryClient({
   }
 });
 
+// 並列モード(Concurrent Mode)を使用する
 const rootdiv = document.getElementById('root') as HTMLElement;
-
 const root = ReactDOM.createRoot(rootdiv);
 
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Router>
-        <AuthProvider>
-          <ProjectProvider>
-              <App />
-              {process.env.NODE_ENV === 'development' && (
-                <ReactQueryDevtools initialIsOpen={false} />
-              )}
-          </ProjectProvider>
-        </AuthProvider>
-      </Router>
+      <HelmetProvider>
+        <Router>
+          <App />
+          {process.env.NODE_ENV === 'development' && (
+            <ReactQueryDevtools initialIsOpen={false} />
+          )}
+        </Router>
+      </HelmetProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );

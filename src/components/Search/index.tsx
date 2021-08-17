@@ -1,6 +1,4 @@
-import { FC, useState, useEffect, useContext, Suspense, useRef } from 'react';
-import { ProjectContext } from 'contexts/projectContext';
-import { useQuery } from 'react-query';
+import { FC, useState, useCallback, useRef, Suspense } from 'react';
 import { Content } from 'models/content';
 import getContentsAll from 'services/get-contents-all';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,164 +6,161 @@ import ErrorBoundary from 'ErrorBoundary';
 import { FiSearch } from 'react-icons/fi';
 import { AiFillCloseCircle } from 'react-icons/ai';
 
+/* 
+ * 暗い: (focus: true)
+ * 暗い ＆ 結果なし: (focus: true, resource: false)
+ * 暗い ＆ 結果あり: (focus: true, resource: true)
+ * ResultsOuter: foucus(self), resetFunc(for ChildComponent)
+ * ResultsInner: resetFunc,
+ */
+
 const Search: FC<{ project: string, isLoggedIn: boolean }> = ({ project, isLoggedIn }) => {
-  // 入力キーワード
-  const [keyword, setKeyword] = useState<string>('');
-  // 検索するかどうか
-  const [focus, setFocus] = useState<boolean>(false);
   const ebKey = useRef(0);
+  const [query, setQuery] = useState<string>('');
+  const [focus, setFocus] = useState<boolean>(false);
+  // 元になるデータ
+  const [data, setData] = useState<Content[] | undefined>(undefined);
+  // 検索結果に使う resource
+  const [resource, setResource] = useState<Content[] | undefined>(undefined);
 
   const navigate = useNavigate();
 
-  const reset = (path?: string) => {
+  const reset = useCallback((path?: string) => {
     path && navigate(path);
+    setQuery('');
+    setResource(undefined);
+    setData(undefined);
     setFocus(false);
-    setKeyword('');
-    // setFocus(false);
-  }
-
-  const KeyBinding = (e: React.KeyboardEvent) => {
-    if (e.code === 'Esc') {
-      reset();
+  }, [navigate, setQuery, setFocus, setResource, setData]);
+  // },[navigate]);
+  const resetf = useCallback(() => {
+    if (query === '') { // 0文字だったらフォーカスを外したときに検索をキャンセル
+      setFocus(false);
+      setResource(undefined);
+      setData(undefined);
     }
-  }
+  }, [query, setFocus]);
 
-  if (project) {
-    return (
-      <>
-        <div id="search-input-outer" tabIndex={0}>
-          <input
-            id='search-input'
-            onFocus={() => setFocus(true)}
-            onKeyDown={(e) => KeyBinding(e)}
-            type='text' value={keyword}
-            onChange={e => setKeyword(e.target.value)}
-            placeholder='Search...'
-          />
-          <FiSearch size={28} color={'#888'} />
-        </div>
-        <ErrorBoundary key={`eb_1_${ebKey.current}`}>
-          <Suspense fallback={<div className="spinner"></div>}>
-            <SearchDataFetch project={project} focus={focus} keyword={keyword} reset={reset} isLoggedIn={isLoggedIn} />
-          </Suspense>
-        </ErrorBoundary>
-      </>
-    );
-  }
+  const fetchData = useCallback(async () => {
+    if (!data) {
+      // console.log('fetch!!!');
+      const res = await getContentsAll(project, !isLoggedIn);
+      setData(res);
+    }
+  }, [data, project, isLoggedIn, setData]);
 
-  return <></>
+  const searchQuery = useCallback((query: string, data: Content[]) => {
+    const formattedQuery = query.trim().toLowerCase().match(/[^\s]+/g);
+    const isTrue = (arg: string[] | undefined) => {
+      if (arg && arg.length > 0) return true;
+    }
+
+    const filteredList = data.filter(v =>
+      formattedQuery && formattedQuery.every((kw) => (
+        isTrue((v.tags && v.tags.filter(z => z.toLowerCase().indexOf(kw) !== -1)))
+        || v.title.toLowerCase().indexOf(kw) !== -1
+        || v.content.toLowerCase().indexOf(kw) !== -1
+      )));
+
+    setResource(filteredList);
+  }, [setResource]);
+
+  const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
+    !data && fetchData();
+    setFocus(true);
+  }, [data, fetchData, setFocus]);
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
+    data && searchQuery(value, data);
+  }, [data, setQuery, searchQuery]);
+
+  return (
+    <>
+      <div id="search-input-outer" tabIndex={0}>
+        <input
+          id='search-input'
+          type='text'
+          value={query}
+          onFocus={(e) => handleFocus(e)}
+          onBlur={() => resetf()}
+          onChange={(e) => handleChange(e)}
+          placeholder='Search...'
+        />
+        <FiSearch size={28} color={'#888'} />
+      </div>
+      <ErrorBoundary key={`eb_1_${ebKey.current}`}>
+        <Suspense fallback={<></>}>
+          {focus &&
+            <ResultsOuter
+              focus={focus}
+              data={resource}
+              project={project}
+              query={query}
+              reset={reset}
+              isLoggedIn={isLoggedIn}
+            />}
+        </Suspense>
+      </ErrorBoundary>
+    </>
+  );
 }
 
-const SearchDataFetch: FC<{ project: string; focus: boolean; keyword: string; reset: (arg?: string) => void, isLoggedIn: boolean }> = ({ project, focus, keyword, reset, isLoggedIn }) => {
-  // const ctx = useProjectContext();
-  const pub = !isLoggedIn;
-  const { data } = useQuery(['search'], () => getContentsAll(project, pub))
-
-  if (data && focus) {
-    return (
-      <SearchData data={data} focus={focus} keyword={keyword} reset={reset} />
-    );
-  }
-
-  return <></>
+type ResultsProps = {
+  focus?: boolean;
+  data: Content[] | undefined;
+  project: string;
+  query: string;
+  reset: (arg?: string) => void;
+  isLoggedIn: boolean;
 }
 
-const SearchData: FC<{ data: Content[]; focus: boolean; keyword: string; reset: (arg?: string) => void }> = ({ data, focus, keyword, reset }) => {
-  // リストを表示するかどうか
-  const [showList, setShowList] = useState<boolean>(false);
-  // フィルター
-  const [filteredData, setFilteredData] = useState<Content[]>(data);
-
-  // keywordが変わる度に検索してフィルターにかける
-  useEffect(() => {
-    // console.log('useEffect!!');
-    let isMounted = true;
-    if (isMounted) {
-
-      if (!focus) {
-        setFilteredData(filteredData);
-        reset();
-        return;
-      }
-
-      // if (keyword === '') {
-      //   setFilteredData(data);
-      // }
-
-      const searchKeywords = keyword.trim().toLowerCase().match(/[^\s]+/g);
-      const isTrue = (arg: string[] | undefined) => {
-        if (arg && arg.length > 0) return true;
-      }
-
-      const filteredList = data.filter(v =>
-        searchKeywords && searchKeywords.every((kw) => (
-          isTrue((v.tags && v.tags.filter(z => z.toLowerCase().indexOf(kw) !== -1)))
-          || v.title.toLowerCase().indexOf(kw) !== -1
-          || v.content.toLowerCase().indexOf(kw) !== -1
-        )))
-      setFilteredData(filteredList);
-
-      if (filteredData.length > 0) {
-        setShowList(true);
-      }
-    }
-    return () => {
-      isMounted = false;
-    }
-    // setShowList(false);
-  }, [reset, focus, keyword, data, filteredData])
-
-  const closeResults = () => {
-    setShowList(false);
-  }
-
-  // フィルターをかけた後の加工が重要。
-  // そのまま表示させるだけだと不十分、というか寂しい
-  // console.log('keyword -->', keyword);
+const ResultsOuter: FC<ResultsProps> = ({ focus, data, project, query, reset, isLoggedIn }) => {
   if (focus) {
     return (
       <div id='modal-search-results-outer' onClick={() => reset()}>
-        {filteredData.length > 0 && <Results keyword={keyword} data={filteredData} show={showList} closeResults={closeResults} reset={reset} />}
+        {data &&
+          <ResultsInner
+            data={data}
+            project={project}
+            query={query}
+            reset={reset}
+            isLoggedIn={isLoggedIn}
+          />}
       </div>
     );
   }
-
   return <></>;
 }
 
-
-// <Link className='tag-link' to={`/local/${project}/${tag}`}>{tag}</Link>
-
-const Results: FC<{ keyword: string, data: Content[] | undefined, show: boolean, closeResults: () => void; reset: (arg?: string) => void }> = ({ keyword, data, show, closeResults, reset }) => {
-  const { project } = useContext(ProjectContext);
-  // onClick={() => goPage(`/local/${project}/${v.slug}`)}
-  // console.log('results', data);
-  if (data && show) {
+const ResultsInner: FC<ResultsProps> = ({ data, project, query, reset, isLoggedIn }) => {
+  if (data) {
     return (
       <div id='modal-search-results-inner'>
-      <header className="search-results-header">
-        <h2>Search results {data.length}</h2>
-        <div className="button-close-search-results">
-        <AiFillCloseCircle size={30} color={'#f00'} />
-        </div>
-      </header>
+        <header className="search-results-header">
+          <h2>Search results {data.length}</h2>
+          <div className="button-close-search-results">
+            <AiFillCloseCircle size={30} color={'#f00'} />
+          </div>
+        </header>
         <ul className='item-list'>
           {data.map((v, key) => (
             <li className="results-item" key={`results_${key}`}>
               <Link
                 className='item-link'
-                to={`/local/${project}/${v.slug}`}
-                onClick={() => reset(`/local/${project}/${v.slug}`)}
+                to={isLoggedIn ? `/local/${project}/${v.slug}` : `/${v.slug}`}
+                onClick={() => reset()}
               >
-                <div className='item-title'><MatchTitle keyword={keyword} title={v.title} /></div>
+                <div className='item-title'><MatchFunc query={query} str={v.title} /></div>
                 {v.tags && v.tags.length > 0 ?
                   <ul className="tag-list">
                     {v.tags.map((tag, tkey) => (
-                      <li key={`tag_${tkey}`} className="tag-item"><MatchTag keyword={keyword} tag={tag} /></li>
+                      <li key={`tag_${tkey}`} className="tag-item"><MatchFunc query={query} str={tag} /></li>
                     ))}
                   </ul>
                   : ''}
-                <div className='item-dscr'><MatchContent keyword={keyword} content={v.content} /></div>
+                <div className='item-dscr'><MatchContent query={query} str={v.content} /></div>
               </Link>
             </li>
           ))}
@@ -177,52 +172,27 @@ const Results: FC<{ keyword: string, data: Content[] | undefined, show: boolean,
   return <></>;
 }
 
-const MatchTitle: FC<{ keyword: string, title: string }> = ({ keyword, title }) => {
-  const newItem = title.replace(keyword, `:${keyword}:`);
-  const textArray = newItem.split(':');
 
-  return (
-    <>
-      {textArray.map((str, key) => {
-        if (str.toLowerCase() === keyword.toLowerCase()) {
-          return <span key={`match_title_${key}`} className='match'>{str}</span>;
-        }
-        return str;
-      })}
-    </>
-  );
+const MatchFunc: FC<{ query: string, str: string }> = ({ query, str }) => {
+  const tmpArray = str.split(query);
+
+  if (tmpArray.length > 1) {
+    return <>{tmpArray[0]}<span className='match'>{query}</span>{tmpArray[1]}</>;
+  }
+
+  return <>{str}</>;
 }
 
-const MatchTag: FC<{ keyword: string, tag: string }> = ({ keyword, tag }) => {
-  const newItem = tag.replace(keyword, `:${keyword}:`);
-  const textArray = newItem.split(':');
+const MatchContent: FC<{ query: string, str: string }> = ({ query, str }) => {
+  const tmpArray = str.split(query);
+  const before = tmpArray[0].slice(-30);
+  const after = tmpArray.slice(1).join(query).slice(0, 100);
 
-  return (
-    <>
-      {textArray.map((str, key) => {
-        if (str.toLowerCase() === keyword.toLowerCase()) {
-          return <span key={`match_tag_${key}`} className='match'>{str}</span>;
-        }
-        return str;
-      })}
-    </>
-  );
-}
+  if (tmpArray.length > 1) {
+    return <>{before}<span className='match'>{query}</span>{after}</>;
+  }
 
-const MatchContent: FC<{ keyword: string, content: string }> = ({ keyword, content }) => {
-  const newItem = content.replace(keyword, `:${keyword}:`);
-  const textArray = newItem.split(':');
-
-  return (
-    <>
-      {textArray.map((str, key) => {
-        if (str.toLowerCase() === keyword.toLowerCase()) {
-          return <span key={`match_content_${key}`} className='match'>{str}</span>;
-        }
-        return str;
-      })}
-    </>
-  );
+  return <>{str.slice(0, 100)}</>;
 }
 
 export default Search;

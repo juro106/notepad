@@ -1,44 +1,33 @@
 import { FC, useContext, useState, useEffect, Suspense } from 'react';
-import { AuthContext } from 'contexts/authContext';
 import { ProjectContext } from 'contexts/projectContext';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 // import { useQuery } from 'react-query';
 import getImages from 'services/get-images';
 import deleteImage from 'services/delete-image';
 import { ImageFile } from 'models/image-file';
-import Projcets from 'components/UserHome/Projects';
 import ImageUploader from './ImageUploader';
 import ImagePreviewer from './ImagePreviewer';
 import ToastWarning from 'components/ToastWarning';
 
 const ImageManager: FC = () => {
-  const [load, setLoad] = useState<boolean>(false);
   const [data, setData] = useState<ImageFile[] | undefined>(undefined);
   const [flg, setFlg] = useState<boolean>(false);
-  const { isLoggedIn } = useContext(AuthContext);
-  const [isEmptyProject, setIsEmptyProject] = useState<boolean>(false);
   const { project } = useContext(ProjectContext)
   // const { data } = useQuery(['images'], () => getImages(project));
 
   const changeState = (arg: boolean) => {
     setFlg(arg);
-    setIsEmptyProject(false);
   }
 
   // 初回
   useEffect(() => {
     const fetch = async () => {
-      if (project !== '') {
-        const res = await getImages(project);
-        setData(res);
-      } else {
-        setIsEmptyProject(true)
-      }
+      const res = await getImages(project);
+      setData(res);
     }
     fetch();
-    setLoad(true);
     window.scrollTo(0, 0);
-  }, [project, isEmptyProject])
+  }, [project])
 
 
   // 2回目移行（消去して変化があったとき）
@@ -58,40 +47,24 @@ const ImageManager: FC = () => {
   }, [flg, project])
 
 
-  if (isLoggedIn) {
-    return (
-      <HelmetProvider>
-        <Helmet>
-          {load &&
-            <>
-              <title>Image Manager</title>
-              <meta name='robots' content='noindex nofollow' />
-            </>
-          }
-        </Helmet>
-        {isEmptyProject
-          ?
-          <Suspense fallback={<div className="spinner"></div>}>
-            <div className='info'><p className='red'>プロジェクト選択してください</p></div>
-            <Projcets refer={'image-manager'} changeState={changeState} />
-          </Suspense>
-          :
-          <Suspense fallback={<div className="spinner"></div>}>
-            <div id="image-manager-wrapper">
-              <main id='image-manager-inner'>
-                <h1 id='page-title'>画像を管理</h1>
-                <ImageUploader changeState={changeState} />
-                <p>画像クリックで原寸大表示</p>
-                <Images data={data} changeState={changeState} />
-              </main>
-            </div>
-          </Suspense>
-        }
-      </HelmetProvider>
-    );
-  }
-
-  return <></>
+  return (
+    <>
+      <Helmet>
+        <title>Image Manager</title>
+        <meta name='robots' content='noindex nofollow' />
+      </Helmet>
+      <Suspense fallback={<div className="spinner"></div>}>
+        <div id="image-manager-wrapper">
+          <main id='image-manager-inner'>
+            <h1 id='page-title'>画像を管理</h1>
+            <ImageUploader changeState={changeState} />
+            <p>画像クリックで原寸大表示</p>
+            <Images data={data} changeState={changeState} />
+          </main>
+        </div>
+      </Suspense>
+    </>
+  );
 }
 
 const Images: FC<{ data: ImageFile[] | undefined, changeState: (arg: boolean) => void }> = ({ data, changeState }) => {

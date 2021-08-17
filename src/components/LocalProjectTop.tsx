@@ -1,10 +1,10 @@
-import { FC, useContext } from 'react';
+import { FC, memo, useContext, Suspense } from 'react';
 import { ProjectContext } from 'contexts/projectContext';
 import ContentsList from 'components/ContentsList';
 import ListSwitcher from 'components/ListSwitcher';
 import LocalPageOuter from 'components/LocalPageOuter';
 
-const LocalProjectTop: FC = () => {
+const LocalProjectTop: FC = memo(() => {
   const { project } = useContext(ProjectContext);
 
   return (
@@ -12,11 +12,13 @@ const LocalProjectTop: FC = () => {
       <main>
         <ListSwitcher />
         <h1>コンテンツ一覧</h1>
-        <ContentsList project={project} />
+        <Suspense fallback={<div className="spinner"></div>}>
+          <ContentsList project={project} />
+        </Suspense>
       </main>
     </LocalPageOuter>
   );
-}
+});
 
 export default LocalProjectTop;
 

@@ -1,85 +1,63 @@
 import {
   FC,
+  memo,
   useState,
   useEffect,
+  useCallback,
   Suspense,
   SuspenseList
 } from 'react';
-import { ImgSelectProvider } from 'contexts/imgSelectContext';
 import { useQuery } from 'react-query';
 import getContent from 'services/get-content';
-// import postContent from 'services/post-content';
 import getRelated from 'services/get-related';
+import getRelatedOnly from 'services/get-related-only';
+import { RelatedList } from 'models/content';
 import Main from './Main';
 import Related from './Related';
-// import ResponseMessage from './ResponseMessage';
-import {
-  // Content,
-  RelatedList
-} from 'models/content';
-// import { Message } from 'models/message';
-// import { useForceUpdate } from 'hooks/useForceUpdate';
 
-const Page: FC<{ slug: string | undefined, project: string }> = ({ slug, project }) => {
-  const [flg, setFlg] = useState<boolean>(false);
+const Page: FC<{ slug: string, project: string }> = memo(({ slug, project }) => {
+  const [tags, setTags] = useState<string[] | undefined>(undefined);
   const [error, setError] = useState<Error>();
-  // const [d1, setD1] = useState<Content | undefined>(undefined);
-  const [relatedData, setRelatedData] = useState<RelatedList | undefined>(undefined);
-  // const [msg, setMsg] = useState<Message | undefined>(undefined);
+  const [tagsData, setTagsData] = useState<RelatedList | undefined>(undefined);
 
-  const changeState = (arg: boolean) => {
-    setFlg(arg);
-  }
-  // console.log("flg: ", flg);
-
-  // const setResMsg = (arg: Message) => {
-  //   setMsg(arg);
-  // }
-  //
-  // useEffect(() => {
-  //   return () => setMsg(undefined);
-  // }, [slug]);
+  const setTagsState = useCallback((arg: string[]) => {
+    setTags(arg);
+  }, [setTags]);
 
   useEffect(() => {
     let abortCtrl = new AbortController();
     const fetch = async () => {
       try {
-        const response = await getRelated(project, slug);
-        setRelatedData(response);
+        const response = tags && await getRelatedOnly({ project, tags });
+        setTagsData(response);
       } catch (e) {
         if (e.name !== 'AbortError') setError(e)
       }
     }
-    if (slug || flg) {
+    if (tags) {
       fetch();
     }
     return () => {
-      setFlg(false);
       abortCtrl.abort();
     }
-  }, [flg, slug, project, setRelatedData]);
+  }, [project, tags, setTagsData]);
 
   const { data: mainData } = useQuery(['page', slug], () => getContent(project, slug));
-  // const { data: d2 } = useQuery(['related', slug], () => getRelated(slug));
+  const { data: relatedData } = useQuery(['pre-tags', slug], () => getRelated(project, slug));
 
   if (error) return <div>{error.toString()}</div>
 
   return (
     <SuspenseList>
       <Suspense fallback={<div className="spinner"></div>}>
-        <ImgSelectProvider>
-          <Main data={mainData} changeState={changeState} />
-        </ImgSelectProvider>
+        <Main data={mainData} setTagsState={setTagsState} />
       </Suspense>
       <Suspense fallback={<div className="spinner"></div>}>
-        <Related data={relatedData} changeState={changeState} />
+        <Related data={tags ? tagsData : relatedData} />
       </Suspense>
     </SuspenseList>
   );
-}
+});
 
 export default Page;
 
-      // <Suspense fallback={<div className="spinner"></div>}>
-      //   {msg && <ResponseMessage data={msg} />}
-      // </Suspense>

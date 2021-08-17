@@ -17,14 +17,14 @@ const LoginButton: FC = () => {
   const login = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
-    navigate('/home', {state: {loginflg: true}})
+    navigate('/local/home', {state: {loginflg: true}})
   }
   const logout = async () => {
     firebase.auth().signOut();
     const res = await Logout();
     console.log(res);
     setUser(null);
-    navigate('/home', {state: {loginflg: false}})
+    navigate('/local/home', {state: {loginflg: false}})
   }
   return (
     <>

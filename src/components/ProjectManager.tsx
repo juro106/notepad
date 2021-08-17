@@ -124,10 +124,12 @@ const ToastWarning: FC<{
   toastClose,
 }) => {
     const { elementRef, closeModal } = useCloseModal(toastClose);
+    const ctx = useProjectContext();
 
     const handleDelete = async (arg: string) => {
       const res = await deleteProject(arg);
       console.log(res);
+      ctx.setCurrentProject('');
       toastClose();
       changeState(true); // 処理が終わったら再描写させる
     }

@@ -40,7 +40,7 @@ const ToastWarning: FC<{
       console.log(res);
       closeToast();
       changeState && changeState(true); // 処理が終わったら再描写させる
-      mode === 'content' && navigate('/edit') 
+      mode === 'content' && navigate(`/local/${project}/`) 
     }
 
     if (isToast) {

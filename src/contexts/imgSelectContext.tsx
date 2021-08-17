@@ -1,4 +1,4 @@
-import { FC, createContext, useState, useContext, useCallback } from 'react';
+import { FC, memo, createContext, useState, useContext, useCallback } from 'react';
 // import { Content } from 'models/content';
 
 type ImgSelectProps = {
@@ -39,11 +39,11 @@ export const useImgSelector = (): ImgSelectProps => {
   }
 }
 
-const ImgSelectProvider: FC = ({ children }) => {
+const ImgSelectProvider: FC = memo(({ children }) => {
   const ctx = useImgSelector();
   // 下層コンポーネントをラップする
   return <ImgSelectContext.Provider value={ctx}>{children}</ImgSelectContext.Provider>;
-}
+});
 
 export { ImgSelectContext, ImgSelectProvider }; 
 

@@ -4,7 +4,7 @@ import { Content, isContentsList } from 'models/content';
 
 const getContentsAll = async (
   project?: string,
-  pub?: boolean,
+  pub?: boolean, // public or local 他のユーザーのデータ閲覧問題があるので分けている。
   options?: Options,
 ): Promise<Content[]> => {
   const mergedOptions = {

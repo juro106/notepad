@@ -32,10 +32,9 @@ const AuthProvider: FC = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [loading, setLoading] = useState<string>('start');
-  // const navigate = useNavigate();
 
   useEffect(() => {
-    // ログイン状態が変化すると firebase の auth メソッドを呼び出す
+    // ログイン状態が変化したときに firebase の auth メソッドを呼び出す
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         setCurrentUser(user);
@@ -65,6 +64,8 @@ const AuthProvider: FC = ({ children }) => {
     // }, [currentUser, navigate]);
   }, [currentUser]);
 
+  // if (!isLoaded) return <div className='spinner'></div>;  // ユーザー選択が終わるまでは下層をマウントしない
+
   // 下層コンポーネントをラップする
   return <AuthContext.Provider value={{
     currentUser: currentUser,
@@ -77,3 +78,4 @@ const AuthProvider: FC = ({ children }) => {
 }
 
 export { AuthContext, AuthProvider };
+

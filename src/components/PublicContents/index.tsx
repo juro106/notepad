@@ -15,7 +15,7 @@ const MainContents: FC = () => {
 
   return (
     <ErrorBoundary key={`eb_1_${ebKey.current}`}>
-      <Suspense fallback={<p>...Loading</p>}>
+      <Suspense fallback={<div className='spinner'></div>}>
         <Page slug={slug} />
       </Suspense>
     </ErrorBoundary>

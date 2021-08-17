@@ -1,10 +1,13 @@
 import {
   FC,
+  memo,
+  useContext,
   Suspense,
 } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router';
 import { useQuery } from 'react-query';
+import { ProjectContext } from 'contexts/projectContext';
 import getProjects from 'services/get-projects';
 import { useProjectContext } from 'contexts/projectContext';
 
@@ -14,22 +17,23 @@ type Props = {
   changeState?: (arg: boolean) => void;
 }
 
-const Projects: FC<Props> = ({ refer, changeState }) => {
-  const { data } = useQuery(['projects'], () => getProjects());
+const ProjectSelector: FC<Props> = memo(({ refer, changeState }) => {
 
   return (
     <div className='projects-block'>
-      <h2 className='menu-heading'>あなたのプロジェクト一覧</h2>
       <Suspense fallback={<div className="spinner"></div>}>
-        <List data={data} refer={refer} changeState={changeState} />
+        <ProjectList refer={refer} changeState={changeState} />
       </Suspense>
     </div>
   );
-}
+});
 
-const List: FC<Props> = ({ data, refer, changeState }) => {
+const ProjectList: FC<Props> = memo(({refer, changeState }) => {
   const ctx = useProjectContext();
   const navigate = useNavigate();
+  const { project } = useContext(ProjectContext)
+
+  const { data } = useQuery(['projects'], () => getProjects());
 
   const handleClick = (arg: string) => {
     ctx.setCurrentProject(arg); // Context(現在のProject)の値を更新
@@ -42,22 +46,28 @@ const List: FC<Props> = ({ data, refer, changeState }) => {
       <ul className='project-list'>
         {data.map((v, k) => (
           <li className='project-item' onClick={() => handleClick(v)} key={k}>
-            {refer
-              ? <Link className='project-link' to={`/${refer}`}>{v}</Link>
-              : <Link className='project-link' to={`/local/${v}/`}>{v}</Link>
-            }
+            <Link
+              className={project === v ? 'project-link-current' : 'project-link'}
+              to={refer ? `/${refer}` : `/local/${v}/`}
+            >
+              {v}
+            </Link>
           </li>
         ))}
+        <li className='menu-sub-item'>
+          <Link className='menu-sub-link' to='/local/new-project'>＋ 新規プロジェクト作成</Link>
+        </li>
       </ul>
     );
   }
+
   return (
     <div>
       <p>プロジェクトがありません。</p>
-      <Link className='menu-sub-link' to='/newproject'>＋ 新規プロジェクト作成</Link>
+      <Link className='menu-sub-link' to='/local/new-project'>＋ 新規プロジェクト作成</Link>
     </div>
   );
-}
+});
 
-export default Projects;
+export default ProjectSelector;
 

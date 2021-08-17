@@ -4,6 +4,7 @@ import { TagNum } from 'models/content';
 
 const getTags = async (
   project: string,
+  pub?: boolean,
   options?: Options,
 ): Promise<TagNum[]> => {
   const mergedOptions = {
@@ -12,7 +13,9 @@ const getTags = async (
   }
   // console.log(data)
   const response = await ky.get(
-    `${process.env.REACT_APP_API_URL}/tags/${project}/`,
+    pub
+    ? `${process.env.REACT_APP_API_URL}/public/tags-all`
+    : `${process.env.REACT_APP_API_URL}/tags/${project}/`,
     mergedOptions,
   );
 

@@ -7,10 +7,8 @@ import { ProjectContext } from 'contexts/projectContext';
 // const Related: FC<{data: Content[] | undefined }> = ({ data }) => {
 const Related: FC<{
   data: RelatedList | undefined,
-  changeState: (flg: boolean) => void,
 }> = ({
   data,
-  changeState,
 }) => {
   if (data && data.length > 0) {
     return (
@@ -60,7 +58,7 @@ const Item: FC<{ data: Content[] }> = ({ data }) => {
             <li key={`li_${v.title}`} className='item-arrow'>
               <Link to={`/local/${project}/${v.slug.trim()}`} className='item-link'>
                 <div className='item-title'>{v.title}</div>
-                <div className='item-dscr'>{v.content.slice(0, 80)}</div>
+                <div className='item-dscr'>{v.updated_at}: {v.content.slice(0, 80)}</div>
               </Link>
             </li>
             : ''

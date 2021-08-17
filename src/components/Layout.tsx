@@ -1,6 +1,7 @@
-import { FC, useContext } from 'react';
+import { FC, useContext, Suspense } from 'react';
 import { AuthContext } from 'contexts/authContext';
 import { ProjectContext } from 'contexts/projectContext';
+import ProjectFilter from 'contexts/projectProviderFilter';
 import Nav from 'components/Nav';
 import Header from 'components/Header';
 
@@ -14,9 +15,13 @@ const Layout: FC = ({ children }) => {
     <>
       <Nav isLoggedIn={isLoggedIn} project={project} />
       <Header isLoggedIn={isLoggedIn} project={project} />
-      <div id="wrapper">
-        {children}
-      </div>
+      <Suspense fallback={<div className='spinner'></div>}>
+        <div id="wrapper">
+          <ProjectFilter>
+            {children}
+          </ProjectFilter>
+        </div>
+      </Suspense>
     </>
   );
 }

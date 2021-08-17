@@ -6,6 +6,7 @@ import { useParams } from 'react-router';
 import ErrorBoundary from 'ErrorBoundary';
 import { AuthContext } from 'contexts/authContext';
 import { ProjectContext, useProjectContext } from 'contexts/projectContext';
+import { ImgSelectProvider } from 'contexts/imgSelectContext';
 // import { useImgSelectContext } from 'contexts/imgSelectContext';
 import Page from './Page';
 
@@ -30,13 +31,15 @@ const MainContents: FC = () => {
     return () => {
       abortCtrl.abort();
     }
-  }, []);
+  }, [slug]);
 
-  if (currentUser && param) {
+  if (currentUser && slug && param) {
     return (
       <ErrorBoundary key={`eb_1_${ebKey.current}`}>
         <Suspense fallback={<div className="spinner"></div>}>
+        <ImgSelectProvider>
           <Page slug={slug} project={param} />
+        </ImgSelectProvider>
         </Suspense>
       </ErrorBoundary>
     );

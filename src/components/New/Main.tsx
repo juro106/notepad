@@ -1,5 +1,6 @@
 import {
   FC,
+  memo,
   useState,
   useEffect,
   useContext,
@@ -16,7 +17,7 @@ import ImageComponent from 'components/Image/ImageComponent';
 import ImageSelector from 'components/Image/ImageSelector';
 import ImageUploader from 'components/Image/ImageUploader';
 
-const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) => {
+const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState }) => {
   // const [titleText, setTitleText] = useState<string>('');
   const [imgURL, setImgURL] = useState<string | undefined>(undefined);
   // const [isPostable, setIsPostable] = useState<boolean>(false);
@@ -30,7 +31,6 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
   const navigate = useNavigate();
 
   useEffect(() => {
-    // ctx.setCurrentImgURL('');
     window.scrollTo(0, 0);
   }, [])
 
@@ -38,13 +38,6 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
   useEffect(() => {
     ctxImgURL !== '' && setImgURL(ctxImgURL)
   }, [ctxImgURL]);
-
-  // タイトルの文字数が0の場合、セーブボタンをoffにする
-  // useEffect(() => {
-  //   titleText.length > 0
-  //     ? setIsPostable(true)
-  //     : setIsPostable(false);
-  // }, [titleText]);
 
   const KeyBinding = (e: React.KeyboardEvent) => {
     if (e.code === 'Enter' && e.altKey) {
@@ -59,23 +52,20 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
     }
   }
 
-  // const characterCount = (e: React.ChangeEvent<HTMLDivElement>) => {
-  //   // console.log(e.target);
-  //   setTitleText(e.target.innerText);
-  // }
   // 初回投稿のみ使われる
   const setPost = async () => {
     if (refTitle && refTitle.current && refBody && refBody.current && refTags && refTags.current && uid) {
       if (refTitle.current.innerText.length === 0) return; // タイトルが入力されていなければ登録しない
 
       const tagText = refTags.current.innerText.replaceAll(' ', '');
+      const tagSlug = tagText === '_istag' && refTitle.current.innerText.trim();
 
       const data = {
         user: uid,
         title: refTitle.current.innerText.trim(),
-        slug: generateUuid(), // <- ここが通常のページと違う
+        slug: tagSlug ? tagSlug : generateUuid(), // <- ここが通常のページと違う
         project: project,
-        tags: tagText.length === 0 ? ['_notag'] : tagText.split(",").filter(v => v !== ''),
+        tags: tagText === '_istag' ? [] : tagText.length === 0 ? ['_notag'] : tagText.split(",").filter(v => v !== ''),
         content: refBody.current.innerText.replaceAll('\n\n', '\n'),
         image: ctxImgURL,
       };
@@ -86,10 +76,10 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
   }
 
   const DeleteImage = () => {
-    const input = document.getElementById('upload-image') as HTMLInputElement;
-    const imgTag = document.getElementById('preview') as HTMLImageElement;
-    input.value = '';
-    imgTag.src = '';
+    // const input = document.getElementById('upload-image') as HTMLInputElement;
+    // const imgTag = document.getElementById('preview') as HTMLImageElement;
+    // input.value = '';
+    // imgTag.src = '';
     ctx.setCurrentImgURL('');
     setImgURL(undefined);
     window.scrollTo(0, 0);
@@ -114,7 +104,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
           data-text="[ Tags ]"
           onBlur={setTags}
         ></div>
-        <div className='content-body-new'
+        <div className={imgURL ? 'content-body' : 'content-body-new'}
           tabIndex={0}
           contentEditable={true}
           suppressContentEditableWarning={true}
@@ -131,7 +121,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = ({ setTagsState }) =
       </main>
     </div>
   );
-}
+});
 
 export default Main;
 

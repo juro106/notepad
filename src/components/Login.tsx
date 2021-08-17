@@ -8,7 +8,7 @@ const Login: FC = () => {
 
   useEffect(() =>{
     if (isLoggedIn) {
-        navigate('/user')
+        navigate('/local/home')
     }
   },[isLoggedIn, navigate])
 

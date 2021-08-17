@@ -8,7 +8,7 @@ const CreateNewContent: FC = () => {
 
   if (!New) {
     return (
-      <Link to='/new' className="create-new-link">
+      <Link to='/local/new-contents' className="create-new-link">
         <BsFillPlusSquareFill size={32} color={'#008600'} />
       </Link>
     )

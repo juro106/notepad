@@ -1,17 +1,12 @@
-import { FC, useState, useEffect } from 'react';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { FC } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const About: FC = () => {
-  const [title, setTitle] = useState('');
 
-  useEffect(() => {
-    setTitle('About');
-  },[]);
-  
   return (
-    <HelmetProvider>
+    <>
       <Helmet>
-        <title>{title}</title>
+        <title>About</title>
         <meta name="description" content="メモ帳アプリの使い方。" />
       </Helmet>
       <div className="fixed-content">
@@ -23,7 +18,7 @@ const About: FC = () => {
         <h3>編集</h3>
         <p>本文をタップすれば編集出来ます。</p>
       </div>
-    </HelmetProvider>
+    </>
   );
 }
 

@@ -3,13 +3,13 @@ import { ProjectContext } from 'contexts/projectContext';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-const ListSwitcher: FC = () => {
+const ListSwitcher: FC<{production?: boolean}> = ({production}) => {
   const pathname = useLocation().pathname;
   const { project } = useContext(ProjectContext);
 
   const itemList = [
-    { name: 'Contents', url: `/local/${project}/` },
-    { name: 'Tags', url: `/local/tags/${project}/` },
+    { name: 'Contents', url: production ? '/' :`/local/${project}/` },
+    { name: 'Tags', url: production ? '/tags/' : `/local/tags/${project}/` },
   ];
 
   return (

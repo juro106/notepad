@@ -1,13 +1,13 @@
-import { FC, useState, useEffect, useContext } from 'react';
+import { FC, useState, useEffect, useContext, Suspense } from 'react';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import getTags from 'services/get-tags';
 import deleteContent from 'services/delete-content';
-import  { TagNum } from 'models/content';
+import { TagNum } from 'models/content';
 import { ProjectContext } from 'contexts/projectContext';
 import ListSwitcher from 'components/ListSwitcher';
 import LocalPageOuter from 'components/LocalPageOuter';
-import TrashIcon from 'components/TrashIcon';
+import TrashIcon from 'components/Button/TrashIcon';
 
 const Tags: FC = () => {
   const { project } = useContext(ProjectContext);
@@ -17,7 +17,9 @@ const Tags: FC = () => {
       <main>
         <ListSwitcher />
         <h1>タグ一覧</h1>
-        <ContentsList project={project} />
+        <Suspense fallback={<div className="spinner"></div>}>
+          <ContentsList project={project} />
+        </Suspense>
       </main>
     </LocalPageOuter>
   );
@@ -47,7 +49,7 @@ const ContentsList: FC<{ project: string }> = ({ project }) => {
               <div className="edit-list-tag-title">{tag.name}</div>
               <div className="edit-list-tag-number">({tag.number})</div>
             </Link>
-            {tag.number === 0 && 
+            {tag.number === 0 &&
               <div className='delete-button' onClick={() => deleteItem(tag.name)}>
                 <TrashIcon />
               </div>

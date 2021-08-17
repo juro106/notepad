@@ -7,7 +7,7 @@ import {
   useEffect,
 } from 'react';
 import { useParams } from 'react-router-dom';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { AuthContext } from 'contexts/authContext';
 import { ProjectContext, useProjectContext } from 'contexts/projectContext';
 import ErrorBoundary from 'ErrorBoundary';
@@ -17,9 +17,10 @@ import TimeOut from 'components/TimeOut';
 type Props = {
   title: string;
   children: React.ReactElement;
+  suspense?: boolean
 }
 
-const LocalPageOuter: FC<Props> = ({ title, children }) => {
+const LocalPageOuter: FC<Props> = ({ title, children, suspense }) => {
   const [projectAfter, setProjectAfter] = useState<string | undefined>(undefined);
   const ebKey = useRef(0);
   const { currentUser } = useContext(AuthContext);
@@ -38,17 +39,19 @@ const LocalPageOuter: FC<Props> = ({ title, children }) => {
 
   if (currentUser && projectAfter) {
     return (
-      <HelmetProvider>
+      <>
         <Helmet>
           <title>{title}</title>
           <meta name='robots' content='noindex nofollow' />
         </Helmet>
-        <ErrorBoundary key={ebKey.current}>
-          <Suspense fallback={<div className="spinner"></div>}>
-            {children}
-          </Suspense>
-        </ErrorBoundary>
-      </HelmetProvider>
+        {suspense ?
+          <ErrorBoundary key={ebKey.current}>
+            <Suspense fallback={<div className="spinner"></div>}>
+              {children}
+            </Suspense>
+          </ErrorBoundary>
+          : children}
+      </>
     );
   } else {
     return <TimeOut />

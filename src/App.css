@@ -47,6 +47,17 @@ h1 {
     margin: 0;
     padding: 20px 0;
 }
+.visuallyhidden {
+    position: absolute;
+    clip: rect(1px, 1px, 1px, 1px);
+    -webkit-clip-path: inset(0px 0px 99.9% 99.9%);
+    clip-path: inset(0px 0px 99.9% 99.9%);
+    overflow: hidden;
+    height: 1px;
+    width: 1px;
+    padding: 0;
+    border: 0;
+}
 h2 {
     font-size: 20px;
 }
@@ -76,20 +87,15 @@ code {
 }
 #nav {
     flex: 1;
-    display: flex;
     height: var(--nav-height);
     padding: 0;
-    align-items: center;
     overflow: auto;
     background: #555;
 }
-#virtual-nav {
+#nav-inner {
     display: flex;
-    height: var(--nav-height);
-    padding: 0;
+    justify-content: space-between;
     align-items: center;
-    overflow: auto;
-    background: #555;
 }
 #nav-left {
     display: flex;
@@ -121,6 +127,7 @@ code {
 .create-new-link {
     display: flex;
     padding: 0;
+    margin: 0 10px;
     color: #fff;
     /* background: green; */
     opacity: .8;
@@ -136,15 +143,17 @@ code {
     background: #eee;
 }
 #header {
-    position: relative;
-    display: flex;
     min-height: var(--header-height);
-    padding: 0 10px;
+}
+#header-inner {
+    display: flex;
+    justify-content: space-between;
 }
 .header-item {
     display: flex;
     align-items: center;
-    margin: 0 10px 0 0;
+    min-height: var(--header-height);
+    margin: 0 10px;
 }
 .nav-project-name {
     padding: 0;
@@ -162,7 +171,7 @@ code {
     text-align: left;
     /* min-height: 101vh; */
 }
- /* main */
+/* main */
 main {
     padding: 0 10px;
     background: var(--hobo-white);
@@ -173,7 +182,7 @@ main {
 }
 
 .main-contents {
-    margin: 30px auto 20px;
+    margin: 0 auto 20px;
     padding: 10px;
     text-align: left;
     border-top: 1px solid #ccc;
@@ -193,6 +202,7 @@ main {
 .editable-option {
     position: relative;
     display: flex;
+    align-items: center;
     margin: 20px 0 0;
 }
 
@@ -281,7 +291,7 @@ button:hover {
     display: flex;
 }
 .item-arrow::before {
-    content: '└';
+    content: '\2514';
     font-size: 19px;
     font-family: system-ui;
     font-weight: bold;
@@ -427,6 +437,7 @@ button:hover {
     max-width: 100%;
 }
 .message {
+    font-size: 14px;
     margin: 0 10px 0 0;
     color: green; 
     opacity: 0;
@@ -480,44 +491,58 @@ button:hover {
     display: flex;
     font-weight: bold;
     align-items: center;
-    padding: 10px;
     max-width: 50%;
     justify-content: center;
 }
+.list-nav-item {
+    padding: 5px 10px 8px;
+}
 .list-nav-item-current {
-    opacity: 0.3;
+    box-sizing: border-box;
+    border-bottom: 3px solid #888;
+    padding: 5px 10px;
+    font-weight: bold;
 }
 
 .hidden {
     display: none;
 }
 @keyframes fadeIn { /*animation-nameで設定した値を書く*/
-  0% {opacity: 0} /*アニメーション開始時は不透明度0%*/
-  100% {opacity: 1} /*アニメーション終了時は不透明度100%*/
+    0% {opacity: 0} /*アニメーション開始時は不透明度0%*/
+    100% {opacity: 1} /*アニメーション終了時は不透明度100%*/
 
 }
 @keyframes fadeOut {
-  0% {opacity: 1}
-  100% {opacity: 0}
+    0% {opacity: 1}
+    100% {opacity: 0}
 }
 @keyframes fadeInOut {
-  10% {opacity: 1}
+    10% {opacity: 1}
+}
+.loading {
+    text-align: center;
 }
 .spinner {
-  width: 32px;
-  height: 32px;
-  margin: 30px auto;
-  border: 4px #ddd solid;
-  border-top: 4px #555 solid;
-  border-radius: 50%;
-  -webkit-animation: sp-anime 1.0s infinite linear;
-  animation: sp-anime 1.0s infinite linear;
+    width: 32px;
+    height: 32px;
+    margin: 30px auto;
+    border: 4px #ddd solid;
+    border-top: 4px #555 solid;
+    border-radius: 50%;
+    visibility: hidden;
+    -webkit-animation: 0s linear 0.5s forwards makeVisible, sp-anime 1.0s infinite linear;
+    animation: 0s linear 0.5s forwards makeVisible, sp-anime 1.0s infinite linear;
 }
 
 @keyframes sp-anime {
-  100% { 
-    transform: rotate(360deg); 
-  }
+    100% { 
+        transform: rotate(360deg); 
+    }
+}
+@keyframes makeVisible {
+    to {
+        visibility: visible;
+    }
 }
 
 .top-heading {
@@ -525,28 +550,36 @@ button:hover {
 }
 
 .project-list {
-   padding: 0; 
-   margin: 10px 0;
-   list-style-type: none;
+    padding: 0; 
+    margin: 10px 0;
+    list-style-type: none;
 }
 .project-item {
     display: flex;
     justify-content: space-between;
+    box-sizing: border-box;
     border-bottom: dotted 1px #ccc;
 }
+.project-link-current,
 .project-link {
     display: block;
     width: 100%;
-    padding: 10px 5px;
+    padding: 10px 5px 10px 15px;
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
 }
-.project-link::before {
+.project-link-current {
+    color: var(--link-red);
+    padding: 10px 5px;
+    background: #eee;
+}
+.project-link-current::before {
     content: '▶';
     margin: 0 5px 0 0;
     font-size: .5rem;
 }
+.project-link-current:hover,
 .project-link:hover {
     cursor: pointer;
     background: #eee;
@@ -642,7 +675,7 @@ table {
     background: inherit;
 }
 .delete-button:hover {
-   cursor: pointer; 
+    cursor: pointer; 
 }
 .trash-icon {
     display: flex;
@@ -651,7 +684,10 @@ table {
 }
 .content-edit-trash-icon:hover,
 .trash-icon:hover {
-   cursor: pointer; 
+    cursor: pointer; 
+}
+.icon-trash {
+    color: #666;
 }
 .content-edit-trash-icon {
     display: flex;
@@ -759,10 +795,12 @@ table {
     grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
     padding: 0;
     margin: 0;
-    gap: 5px;
+    gap: 1px;
 }
 .image-list-item {
     display: block;
+    box-sizing: border-box;
+    outline: 1px solid #efefef;
 }
 .image-item-box {
     width: auto;
@@ -774,25 +812,28 @@ table {
     opacity: 0.8;
     cursor: pointer;
 }
-.image-item {
+.image-item { /* img */
     display: block;
     width: 100%;
-    height: auto;
+    min-height: 100%;
+    object-fit: cover;
 }
 .image-list-menu {
     display: flex;
     justify-content: center;
-    margin: 5px 0;
+    margin: 0;
+    padding: 0 0 10px;
+}
+.image-list-menu:hover {
+    opacity: 0.8;
+    cursor: pointer;
 }
 .image-list-menu-button-delete {
     width: 100%;
     text-align: center;
     color: var(--link-red);
+    font-size: 13px;
     font-weight: bold;
-}
-.image-list-menu-button-delete:hover {
-    background: #eee;
-    cursor: pointer;
 }
 #modal-wrapper {
     position: fixed;
@@ -904,8 +945,8 @@ table {
 }
 .button-yes:hover,
 .button-no:hover {
-   cursor: pointer; 
-   background: #eee;
+    cursor: pointer; 
+    background: #eee;
 }
 .section-menu {
     padding: 0 10px;
@@ -916,10 +957,10 @@ table {
 }
 
 .menu-heading::before {
-   content: '■';
-   font-size: .9em;
-   color: #777;
-   margin: 0 5px 0 0;
+    content: '■';
+    font-size: .9em;
+    color: #777;
+    margin: 0 5px 0 0;
 }
 .menu-list {
     padding: 0;
@@ -950,10 +991,14 @@ table {
 }
 .menu-sub-link {
     display: block;
-    padding: 5px 0;
+    padding: 10px 0;
     font-size: 17px; 
     font-weight: bold;
     border-bottom: dotted 1px #aaa;
+}
+.menu-sub-link:hover {
+    cursor:pointer;
+    background: #eee;
 }
 .match {
     color: #000;
@@ -992,13 +1037,16 @@ table {
     border: 1px solid #aaa;
     box-sizing: border-box;
     border-radius: 3px;
+    width: 300px; 
     height: 32px;
     padding: 2px;
+    background: #fff;
 }
 #search-input {
     display: block;
     z-index: 2;
     box-sizing: border-box;
+    width: 100%;
     height: 28px;
     font-size: 17px; 
     border: 0;
@@ -1018,10 +1066,42 @@ table {
 }
 .tag-item {
     margin: 0 10px 0 0;
-    color: #333;
+    color: #555;
+    font-size:14px;
 }
 .tag-item::before {
     content: '#';
+}
+
+.sa-icon {
+    display: flex;
+    align-items: center;
+    border: solid 2px #fff;
+    border-radius: 50%;
+    box-sizing: border-box;
+    background:#fff;
+    color: #000;
+    font-size: 1.6rem;
+    font-weight:bold;
+    font-family: "Yu Mincho", "Hiragino Mincho", serif;
+    width: 30px;
+    height: 30px;
+    justify-content: center;
+    line-height: 20px;
+    margin: 0 5px 0 0;
+    text-align: center;
+    user-select: none;
+}
+
+.sa-icon::before {
+    content: "さ";
+    text-decoration: none;
+}
+
+.sa-icon:hover::before {
+    content: "と";
+    color: red;
+    text-decoration: none;
 }
 
 @media only screen and (min-width: 415px) {
@@ -1037,7 +1117,7 @@ table {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
     .image-item-box {
-        width: 200px;
+        width: 100%;
         height: 150px;
     }
     .button-preview-close {
@@ -1069,8 +1149,18 @@ table {
     }
 }
 @media only screen and (min-width: 1080px) {
+    #nav-inner,
+    #header-inner {
+        width: calc(var(--contents-width-m) + 20px);
+        margin: 0 auto;
+    }
+    #modal-search-results-inner {
+        width: var(--contents-width-m);
+        margin: 0 auto 40px;
+    }
     #wrapper {
-        width: 54em;
+        width: var(--contents-width-m);
+        margin: 0 auto;
     }
     .main-contents,
     .editable {
