@@ -1,21 +1,19 @@
-import { FC, useContext, Suspense } from 'react';
-import { AuthContext } from 'contexts/authContext';
-import { ProjectContext } from 'contexts/projectContext';
+import { FC, memo, Suspense } from 'react';
 import ProjectFilter from 'contexts/projectProviderFilter';
 import Nav from './Nav';
 import Header from './Header';
+import Spinner from 'components/common/Spinner';
 
-const Layout: FC = ({ children }) => {
-  const { isLoggedIn } = useContext(AuthContext);
-  const { project } = useContext(ProjectContext);
-  console.log("isLoggedIn: ", isLoggedIn);
+const Layout: FC = memo(({ children }) => {
+  // const { isLoggedIn } = useContext(AuthContext);
+  // const { project } = useContext(ProjectContext);
   // const ImageManager = useMatch('/image-manager');
 
   return (
     <>
-      <Nav isLoggedIn={isLoggedIn} project={project} />
-      <Header isLoggedIn={isLoggedIn} project={project} />
-      <Suspense fallback={<div className='spinner'></div>}>
+      <Nav />
+      <Header />
+      <Suspense fallback={<Spinner />}>
         <div id="wrapper">
           <ProjectFilter>
             {children}
@@ -24,7 +22,7 @@ const Layout: FC = ({ children }) => {
       </Suspense>
     </>
   );
-}
+});
 
 export default Layout;
 

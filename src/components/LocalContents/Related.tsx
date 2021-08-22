@@ -1,30 +1,33 @@
-import { FC, useContext } from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Content, RelatedContents, RelatedList } from 'models/content';
 import { useParams } from 'react-router';
-import { ProjectContext } from 'contexts/projectContext';
+import { useLayout } from 'hooks/useLayout';
+import LayoutSwitcher from 'components/Button/LayoutSwitcher';
 
-// const Related: FC<{data: Content[] | undefined }> = ({ data }) => {
-const Related: FC<{
-  data: RelatedList | undefined,
-}> = ({
-  data,
-}) => {
+// local
+const Related: FC<{ data: RelatedList | undefined, project: string, }> = ({ data, project, }) => {
+
   if (data && data.length > 0) {
     return (
+      <>
+      <LayoutSwitcher />
       <div className='related-contents'>
-      {data.map((v, i) => (
-        <ItemBlock key={`block_${i}`} data={v} />
-      ))}
+        {data.map((v, i) => (
+          <ItemBlock key={`block_${i}`} data={v} project={project} />
+        ))}
       </div>
+      </>
     )
   }
 
-  return <div className='related-contents'></div>
+  return <></>
 }
 
-const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
-  const { project } = useContext(ProjectContext);
+const ItemBlock: FC<{ data: RelatedContents, project: string }> = ({ data, project }) => {
+  const { slug } = useParams();
+  const { grid } = useLayout();
+
   if (data) {
     return (
       <>
@@ -35,8 +38,12 @@ const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
                 {v[0]}
               </Link>
             </h3>
-            <ul className='item-list'>
-              <Item data={v[1]} />
+            <ul className={grid ? 'grid-list' : 'related-item-list'}>
+              {v[1].map(x => (
+                x.slug !== slug
+                  ? <Item key={x.slug} data={x} />
+                  : ''
+              ))}
             </ul>
           </div>
         ))}
@@ -47,42 +54,21 @@ const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
   return <></>
 }
 
-const Item: FC<{ data: Content[] }> = ({ data }) => {
-  const { project } = useContext(ProjectContext);
-  const { slug } = useParams();
-  if (data && data.length > 0) {
-    return (
-      <>
-        {data.map(v => (
-          slug !== v.slug ?
-            <li key={`li_${v.title}`} className='item-arrow'>
-              <Link to={`/local/${project}/${v.slug.trim()}`} className='item-link'>
-                <div className='item-title'>{v.title}</div>
-                <div className='item-dscr'>{v.updated_at}: {v.content.slice(0, 80)}</div>
-              </Link>
-            </li>
-            : ''
-        ))}
-      </>
-    )
-  }
+const Item: FC<{ data: Content }> = ({ data }) => {
+  const { title, project, slug, updated_at, content } = data;
+  const { grid } = useLayout();
 
-  return <></>
+  return (
+    <>
+      <li key={`li_${title}`} className={grid ? 'grid-list-item' : 'item-arrow'}>
+        <Link to={`/local/${project}/${slug.trim()}`} className={grid ? 'grid-item-link' : 'item-link'}>
+          <div className='item-title'>{title}</div>
+          <div className='item-dscr'>{updated_at}: {content.slice(0, 80)}</div>
+        </Link>
+      </li>
+    </>
+  )
 }
 
 export default Related;
 
-    // return (
-    //   <>
-    //     {data.map((v, k) => (
-    //       <div key={`p_${k}`} className='item'>
-    //         <Link to={`/v1/${v.slug.trim()}`} className="item-link">
-    //           {v.user === 'tagName' 
-    //           ?  <h3 className="related-items-heading">{v.title}</h3>
-    //           :  <div className="item-title">{v.title}</div>}
-    //           <div className="item-dscr">{v.content.slice(0, 80)}</div>
-    //         </Link>
-    //       </div>
-    //     ))}
-    //     </>
-    // )

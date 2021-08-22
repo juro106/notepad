@@ -4,17 +4,20 @@ import { Content, isContentsList } from 'models/content';
 
 const getContentsAll = async (
   project?: string,
-  pub?: boolean, // public or local 他のユーザーのデータ閲覧問題があるので分けている。
+  isLoggedIn?: boolean, // public or local 他のユーザーのデータ閲覧問題があるので分けている。
+  sort?: string, // sort
   options?: Options,
 ): Promise<Content[]> => {
   const mergedOptions = {
     ...DEFAULT_API_OPTIONS,
     ...options,
   }
+
+  const parameter = sort ? sort : '';
   const response = await ky.get(
-    pub 
-    ? `${process.env.REACT_APP_API_URL}/public/contents-all`
-    : `${process.env.REACT_APP_API_URL}/pages/${project}/`,
+    isLoggedIn
+      ? `${process.env.REACT_APP_API_URL}/pages/${project}/${parameter}`
+      : `${process.env.REACT_APP_API_URL}/public/contents-all${parameter}`,
     mergedOptions,
   );
 

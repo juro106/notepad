@@ -1,7 +1,7 @@
 import {
   FC,
-  Suspense,
-  SuspenseList
+  // Suspense,
+  // SuspenseList
 } from 'react';
 import { useQuery } from 'react-query';
 import getContent from 'services/get-content';
@@ -10,19 +10,18 @@ import Main from './Main';
 import Related from './Related';
 
 const Page: FC<{ slug: string }> = ({ slug }) => {
-  const { data: d1 } = useQuery(['page', slug], () => getContent('', slug, true));
-  const { data: d2 } = useQuery(['related', slug], () => getRelated('', slug, true));
+  const { data: mainData } = useQuery(['page', slug], () => getContent('', slug, false));
+  const { data: relatedData } = useQuery(['related', slug], () => getRelated('', slug, false));
 
-  return (
-    <SuspenseList>
-      <Suspense fallback={<div className="spinner"></div>}>
-        <Main data={d1} />
-      </Suspense>
-      <Suspense fallback={<div className="spinner"></div>}>
-        <Related data={d2} />
-      </Suspense>
-    </SuspenseList>
-  );
+  if (mainData) {
+    return (
+      <>
+        <Main data={mainData} />
+        <Related data={relatedData && relatedData} />
+      </>
+    );
+  }
+  return <></>
 }
 
 export default Page;

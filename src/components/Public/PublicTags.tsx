@@ -1,25 +1,29 @@
 import { FC, useRef, Suspense, } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { useLayout } from 'hooks/useLayout';
 import getTags from 'services/get-tags';
-import ListSwitcher from 'components/Common/ListSwitcher';
 import ErrorBoundary from 'ErrorBoundary';
+import ContentsListHeader from 'components/common/ContentsListHeader';
+import Visuallyhidden from 'components/Heading/Visuallyhidden';
+import Spinner from 'components/common/Spinner';
 
 const PublicTags: FC = () => {
   const ebKey = useRef(0);
+  const title = 'タグ一覧 - Sasa-Box';
 
   return (
     <>
       <Helmet>
-        <title>タグ一覧 - Sasa-Box</title>
+        <title>{title}</title>
         <link rel="canonical" href={`${process.env.REACT_APP_BASE_URL}/tags/`} />
       </Helmet>
       <ErrorBoundary key={ebKey.current}>
-        <Suspense fallback={<div className="spinner"></div>}>
+        <Suspense fallback={<Spinner />}>
+          <Visuallyhidden children={title} />
           <main>
-            <ListSwitcher production={true} />
-            <h1>タグ一覧</h1>
+            <ContentsListHeader />
             <ContentsList />
           </main>
         </Suspense>
@@ -30,13 +34,14 @@ const PublicTags: FC = () => {
 
 const ContentsList: FC = () => {
   const { data } = useQuery(['tags'], () => getTags('', true));
+  const { grid } = useLayout();
 
   if (data) {
     return (
-      <ul className="item-list">
+      <ul className={grid ? 'grid-list' : "item-list"}>
         {data.map((tag, k) => (
-          <li key={`p_${k}`} className='edit-list-item'>
-            <Link to={`/${tag.name}`} className="edit-item-link-tag">
+          <li key={`p_${k}`} className={grid ? 'grid-list-item' : 'edit-list-item'}>
+            <Link to={`/${tag.name}`} className={grid ? "grid-item-link-tag" : "edit-item-link-tag"}>
               <div className="edit-list-tag-title">{tag.name}</div>
               <div className="edit-list-tag-number">({tag.number})</div>
             </Link>

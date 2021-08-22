@@ -1,9 +1,8 @@
-import {
-  FC, useRef, Suspense, useEffect
-} from 'react';
+import { FC, useRef, Suspense, useEffect } from 'react';
 import ErrorBoundary from 'ErrorBoundary';
 import { useParams } from 'react-router';
 import Page from './Page';
+import Spinner from 'components/common/Spinner';
 
 const MainContents: FC = () => {
   const { slug } = useParams();
@@ -15,7 +14,7 @@ const MainContents: FC = () => {
 
   return (
     <ErrorBoundary key={`eb_1_${ebKey.current}`}>
-      <Suspense fallback={<div className='spinner'></div>}>
+      <Suspense fallback={<Spinner />}>
         <Page slug={slug} />
       </Suspense>
     </ErrorBoundary>

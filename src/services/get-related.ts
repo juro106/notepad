@@ -6,7 +6,7 @@ import { RelatedList } from 'models/content';
 const getRelated = async (
   project?: string,
   slug?: string,
-  pub?: boolean,
+  isLoggedIn?: boolean,
   options?: Options,
 ): Promise<RelatedList> => {
   const mergedOptions = {
@@ -14,9 +14,9 @@ const getRelated = async (
     ...options,
   }
   const response = await ky.get(
-    pub
-    ? `${process.env.REACT_APP_API_URL}/public/related/${slug}`
-    : `${process.env.REACT_APP_API_URL}/related/${project}/${slug}`,
+    isLoggedIn
+      ? `${process.env.REACT_APP_API_URL}/related/${project}/${slug}`
+      : `${process.env.REACT_APP_API_URL}/public/related/${slug}`,
     mergedOptions,
   );
 

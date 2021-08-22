@@ -12,6 +12,8 @@ import ErrorBoundary from 'ErrorBoundary';
 import getContentsAll from 'services/get-contents-all';
 import { Content } from 'models/content';
 import Page from './Page';
+import PageTitle from 'components/Heading/PageTitle';
+import Spinner from 'components/common/Spinner';
 
 const ContentsManager: FC = () => {
   const [data, setData] = useState<Content[] | undefined>(undefined);
@@ -64,8 +66,8 @@ const ContentsManager: FC = () => {
       </Helmet>
       <ErrorBoundary key={ebKey.current}>
         <main>
-          <Suspense fallback={<div className="spinner"></div>}>
-            <h1 id='page-title'>メモを編集</h1>
+          <Suspense fallback={<Spinner />}>
+            <PageTitle>メモを編集</PageTitle>
             <Page data={data} project={project} changeState={changeState} />
           </Suspense>
         </main>

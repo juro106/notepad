@@ -2,6 +2,7 @@ import { FC, createContext, useState, useContext, useEffect } from 'react';
 import firebase from 'firebase/app';
 // import { useNavigate } from 'react-router';
 import md5 from 'md5';
+import { useLocation } from 'react-router';
 
 type AuthContextProps = {
   currentUser: firebase.User | null | undefined;
@@ -33,7 +34,14 @@ const AuthProvider: FC = ({ children }) => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [loading, setLoading] = useState<string>('start');
 
+  const [isPublic, setIsPublic] = useState<boolean>(false);
+  const pathname = useLocation().pathname;
+  const local = pathname.split('/')[1];
+
   useEffect(() => {
+    local!=='local' ?  setIsPublic(true) : setIsPublic(false);
+    // console.log('isPublic:', isPublic);
+    
     // ログイン状態が変化したときに firebase の auth メソッドを呼び出す
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
@@ -62,9 +70,11 @@ const AuthProvider: FC = ({ children }) => {
       }
     });
     // }, [currentUser, navigate]);
-  }, [currentUser]);
+  }, [currentUser, local, isPublic]);
 
-  // if (!isLoaded) return <div className='spinner'></div>;  // ユーザー選択が終わるまでは下層をマウントしない
+  // if (isPublic) return <>{children}</>;
+
+  // if (!isLoaded) return <Spinner />;  // ユーザー選択が終わるまでは下層をマウントしない
 
   // 下層コンポーネントをラップする
   return <AuthContext.Provider value={{

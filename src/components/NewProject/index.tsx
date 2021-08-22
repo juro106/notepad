@@ -1,8 +1,10 @@
 import { FC, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import createTable from 'services/create-table';
+import PageTitle from 'components/Heading/PageTitle';
 
 const NewProcject: FC = () => {
+  console.log('render newproject');
   const [value, setValue] = useState('');
   const [projectName, setProjectName] = useState('');
   const [NG, setNG] = useState(false);
@@ -39,11 +41,11 @@ const NewProcject: FC = () => {
 
   return (
     <main>
-      <h1>新規プロジェクト作成</h1>
+      <PageTitle>新規プロジェクト作成</PageTitle>
       <p>新しいプロジェクト（カテゴリー？ ページ？）を作成します。</p>
       <input className='create-project-input' onChange={(e) => setValue(e.target.value)} type='text' />
       <button className='create-project-button' onClick={submit}>Create</button>
-        <p>半角アルファベットと数字、_(アンダーバー)が使えます。</p>
+      <p>半角アルファベットと数字、_(アンダーバー)が使えます。</p>
       {NG ? <div className='red'>{projectName}</div> : ''}
     </main>
   );

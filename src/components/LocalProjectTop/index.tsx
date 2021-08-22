@@ -1,18 +1,18 @@
-import { FC, memo, useContext, Suspense } from 'react';
-import { ProjectContext } from 'contexts/projectContext';
-import ContentsList from './ContentsList';
-import ListSwitcher from 'components/Common/ListSwitcher';
+import { FC, memo, Suspense } from 'react';
+import { useProject } from 'hooks/useProject';
 import LocalPageOuter from 'components/Local/LocalPageOuter';
+import ContentsListHeader from 'components/common/ContentsListHeader';
+import ContentsList from './ContentsList';
+import Spinner from 'components/common/Spinner';
 
 const LocalProjectTop: FC = memo(() => {
-  const { project } = useContext(ProjectContext);
+  const project = useProject();
 
   return (
     <LocalPageOuter title={'public'}>
       <main>
-        <ListSwitcher />
-        <h1>コンテンツ一覧</h1>
-        <Suspense fallback={<div className="spinner"></div>}>
+        <ContentsListHeader />
+        <Suspense fallback={<Spinner />}>
           <ContentsList project={project} />
         </Suspense>
       </main>

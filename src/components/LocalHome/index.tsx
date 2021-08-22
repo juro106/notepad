@@ -10,6 +10,7 @@ import ErrorBoundary from 'ErrorBoundary';
 import { AuthContext } from 'contexts/authContext';
 import { ProjectContext } from 'contexts/projectContext';
 import ProjectSelector from 'components/Project/ProjectSelector';
+import Spinner from 'components/common/Spinner';
 import Menu from './Menu';
 
 const LocalHome: FC = () => {
@@ -20,7 +21,7 @@ const LocalHome: FC = () => {
   if (isLoggedIn && isLoaded) {
     return <Page />;
   } else if (!isLoaded) {
-    return <div className='loading'>...Loading<div className='spinner'></div></div>;
+    return <div className='loading'><p>...Loading</p><Spinner /></div>;
   } else {
     return <main><h1 className='hi-people'>Hi People!!</h1></main>;
   }
@@ -55,7 +56,7 @@ const Page: FC = () => {
             {isEmptyProject && <div className='info'><p className='red'>プロジェクト選択してください</p></div>}
           </header>
           <ErrorBoundary key={`eb_1_${ebKey.current}`}>
-            <Suspense fallback={<div className='spinner'></div>}>
+            <Suspense fallback={<Spinner />}>
               <ProjectSelector />
             </Suspense>
           </ErrorBoundary>
@@ -65,7 +66,7 @@ const Page: FC = () => {
     );
   }
 
-  return <div className='spinner'></div>;
+  return <Spinner />;
 }
 
 export default LocalHome;

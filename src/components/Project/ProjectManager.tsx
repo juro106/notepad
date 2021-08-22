@@ -13,10 +13,12 @@ import { useProjectContext } from 'contexts/projectContext';
 import { useCloseModal } from 'hooks/useCloseModal';
 import Overlay from 'components/Modal/Overlay';
 import ModalContents from 'components/Modal/ModalContents';
+import TrashIcon from 'components/Button/TrashIcon';
+import Spinner from 'components/common/Spinner';
 
 const ProjectManager: FC = () => {
   return (
-    <Suspense fallback={<div className="spinner"></div>}>
+    <Suspense fallback={<Spinner />}>
       <Contents />
     </Suspense>
   )
@@ -57,9 +59,9 @@ const Contents: FC = () => {
     <div className='projects-block'>
       <h1>プロジェクト管理</h1>
       <p>プロジェクトの作成、削除を行います</p>
-      <Link to='/newproject'>＋ 新規プロジェクト作成</Link>
+      <Link to='/local/new-project'>＋ 新規プロジェクト作成</Link>
       <h2 className='project-manager-h2'>プロジェクト一覧</h2>
-      <Suspense fallback={<div className="spinner"></div>}>
+      <Suspense fallback={<Spinner />}>
         <List data={data} changeState={changeState} />
       </Suspense>
     </div>
@@ -94,7 +96,7 @@ const List: FC<{ data: string[] | undefined, changeState: (arg: boolean) => void
               <Link className='project-link' onClick={() => handleClick(v)} to={`/local/${v}/`}>{v}</Link>
               <div className='button-delete-project'>
                 <div className="delete-button" onClick={() => showToastWarning(v)}>
-                  ☓ delete
+                  <TrashIcon />
                 </div>
               </div>
             </li>

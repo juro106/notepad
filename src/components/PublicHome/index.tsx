@@ -3,23 +3,27 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import getContentsAll from 'services/get-contents-all';
 import { useQuery } from 'react-query';
+import { useLayout } from 'hooks/useLayout';
 import ErrorBoundary from 'ErrorBoundary';
-import ListSwitcher from 'components/Common/ListSwitcher';
+import Visuallyhidden from 'components/Heading/Visuallyhidden';
+import ContentsListHeader from 'components/common/ContentsListHeader';
+import Spinner from 'components/common/Spinner';
 
 const PublicHome: FC = () => {
   const ebKey = useRef(0);
+  const title = 'Sasa-Box コンテンツ一覧';
 
   return (
     <>
       <Helmet>
-        <title>Sasa-Box</title>
+        <title>{title}</title>
         <link rel="canonical" href={`${process.env.REACT_APP_BASE_URL}/`} />
       </Helmet>
       <ErrorBoundary key={ebKey.current}>
-        <Suspense fallback={<div className="spinner"></div>}>
+        <Suspense fallback={<Spinner />}>
+          <Visuallyhidden children={title} />
           <main>
-            <ListSwitcher production={true} />
-            <h1>一覧</h1>
+            <ContentsListHeader />
             <ContentsList />
           </main>
         </Suspense>
@@ -29,28 +33,27 @@ const PublicHome: FC = () => {
 }
 
 const ContentsList: FC = () => {
-  const { data } = useQuery(["all"], () => getContentsAll('', true));
+  const { data } = useQuery(["contents-all", "public"], () => getContentsAll('', false));
+  const { grid } = useLayout();
 
   if (data && data.length > 0) {
     return (
-      <div className="related-contents">
-        <ul className="item-list">
-          {data.map((v, k) => (
-            v.content.length > 0
-              ?
-              <li key={`p_${k}`} className='item'>
-                <Link to={`/${v.slug.trim()}`} className="item-link">
-                  <div className="item-title">{v.title}</div>
-                  <div className="item-dscr">
-                    {v.updated_at ? `${v.updated_at}: ` : ''}
-                    {v.content.slice(0, 80)}
-                  </div>
-                </Link>
-              </li>
-              : ''
-          ))}
-        </ul>
-      </div>
+      <ul className={grid ? 'grid-list' : "item-list"}>
+        {data.map((v, k) => (
+          v.content.length > 0
+            ?
+            <li key={`p_${k}`} className={grid ? 'grid-list-item' : 'item'}>
+              <Link to={`/${v.slug.trim()}`} className={grid ? 'grid-item-link' : "item-link"}>
+                <div className="item-title">{v.title}</div>
+                <div className="item-dscr">
+                  {v.updated_at ? `${v.updated_at.slice(0, 10)}: ` : ''}
+                  {v.content.slice(0, 80)}
+                </div>
+              </Link>
+            </li>
+            : ''
+        ))}
+      </ul>
     )
   } else {
     return (

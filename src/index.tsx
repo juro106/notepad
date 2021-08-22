@@ -3,24 +3,37 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClientProvider, QueryClient, QueryCache } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { HelmetProvider } from 'react-helmet-async';
 
+import { Provider } from 'react-redux';
+import store from 'store';
 // redux
 // import { Provider } from 'react-redux';
 // import store from './store';
 
-const queryClient = new QueryClient({
+const queryCache = new QueryCache({
+  onError: error => {
+    console.log(error);
+  },
+  onSuccess: data => {
+    console.log('success');
+  }
+});
+
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       suspense: true,
       retry: 0,
-      // cacheTime: 1,
-      // staleTime: 1 * 1000,
-      // staleTime: 60 * 1000,
-    }
-  }
+      refetchOnWindowFocus: false,
+      cacheTime: 300000,
+      staleTime: Infinity,
+      // staleTime: 5 * 60 * 1000,
+    },
+  },
+  queryCache,
 });
 
 // 並列モード(Concurrent Mode)を使用する
@@ -28,18 +41,20 @@ const rootdiv = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(rootdiv);
 
 root.render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <Router>
-          <App />
-          {process.env.NODE_ENV === 'development' && (
-            <ReactQueryDevtools initialIsOpen={false} />
-          )}
-        </Router>
-      </HelmetProvider>
-    </QueryClientProvider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <HelmetProvider>
+          <Router>
+            <App />
+            {process.env.NODE_ENV === 'development' && (
+              <ReactQueryDevtools initialIsOpen={false} />
+            )}
+          </Router>
+        </HelmetProvider>
+      </QueryClientProvider>
+    </React.StrictMode>
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

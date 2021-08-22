@@ -5,7 +5,7 @@ import { Content, isContent } from 'models/content';
 const getContent = async (
   project?: string,
   slug?: string,
-  pub?: boolean,
+  isLoggedIn?: boolean,
   options?: Options,
 ): Promise<Content> => {
   const mergedOptions = {
@@ -14,9 +14,9 @@ const getContent = async (
   }
   // console.log(data)
   const response = await ky.get(
-    pub
-    ? `${process.env.REACT_APP_API_URL}/public/${slug}`
-    : `${process.env.REACT_APP_API_URL}/pages/${project}/${slug}`,
+    isLoggedIn
+      ? `${process.env.REACT_APP_API_URL}/pages/${project}/${slug}`
+      : `${process.env.REACT_APP_API_URL}/public/${slug}`,
     mergedOptions,
   );
 

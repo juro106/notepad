@@ -4,7 +4,7 @@ import {
   // useState
 } from 'react';
 import { ImgSelectContext, useImgSelectContext } from 'contexts/imgSelectContext';
-import { ProjectContext } from 'contexts/projectContext';
+import { useProject } from 'hooks/useProject';
 import { useQuery } from 'react-query';
 import getImages from 'services/get-images';
 import { useCloseModal } from 'hooks/useCloseModal';
@@ -13,6 +13,8 @@ import ModalContents from 'components/Modal/ModalContents';
 // import ImagePreview from 'components/ImagePreview';
 import { ImImages } from 'react-icons/im'
 import { ImageFile } from 'models/image-file'
+import PageTitle from 'components/Heading/PageTitle';
+import Spinner from 'components/common/Spinner';
 
 const ImageSelector: FC = () => {
   const ctx = useImgSelectContext();
@@ -39,7 +41,7 @@ const ImageSelector: FC = () => {
 
 const Contents: FC = () => {
   const { show } = useContext(ImgSelectContext);
-  const { project } = useContext(ProjectContext)
+  const project = useProject();
   // console.log(show);
   const ctx = useImgSelectContext();
 
@@ -49,13 +51,13 @@ const Contents: FC = () => {
 
   const { elementRef, closeModal } = useCloseModal(closeSelector);
 
-  const { data } = useQuery(['images'], () => getImages(project));
+  const { data } = useQuery(['images-all', project], () => getImages(project));
   // console.log(data);
   if (show) {
     return (
       <Overlay id='image-selector-wrapper' onClose={closeModal}>
         <ModalContents id='image-selector-contents' elRef={elementRef}>
-          <h1>画像を選択</h1>
+          <PageTitle>画像を選択</PageTitle>
           <Images data={data} />
           <div className="image-selector-button-close" onClick={closeSelector}>close</div>
         </ModalContents>
@@ -106,7 +108,7 @@ const Images: FC<{ data: ImageFile[] | undefined }> = ({ data }) => {
     );
   }
 
-  return <div className="spinner"></div>
+  return <Spinner />
 }
 
 export default ImageSelector;

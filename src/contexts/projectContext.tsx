@@ -8,8 +8,8 @@ type ProjectProps = {
 
 // default
 const ProjectContext = createContext<ProjectProps>({
-  project: '', 
-  setCurrentProject: () => {},
+  project: '',
+  setCurrentProject: () => { },
 });
 
 export const useProjectContext = () => {
@@ -35,5 +35,5 @@ const ProjectProvider: FC = ({ children }) => {
   return <ProjectContext.Provider value={ctx}>{children}</ProjectContext.Provider>;
 }
 
-export { ProjectContext, ProjectProvider }; 
+export { ProjectContext, ProjectProvider };
 

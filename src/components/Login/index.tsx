@@ -1,6 +1,7 @@
 import { FC, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router';
 import { AuthContext } from 'contexts/authContext';
+import Spinner from 'components/common/Spinner';
 
 const Login: FC = () => {
 
@@ -13,7 +14,7 @@ const Login: FC = () => {
     }
   },[isLoggedIn, navigate])
 
-  return <div className='spinner'></div>
+  return <Spinner />
 }
 
 export default Login;

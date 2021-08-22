@@ -12,6 +12,7 @@ import { AuthContext } from 'contexts/authContext';
 import { ProjectContext, useProjectContext } from 'contexts/projectContext';
 import ErrorBoundary from 'ErrorBoundary';
 import TimeOut from 'components/Local/TimeOut';
+import Spinner from 'components/common/Spinner';
 
 // ローカルページ共通部分
 type Props = {
@@ -46,7 +47,7 @@ const LocalPageOuter: FC<Props> = ({ title, children, suspense }) => {
         </Helmet>
         {suspense ?
           <ErrorBoundary key={ebKey.current}>
-            <Suspense fallback={<div className="spinner"></div>}>
+            <Suspense fallback={<Spinner />}>
               {children}
             </Suspense>
           </ErrorBoundary>

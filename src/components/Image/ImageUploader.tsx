@@ -1,14 +1,16 @@
-import { FC, useContext } from 'react';
+import { FC } from 'react';
+import { queryClient } from 'index';
 import Compressor from 'compressorjs';
-import { ProjectContext } from 'contexts/projectContext';
-import { useImgSelectContext } from 'contexts/imgSelectContext';
+// import { useImgSelectContext } from 'contexts/imgSelectContext';
+import { useProject } from 'hooks/useProject';
+import { useImageSetter } from 'hooks/useImageSetter';
 import { ImFilePicture } from 'react-icons/im';
 
 // if new or edit contents -> mode isSetter
 // else if image manager -> mode off
 const ImageUploader: FC<{ isSetter?: boolean, changeState?: (arg: boolean) => void }> = ({ isSetter, changeState }) => {
-  const { project } = useContext(ProjectContext);
-  const ctx = useImgSelectContext();
+  const project = useProject();
+  const imageSetter = useImageSetter();
 
   const imageHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files === null) {
@@ -31,7 +33,7 @@ const ImageUploader: FC<{ isSetter?: boolean, changeState?: (arg: boolean) => vo
     }
     new Compressor(image, {
       quality: 0.8,
-      maxWidth: 800,
+      maxWidth: 1600,
       success(result: Blob): void {
         // console.log('image', image);
         console.log('result', result);
@@ -51,8 +53,10 @@ const ImageUploader: FC<{ isSetter?: boolean, changeState?: (arg: boolean) => vo
           console.log('upload success');
         }).then(() => {
           isSetter
-            ? ctx.setCurrentImgURL(`/images/${project}/${fileName}`)
-            : changeState && changeState(true);
+            ? imageSetter(`/images/${project}/${fileName}`)
+            : changeState && changeState(true); // 全体の画像を更新する
+        }).then(() => {
+          queryClient.removeQueries(['images-all', project]); // 画像一覧のキャッシュ削除
         });
       },
       error(err: Error): void {

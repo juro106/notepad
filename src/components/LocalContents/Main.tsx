@@ -1,10 +1,12 @@
 import { FC, useContext, useRef, useState, useEffect, memo } from 'react';
 import { Helmet } from 'react-helmet-async';
+// import { useQuery, useMutatation } from 'react-query';
 import { AuthContext } from 'contexts/authContext';
 import { ProjectContext } from 'contexts/projectContext';
 import { ImgSelectContext, useImgSelectContext } from 'contexts/imgSelectContext';
 import postContent from 'services/post-content'
-import { Content } from 'models/content';
+import { removeQueries } from 'services/removeQueries'
+import { Content, ContentForUpload } from 'models/content';
 // import { Message } from 'models/message';
 import ImageComponent from 'components/Image/ImageComponent';
 import ImageUploader from 'components/Image/ImageUploader';
@@ -14,8 +16,9 @@ import deleteContent from 'services/delete-content';
 import ToastWarning from 'components/Local/ToastWarning';
 import TrashIcon from 'components/Button/TrashIcon'
 
+
 const Main: FC<{
-  data: Content | undefined,
+  data: Content,
   setTagsState: (tags: string[]) => void,
   // setResMsg?: (arg: Message) => void,
 }> = memo(({
@@ -36,7 +39,7 @@ const Main: FC<{
   const refTags = useRef<HTMLDivElement>(null);
   const refBody = useRef<HTMLDivElement>(null);
   const ctx = useImgSelectContext();
-  const slug = data ? data.slug : '';
+  const { title, tags, content, slug, created_at, updated_at, image } = data;
   // const isTag = data ? data.tags === [] ? true : false : false;
 
   const KeyBinding = (e: React.KeyboardEvent) => {
@@ -47,9 +50,9 @@ const Main: FC<{
 
   // 初回 画像セット
   useEffect(() => {
-    data && setImgURL(data.image);
+    setImgURL(image);
     // data && setTitleText(data.title);
-  }, [data]);
+  }, [data, image]);
 
   // upload image or select image で画像をセット
   useEffect(() => {
@@ -77,7 +80,7 @@ const Main: FC<{
 
       const tagText = refTags && refTags.current ? refTags.current.innerText.replaceAll(' ', '') : '_istag';
 
-      const data: Content = {
+      const data: ContentForUpload = {
         user: uid,
         title: refTitle.current.innerText.trim(),
         slug: slug,
@@ -90,6 +93,8 @@ const Main: FC<{
       // setSaved(false);
       // setMessage(undefined);
       const res = await postContent(data);
+      // const queryClient = new QueryClient({});
+      removeQueries(project, slug);
       // changeState(true);
       console.log(res);
       // setResMsg(res);
@@ -124,79 +129,78 @@ const Main: FC<{
   // <div className="button-save-box">
   //   <div role='button' className={isPostable ? 'save_isActive' : 'save_isNotActive'} onClick={update} tabIndex={0}>save</div>
   // </div>
-  if (data) {
-    return (
-      <>
-        <Helmet>
-          <title>{data.title}</title>
-          <meta name='robots' content='noindex nofollow' />
-          <link rel="canonical" href={`${process.env.REACT_APP_BASE_URL}/${slug}`} />
-        </Helmet>
-        <main className="editable" onKeyDown={(e) => KeyBinding(e)}>
-          <h1 className='content-title'
+  return (
+    <>
+      <Helmet>
+        <title>{title}</title>
+        <meta name='robots' content='noindex nofollow' />
+        <link rel="canonical" href={`${process.env.REACT_APP_BASE_URL}/${slug}`} />
+      </Helmet>
+      <main className="editable" onKeyDown={(e) => KeyBinding(e)}>
+        <div className='time'>
+          {created_at ? <time dateTime={created_at}>{created_at.slice(0, 10)}</time> : ''}
+          {updated_at ? <time dateTime={updated_at} className='time-updated_at'>↺ {updated_at.slice(0, 10)}</time> : ''}
+        </div>
+        <h1 className='content-title'
+          contentEditable={true}
+          suppressContentEditableWarning={true}
+          spellCheck={false}
+          ref={refTitle}
+          data-text="Title"
+          // onInput={characterCount}
+          onBlur={update}
+        >
+          {title}
+        </h1>
+        {tags && tags.length > 0
+          ?
+          <div className='content-tags'
             contentEditable={true}
             suppressContentEditableWarning={true}
             spellCheck={false}
-            ref={refTitle}
-            data-text="Title"
-            // onInput={characterCount}
-            onBlur={update}
+            ref={refTags}
+            data-text="[ Tags ]"
+            onBlur={setTags}
           >
-            {data.title}
-          </h1>
-          {data.tags && data.tags.length > 0
-            ?
-            <div className='content-tags'
-              contentEditable={true}
-              suppressContentEditableWarning={true}
-              spellCheck={false}
-              ref={refTags}
-              data-text="[ Tags ]"
-              onBlur={setTags}
-            >
-              {data.tags.map((v, k) => (
-                data.tags !== undefined ?
-                  data.tags.slice(-1)[0] === v ? `${v}` : `${v}, `
-                  : ''
-
-              ))}
-            </div> : ''}
-          <div className='content-body'
-            contentEditable={true}
-            suppressContentEditableWarning={true}
-            spellCheck={false}
-            ref={refBody}
-            data-text="Content"
-            tabIndex={0}
-            onBlur={update}
-          >
-            {data.content}
+            {tags.map((v, k) => (
+              tags !== undefined ?
+                tags.slice(-1)[0] === v ? `${v}` : `${v}, `
+                : ''
+            ))}
+          </div> : ''}
+        <div className='content-body'
+          contentEditable={true}
+          suppressContentEditableWarning={true}
+          spellCheck={false}
+          ref={refBody}
+          data-text="Content"
+          tabIndex={0}
+          onBlur={update}
+        >
+          {content}
+        </div>
+        <ImageComponent imgURL={imgURL} DeleteImage={DeleteImage} />
+        <div className='editable-option'>
+          <ImageUploader isSetter={true} />
+          <ImageSelector />
+          {/*message && <ResponseMessage data={message} />*/}
+          <div role='button' className='content-edit-trash-icon' onClick={() => setIsToast(true)}>
+            <TrashIcon />
           </div>
-          <ImageComponent imgURL={imgURL} DeleteImage={DeleteImage} />
-          <div className='editable-option'>
-            <ImageUploader isSetter={true} />
-            <ImageSelector />
-            {/*message && <ResponseMessage data={message} />*/}
-            <div role='button' className='content-edit-trash-icon' onClick={() => setIsToast(true)}>
-              <TrashIcon />
-            </div>
-            <ToastWarning
-              mode={'content'}
-              project={project}
-              slug={slug}
-              itemName={data && data.title}
-              isToast={isToast}
-              closeToast={closeToast}
-              deleteFunc2={deleteContent}
-            />
-            {/*saved && <div className='toast-saved'>saved</div>*/}
-          </div>
-        </main>
-      </>
-    )
-  }
-
-  return <></>
+          <ToastWarning
+            mode={'content'}
+            project={project}
+            slug={slug}
+            itemName={title}
+            isToast={isToast}
+            closeToast={closeToast}
+            deleteFunc2={deleteContent}
+          />
+          {/*saved && <div className='toast-saved'>saved</div>*/}
+        </div>
+      </main>
+    </>
+  )
 });
 
 export default Main;

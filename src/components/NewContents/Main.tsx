@@ -12,6 +12,8 @@ import { ProjectContext } from 'contexts/projectContext';
 import { ImgSelectContext, useImgSelectContext } from 'contexts/imgSelectContext';
 import postContent from 'services/post-content';
 import { generateUuid } from 'services/functions';
+import { removeQueries } from 'services/removeQueries'
+import { ContentForUpload } from 'models/content';
 
 import ImageComponent from 'components/Image/ImageComponent';
 import ImageSelector from 'components/Image/ImageSelector';
@@ -32,12 +34,18 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    refTitle.current && refTitle.current.focus(); // マウントされたらタイトルにフォーカス
   }, [])
 
   // upload or select で画像をセット
   useEffect(() => {
     ctxImgURL !== '' && setImgURL(ctxImgURL)
-  }, [ctxImgURL]);
+    // 画像がセットされたら保存してしまう。
+    if (refBody.current && imgURL) {
+      refBody.current.focus();
+      refBody.current.blur();
+    }
+  }, [ctxImgURL, imgURL]);
 
   const KeyBinding = (e: React.KeyboardEvent) => {
     if (e.code === 'Enter' && e.altKey) {
@@ -60,7 +68,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
       const tagText = refTags.current.innerText.replaceAll(' ', '');
       const tagSlug = tagText === '_istag' && refTitle.current.innerText.trim();
 
-      const data = {
+      const data: ContentForUpload = {
         user: uid,
         title: refTitle.current.innerText.trim(),
         slug: tagSlug ? tagSlug : generateUuid(), // <- ここが通常のページと違う
@@ -71,15 +79,12 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
       };
 
       await postContent(data);
+      removeQueries(project);
       navigate(`/local/${project}/${data.slug}`);
     }
   }
 
   const DeleteImage = () => {
-    // const input = document.getElementById('upload-image') as HTMLInputElement;
-    // const imgTag = document.getElementById('preview') as HTMLImageElement;
-    // input.value = '';
-    // imgTag.src = '';
     ctx.setCurrentImgURL('');
     setImgURL(undefined);
     window.scrollTo(0, 0);

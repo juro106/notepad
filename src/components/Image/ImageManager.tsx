@@ -1,18 +1,20 @@
-import { FC, useContext, useState, useEffect, Suspense } from 'react';
-import { ProjectContext } from 'contexts/projectContext';
+import { FC, useState, useEffect, Suspense } from 'react';
 import { Helmet } from 'react-helmet-async';
 // import { useQuery } from 'react-query';
 import getImages from 'services/get-images';
 import deleteImage from 'services/delete-image';
 import { ImageFile } from 'models/image-file';
+import { useProject } from 'hooks/useProject';
 import ImageUploader from './ImageUploader';
 import ImagePreviewer from './ImagePreviewer';
 import ToastWarning from 'components/Local/ToastWarning';
+import PageTitle from 'components/Heading/PageTitle';
+import Spinner from 'components/common/Spinner';
 
 const ImageManager: FC = () => {
   const [data, setData] = useState<ImageFile[] | undefined>(undefined);
   const [flg, setFlg] = useState<boolean>(false);
-  const { project } = useContext(ProjectContext)
+  const project = useProject();
   // const { data } = useQuery(['images'], () => getImages(project));
 
   const changeState = (arg: boolean) => {
@@ -28,7 +30,6 @@ const ImageManager: FC = () => {
     fetch();
     window.scrollTo(0, 0);
   }, [project])
-
 
   // 2回目移行（消去して変化があったとき）
   useEffect(() => {
@@ -46,17 +47,16 @@ const ImageManager: FC = () => {
     }
   }, [flg, project])
 
-
   return (
     <>
       <Helmet>
         <title>Image Manager</title>
         <meta name='robots' content='noindex nofollow' />
       </Helmet>
-      <Suspense fallback={<div className="spinner"></div>}>
+      <Suspense fallback={<Spinner />}>
         <div id="image-manager-wrapper">
           <main id='image-manager-inner'>
-            <h1 id='page-title'>画像を管理</h1>
+            <PageTitle>画像を管理</PageTitle>
             <ImageUploader changeState={changeState} />
             <p>画像クリックで原寸大表示</p>
             <Images data={data} changeState={changeState} />
@@ -127,7 +127,7 @@ const Images: FC<{ data: ImageFile[] | undefined, changeState: (arg: boolean) =>
     );
   }
 
-  return <div className="spinner"></div>
+  return <Spinner />
 }
 
 export default ImageManager;

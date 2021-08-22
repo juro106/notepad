@@ -1,60 +1,58 @@
-import { FC, useState, useEffect, useContext, Suspense } from 'react';
+import { FC, memo, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import getTags from 'services/get-tags';
 import deleteContent from 'services/delete-content';
 import { TagNum } from 'models/content';
-import { ProjectContext } from 'contexts/projectContext';
-import ListSwitcher from 'components/Common/ListSwitcher';
+import { useProject } from 'hooks/useProject';
+import ContentsListHeader from 'components/common/ContentsListHeader';
 import LocalPageOuter from 'components/Local/LocalPageOuter';
 import TrashIcon from 'components/Button/TrashIcon';
+import MiniToastWarning from 'components/Local/MiniToastWarning';
+import Visuallyhidden from 'components/Heading/Visuallyhidden';
+import { useLayout } from 'hooks/useLayout';
 
 const LocalTags: FC = () => {
-  const { project } = useContext(ProjectContext);
+  const title = 'タグ一覧';
 
   return (
-    <LocalPageOuter title={'タグ一覧'}>
+    <LocalPageOuter title={title} suspense={true}>
       <main>
-        <ListSwitcher />
-        <h1>タグ一覧</h1>
-        <Suspense fallback={<div className="spinner"></div>}>
-          <ContentsList project={project} />
-        </Suspense>
+        <Visuallyhidden children={title} />
+        <ContentsListHeader />
+        <Fetch />
       </main>
     </LocalPageOuter>
   );
 }
 
-const ContentsList: FC<{ project: string }> = ({ project }) => {
-  const [list, setList] = useState<TagNum[] | undefined>(undefined);
-  const { data } = useQuery(['tags'], () => getTags(project));
+const Fetch: FC = () => {
+  const project = useProject();
+  const { data } = useQuery(['tags-all', project, { sort_by: 'name', order_by: 'ASC' }], () => getTags(project));
 
-  useEffect(() => {
-    setList(data);
-  }, [data])
+  if (data) {
+    return <ContentsList project={project} data={data} />
+  }
+
+  return <></>
+}
+
+const ContentsList: FC<{ project: string, data: TagNum[] }> = ({ project, data }) => {
+  const [list, setList] = useState<TagNum[]>(data);
+  const { grid } = useLayout();
 
   const deleteItem = async (slug: string) => {
     console.log('deleteItem!!!!');
-    list && setList(list.filter(item => item.name !== slug));
+    setList(list.filter(item => item.name !== slug));
     const msg = await deleteContent(project, slug);
     console.log(msg);
   }
 
   if (list && list.length > 0) {
     return (
-      <ul className="item-list">
-        {list.map((tag, k) => (
-          <li key={`p_${k}`} className='edit-list-item'>
-            <Link to={`/local/${project}/${tag.name}`} className="edit-item-link-tag">
-              <div className="edit-list-tag-title">{tag.name}</div>
-              <div className="edit-list-tag-number">({tag.number})</div>
-            </Link>
-            {tag.number === 0 &&
-              <div className='delete-button' onClick={() => deleteItem(tag.name)}>
-                <TrashIcon />
-              </div>
-            }
-          </li>
+      <ul className={grid ? 'grid-list' : "item-list"}>
+        {list.map(tag => (
+          <Item key={`${tag.name}`} tag={tag} deleteItem={deleteItem} />
         ))}
       </ul>
     )
@@ -66,6 +64,38 @@ const ContentsList: FC<{ project: string }> = ({ project }) => {
     );
   }
 }
+
+const Item: FC<{ tag: TagNum, deleteItem: (arg: string) => void }> = memo(({ tag, deleteItem }) => {
+  const { grid } = useLayout();
+  const [isToast, setIsToast] = useState(false);
+  const closeToast = () => {
+    setIsToast(false);
+  }
+
+  return (
+    <li className={grid ? 'grid-list-item' : 'edit-list-item'}>
+      <Link to={`/local/${tag.project}/${tag.name}`} className={grid ? 'grid-item-link-tag' : "edit-item-link-tag"}>
+        <div className="edit-list-tag-title">{tag.name}</div>
+        <div className="edit-list-tag-number">({tag.number})</div>
+      </Link>
+      {tag.number === 0 &&
+        <>
+          <MiniToastWarning
+            itemName={tag.name}
+            slug={tag.name}
+            isToast={isToast}
+            closeToast={closeToast}
+            deleteFunc={deleteItem}
+            grid={grid}
+          />
+          <div className={isToast ? 'hidden' : grid ? 'delete-button-grid' : 'delete-button'} onClick={() => setIsToast(true)}>
+            <TrashIcon />
+          </div>
+        </>
+      }
+    </li>
+  );
+});
 
 export default LocalTags;
 

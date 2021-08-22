@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from 'react';
+import Spinner from 'components/common/Spinner';
 
 const TimeOut: FC = () => {
   const [flg, setFlg] = useState(false);
@@ -17,7 +18,7 @@ const TimeOut: FC = () => {
     );
   }
 
-  return <div className='spinner'></div>
+  return <Spinner />
 }
 
 export default TimeOut;

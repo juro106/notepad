@@ -1,13 +1,14 @@
-import { FC } from 'react';
+import { FC, memo, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from 'contexts/authContext';
+import { useProject } from 'hooks/useProject';
 import CreateNewContent from 'components/Button/CreateNewContent';
 
-type HeaderProps = {
-  isLoggedIn: boolean;
-  project: string | undefined;
-}
 
-const Header: FC<HeaderProps> = ({ isLoggedIn, project }) => {
+// <Link to='hookstest'>hookstest</Link>
+const Header: FC = memo(() => {
+  const { isLoggedIn } = useContext(AuthContext);
+  const project = useProject();
 
   return (
     <header id="header">
@@ -23,7 +24,7 @@ const Header: FC<HeaderProps> = ({ isLoggedIn, project }) => {
         : ''}
     </header>
   );
-}
+});
 
 export default Header;
 

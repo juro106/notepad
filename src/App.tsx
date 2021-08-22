@@ -16,11 +16,16 @@ import LocalHome from 'components/LocalHome';
 import PublicHome from 'components/PublicHome';
 import PublicContents from 'components/PublicContents';
 import PublicTags from 'components/Public/PublicTags';
+import PublicByDate from 'components/Public/PublicOrderByDate';
 import LocalProjectTop from 'components/LocalProjectTop';
 import LocalTags from 'components/LocalProjectTop/LocalTags';
+import LocalByDate from 'components/LocalProjectTop/OrderByDate';
 import LocalContents from 'components/LocalContents';
 import ContentEditable from 'components/ContentEditable';
 import LocalHomeRedirect from 'components/LocalHomeRedirect';
+//
+import HooksTest from 'components/HooksTest';
+import TestRedux from 'components/TestRedux';
 
 import 'App.css';
 
@@ -30,6 +35,9 @@ const App: FC = () => {
       <ProjectProvider>
         <Layout>
           <Routes>
+            <Route path='/hookstest' element={<HooksTest />} />
+            <Route path='/local/public/test-redux' element={<TestRedux />} />
+            {/**/}
             <Route path='/home' element={<LocalHomeRedirect />} />
             <Route path='/example' element={<ContentEditable />} />
             <Route path='/editor' element={<MyEditor />} />
@@ -40,11 +48,13 @@ const App: FC = () => {
             <Route path='/local/image-manager' element={<ImageManager />} />
             <Route path='/local/project-manager' element={<ProjectManager />} />
             <Route path='/local/home' element={<LocalHome />} />
+            <Route path='/local/bydate/:projectName/' element={<LocalByDate />} />
             <Route path='/local/tags/:projectName/' element={<LocalTags />} />
             <Route path='/local/:projectName/' element={<LocalProjectTop />} />
             <Route path='/local/:projectName/:slug' element={<LocalContents />} />
             <Route path='/about' element={<About />} />
             <Route path='/:slug' element={<PublicContents />} />
+            <Route path='/bydate/' element={<PublicByDate />} />
             <Route path='/tags/' element={<PublicTags />} />
             <Route path='/' element={<PublicHome />} />
           </Routes>

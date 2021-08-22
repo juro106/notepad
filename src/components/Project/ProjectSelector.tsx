@@ -2,14 +2,14 @@ import {
   FC,
   memo,
   useContext,
-  Suspense,
+  // Suspense,
 } from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router';
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router';
 import { ProjectContext } from 'contexts/projectContext';
-import getProjects from 'services/get-projects';
 import { useProjectContext } from 'contexts/projectContext';
+import getProjects from 'services/get-projects';
 
 type Props = {
   data?: string[] | undefined;
@@ -21,14 +21,12 @@ const ProjectSelector: FC<Props> = memo(({ refer, changeState }) => {
 
   return (
     <div className='projects-block'>
-      <Suspense fallback={<div className="spinner"></div>}>
-        <ProjectList refer={refer} changeState={changeState} />
-      </Suspense>
+      <ProjectList refer={refer} changeState={changeState} />
     </div>
   );
 });
 
-const ProjectList: FC<Props> = memo(({refer, changeState }) => {
+const ProjectList: FC<Props> = memo(({ refer, changeState }) => {
   const ctx = useProjectContext();
   const navigate = useNavigate();
   const { project } = useContext(ProjectContext)

@@ -16,6 +16,7 @@ const ToastWarning: FC<{
   changeState?: (arg: boolean) => void
   closeToast: () => void
   deleteFunc?:(arg: string) => Promise<Message>,
+  deleteFunc1?: (arg: string) => void,
   deleteFunc2?: (arg1: string, arg2: string) => Promise<Message>
 
 }> = ({
@@ -28,6 +29,7 @@ const ToastWarning: FC<{
   changeState,
   closeToast,
   deleteFunc,
+  deleteFunc1,
   deleteFunc2,
 }) => {
     const { elementRef, closeModal } = useCloseModal(closeToast);
