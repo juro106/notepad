@@ -1,12 +1,12 @@
 import { FC, useContext } from 'react';
 import Compressor from 'compressorjs';
-import { ProjectContext } from 'contexts/projectContext';
-import { useImgSelectContext } from 'contexts/imgSelectContext';
+import { useProject } from 'hooks/useProject';
+import { useSetImage } from 'hooks/useSetImage';
 
 // const Image: FC<{ setImageURL: (arg: string) => void, url?: string }> = ({ setImageURL, url }) => {
 const Image: FC = () => {
-  const { project } = useContext(ProjectContext);
-  const ctx = useImgSelectContext();
+  const project = useProject();
+  const setImage = useSetImage();
 
   const imageHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files === null) {
@@ -54,7 +54,7 @@ const Image: FC = () => {
           console.log('upload success');
         }).then(() => {
           // setImageURL(`/images/${project}/${fileName}`);
-          ctx.setCurrentImgURL(`/images/${project}/${fileName}`);
+          setImage(`/images/${project}/${fileName}`);
         });
       },
       error(err: Error): void {

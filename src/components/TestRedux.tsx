@@ -5,7 +5,7 @@ import { toggleLayout } from 'ducks/layout/actions';
 import { setProject } from 'ducks/project/actions';
 
 const TestRedux: FC = () => {
-  const hoge = useSelector(state => state.hoge);
+  const fuga = useSelector(state => state.fuga);
   const project = useSelector(state => state.project.project);
   console.log(project);
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const TestRedux: FC = () => {
   return (
     <main>
       <p>test redux</p>
-      <p>ストアに直接書いた Reducer の state: {hoge.msg}</p>
+      <p>ストアに直接書いた Reducer の state: {fuga.msg}</p>
       <button onClick={() => dispatch(toggleLayout())}>toggle</button>
       <button onClick={() => dispatch(setProject(newProject))}>{newProject}</button>
       <button onClick={() => dispatch(setProject(anotherProject))}>{anotherProject}</button>

@@ -128,7 +128,7 @@ const Item: FC<{ v: Content, deleteItem: (arg: string) => void }> = ({ v, delete
       </li>
     );
   } else if (content === 'date') {
-    return <li><h2>{title}</h2></li>
+    return <li className='bydate'><h2>{title}</h2></li>
   }
 
   return <></>;

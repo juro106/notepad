@@ -1,4 +1,4 @@
-import imageReducer from './reducers'
+import imageReducers from './reducers'
 
-export default imageReducer;
+export default imageReducers;
 

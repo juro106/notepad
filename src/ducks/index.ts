@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 import layoutReducer from './layout';
 import projectReducer from './project';
+import modalReducer from './modal';
+import imageReducers from './image';
 
 const fugaState = {
-  msg: 'fuga! fuag! fuga!'
+  msg: 'Hello world State'
 }
 
 const fugaReducer = (state = fugaState) => {
@@ -11,8 +13,10 @@ const fugaReducer = (state = fugaState) => {
 }
 
 export const reducers = combineReducers({
-  hoge: fugaReducer,
+  fuga: fugaReducer,
   layout: layoutReducer,
   project: projectReducer,
+  modal: modalReducer,
+  image: imageReducers,
 });
 

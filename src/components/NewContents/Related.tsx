@@ -35,11 +35,12 @@ const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
                 {v[0]}
               </Link>
             </h3>
+            {v[1] &&
             <ul className={grid ? 'grid-list' : 'related-item-list'}>
               {v[1].map(x => (
                 <Item key={x.slug} data={x} />
               ))}
-            </ul>
+            </ul>}
           </div>
         ))}
       </>

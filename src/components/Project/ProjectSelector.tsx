@@ -1,14 +1,9 @@
-import {
-  FC,
-  memo,
-  useContext,
-  // Suspense,
-} from 'react';
+import { FC, memo, } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
-import { ProjectContext } from 'contexts/projectContext';
-import { useProjectContext } from 'contexts/projectContext';
+import { useProject } from 'hooks/useProject';
+import { useSetProject } from 'hooks/useSetProject';
 import getProjects from 'services/get-projects';
 
 type Props = {
@@ -18,32 +13,31 @@ type Props = {
 }
 
 const ProjectSelector: FC<Props> = memo(({ refer, changeState }) => {
+  const { data } = useQuery(['projects'], () => getProjects());
 
   return (
     <div className='projects-block'>
-      <ProjectList refer={refer} changeState={changeState} />
+      <ProjectList data={data} refer={refer} changeState={changeState} />
     </div>
   );
 });
 
-const ProjectList: FC<Props> = memo(({ refer, changeState }) => {
-  const ctx = useProjectContext();
+const ProjectList: FC<Props> = memo(({ data, refer, changeState }) => {
+  const project = useProject();
+  const setCurrentProject = useSetProject();
   const navigate = useNavigate();
-  const { project } = useContext(ProjectContext)
-
-  const { data } = useQuery(['projects'], () => getProjects());
 
   const handleClick = (arg: string) => {
-    ctx.setCurrentProject(arg); // Context(現在のProject)の値を更新
+    setCurrentProject(arg); // Context(現在のProject)の値を更新
     refer && navigate(`/${refer}`);
     changeState && changeState(true); // flg=ture <-再読込 & setIsEmptyProject=false <-自明なので問答無用で処理
   }
 
-  if (data) {
+  if (data && data.length > 0) {
     return (
       <ul className='project-list'>
         {data.map((v, k) => (
-          <li className='project-item' onClick={() => handleClick(v)} key={k}>
+          <li key={k} className='project-item' onClick={() => handleClick(v)}>
             <Link
               className={project === v ? 'project-link-current' : 'project-link'}
               to={refer ? `/${refer}` : `/local/${v}/`}

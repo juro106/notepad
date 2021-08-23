@@ -9,7 +9,8 @@ import {
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { AuthContext } from 'contexts/authContext';
-import { ProjectContext, useProjectContext } from 'contexts/projectContext';
+import { useProject } from 'hooks/useProject';
+import { useSetProject } from 'hooks/useSetProject';
 import ErrorBoundary from 'ErrorBoundary';
 import TimeOut from 'components/Local/TimeOut';
 import Spinner from 'components/common/Spinner';
@@ -25,18 +26,18 @@ const LocalPageOuter: FC<Props> = ({ title, children, suspense }) => {
   const [projectAfter, setProjectAfter] = useState<string | undefined>(undefined);
   const ebKey = useRef(0);
   const { currentUser } = useContext(AuthContext);
-  const { project } = useContext(ProjectContext);
-  const ctx = useProjectContext();
+  const  project  = useProject();
+  const  setCurrentProject = useSetProject();
   const { projectName } = useParams(); // App.tsx のreact-routerで設定している url ':xxxx' の部分。ここでは projectName
 
   // 直接アクセスした場合、URLのパラメーターからカレントプロジェクトを設定する
   useEffect(() => {
     if (!project) {
-      ctx.setCurrentProject(projectName);
+      setCurrentProject(projectName);
     }
     setProjectAfter(projectName);
     window.scrollTo(0, 0);
-  }, [project, ctx, projectName, projectAfter])
+  }, [project, projectName, projectAfter, setCurrentProject])
 
   if (currentUser && projectAfter) {
     return (

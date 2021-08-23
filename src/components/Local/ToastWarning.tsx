@@ -1,10 +1,10 @@
 import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Message } from 'models/message';
 import { useCloseModal } from 'hooks/useCloseModal';
 import Overlay from 'components/Modal/Overlay';
 import ModalContents from 'components/Modal/ModalContents';
-import { Message } from 'models/message';
-import { useNavigate } from 'react-router-dom';
-
+import { removeQueries } from 'services/removeQueries';
 
 const ToastWarning: FC<{
   mode?: string, 
@@ -41,6 +41,7 @@ const ToastWarning: FC<{
           : deleteFunc ? await deleteFunc(arg) : '';
       console.log(res);
       closeToast();
+      if (project && slug) removeQueries(project, slug);
       changeState && changeState(true); // 処理が終わったら再描写させる
       mode === 'content' && navigate(`/local/${project}/`) 
     }

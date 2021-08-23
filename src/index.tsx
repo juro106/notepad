@@ -17,9 +17,9 @@ const queryCache = new QueryCache({
   onError: error => {
     console.log(error);
   },
-  onSuccess: data => {
-    console.log('success');
-  }
+  // onSuccess: data => {
+  //   console.log('success');
+  // }
 });
 
 export const queryClient = new QueryClient({

@@ -8,8 +8,9 @@ import {
 } from 'react';
 import { useNavigate } from 'react-router';
 import { AuthContext } from 'contexts/authContext';
-import { ProjectContext } from 'contexts/projectContext';
-import { ImgSelectContext, useImgSelectContext } from 'contexts/imgSelectContext';
+import { useProject } from 'hooks/useProject';
+import { useImage } from 'hooks/useImage';
+import { useSetImage } from 'hooks/useSetImage';
 import postContent from 'services/post-content';
 import { generateUuid } from 'services/functions';
 import { removeQueries } from 'services/removeQueries'
@@ -24,13 +25,13 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
   const [imgURL, setImgURL] = useState<string | undefined>(undefined);
   // const [isPostable, setIsPostable] = useState<boolean>(false);
   const { uid } = useContext(AuthContext);
-  const { project } = useContext(ProjectContext)
-  const { ctxImgURL } = useContext(ImgSelectContext)
+  const project = useProject();
   const refTitle = useRef<HTMLDivElement>(null);
   const refTags = useRef<HTMLDivElement>(null);
   const refBody = useRef<HTMLDivElement>(null);
-  const ctx = useImgSelectContext();
   const navigate = useNavigate();
+  const imagePath = useImage();
+  const setImage = useSetImage();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -39,13 +40,13 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
 
   // upload or select で画像をセット
   useEffect(() => {
-    ctxImgURL !== '' && setImgURL(ctxImgURL)
+    imagePath !== '' && setImgURL(imagePath)
     // 画像がセットされたら保存してしまう。
     if (refBody.current && imgURL) {
       refBody.current.focus();
       refBody.current.blur();
     }
-  }, [ctxImgURL, imgURL]);
+  }, [imagePath, imgURL]);
 
   const KeyBinding = (e: React.KeyboardEvent) => {
     if (e.code === 'Enter' && e.altKey) {
@@ -75,7 +76,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
         project: project,
         tags: tagText === '_istag' ? [] : tagText.length === 0 ? ['_notag'] : tagText.split(",").filter(v => v !== ''),
         content: refBody.current.innerText.replaceAll('\n\n', '\n'),
-        image: ctxImgURL,
+        image: imagePath,
       };
 
       await postContent(data);
@@ -85,8 +86,8 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
   }
 
   const DeleteImage = () => {
-    ctx.setCurrentImgURL('');
     setImgURL(undefined);
+    setImage('');
     window.scrollTo(0, 0);
   }
 

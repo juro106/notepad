@@ -108,7 +108,7 @@ const Item: FC<{ v: Content }> = ({ v }) => {
       </li>
     );
   } else if (content === 'date') {
-    return <li><h2>{title}</h2></li>
+    return <li className='bydate'><h2>{title}</h2></li>
   }
 
   return <></>;

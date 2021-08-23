@@ -5,14 +5,15 @@ const initialState: LayoutState = {
   grid: false,
 }
 
-      // Object.assign({}, state, {
-      //   grid: !state.grid
-      // });
+// Object.assign({}, state, {
+//   grid: !state.grid
+// });
 const layoutReducer = (state: LayoutState = initialState, action: LayoutType['action']) => {
   switch (action.type) {
     case ACTION_TYPE.TOGGLE_LAYOUT:
       // return Object.assign({}, state,  {grid: !state.grid });
-      return {...state, 
+      return {
+        ...state,
         grid: !state.grid
       }
     default:

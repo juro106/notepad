@@ -15,6 +15,10 @@ export type ImageState = {
   path: string;
 }
 
+export type ImageSelectorState = {
+  selector: boolean;
+}
+
 // project の action の型
 export type ImageAction = {
   type: keyof Actions;

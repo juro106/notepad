@@ -1,9 +1,12 @@
 import { FC, memo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Content } from 'models/content';
+import { useSetMeta } from 'hooks/useSetMeta';
 
 const Main: FC<{ data: Content }> = memo(({ data }) => {
   const { title, slug, tags, content, image, created_at, updated_at } = data;
+
+  useSetMeta(title, slug);
 
   return (
     <>

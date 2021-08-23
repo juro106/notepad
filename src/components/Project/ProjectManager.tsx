@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 // import { useQuery } from 'react-query';
 import getProjects from 'services/get-projects';
 import deleteProject from 'services/delete-project';
-import { useProjectContext } from 'contexts/projectContext';
+import { useSetProject } from 'hooks/useSetProject';
 import { useCloseModal } from 'hooks/useCloseModal';
 import Overlay from 'components/Modal/Overlay';
 import ModalContents from 'components/Modal/ModalContents';
@@ -69,7 +69,7 @@ const Contents: FC = () => {
 }
 
 const List: FC<{ data: string[] | undefined, changeState: (arg: boolean) => void }> = ({ data, changeState }) => {
-  const ctx = useProjectContext();
+  const setCurrentProject = useSetProject();
   // const navigate = useNavigate();
   const [projectName, setProjectName] = useState<string>('');
   const [toastOn, setToastOn] = useState(false);
@@ -83,7 +83,7 @@ const List: FC<{ data: string[] | undefined, changeState: (arg: boolean) => void
   }
 
   const handleClick = (arg: string) => {
-    ctx.setCurrentProject(arg); // Context(現在のProject)の値を更新
+    setCurrentProject(arg); // Context(現在のProject)の値を更新
     changeState && changeState(true); // flg=ture <-再読込 & setIsEmptyProject=false <-自明なので問答無用で処理
   }
 
@@ -126,12 +126,12 @@ const ToastWarning: FC<{
   toastClose,
 }) => {
     const { elementRef, closeModal } = useCloseModal(toastClose);
-    const ctx = useProjectContext();
+    const setCurrentProject = useSetProject();
 
     const handleDelete = async (arg: string) => {
       const res = await deleteProject(arg);
       console.log(res);
-      ctx.setCurrentProject('');
+      setCurrentProject('');
       toastClose();
       changeState(true); // 処理が終わったら再描写させる
     }
@@ -158,5 +158,4 @@ const ToastWarning: FC<{
     return <></>;
   }
 export default ProjectManager;
-
 

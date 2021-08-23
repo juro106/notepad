@@ -3,14 +3,15 @@ import { queryClient } from 'index';
 import Compressor from 'compressorjs';
 // import { useImgSelectContext } from 'contexts/imgSelectContext';
 import { useProject } from 'hooks/useProject';
-import { useImageSetter } from 'hooks/useImageSetter';
+import { useSetImage } from 'hooks/useSetImage';
+import { generateUuid } from 'services/functions';
 import { ImFilePicture } from 'react-icons/im';
 
 // if new or edit contents -> mode isSetter
 // else if image manager -> mode off
 const ImageUploader: FC<{ isSetter?: boolean, changeState?: (arg: boolean) => void }> = ({ isSetter, changeState }) => {
   const project = useProject();
-  const imageSetter = useImageSetter();
+  const setImage = useSetImage();
 
   const imageHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files === null) {
@@ -31,6 +32,9 @@ const ImageUploader: FC<{ isSetter?: boolean, changeState?: (arg: boolean) => vo
       console.log('no image');
       return;
     }
+
+    const lastFileName = fileName === 'iamge.jpg' ? generateUuid() : fileName;
+  
     new Compressor(image, {
       quality: 0.8,
       maxWidth: 1600,
@@ -38,7 +42,7 @@ const ImageUploader: FC<{ isSetter?: boolean, changeState?: (arg: boolean) => vo
         // console.log('image', image);
         console.log('result', result);
         const data = new FormData();
-        data.append('file', result, fileName);
+        data.append('file', result, lastFileName);
         data.append('project', project);
         console.log('data', data.get('file'));
         const options = {
@@ -53,7 +57,7 @@ const ImageUploader: FC<{ isSetter?: boolean, changeState?: (arg: boolean) => vo
           console.log('upload success');
         }).then(() => {
           isSetter
-            ? imageSetter(`/images/${project}/${fileName}`)
+            ? setImage(`/images/${project}/${lastFileName}`)
             : changeState && changeState(true); // 全体の画像を更新する
         }).then(() => {
           queryClient.removeQueries(['images-all', project]); // 画像一覧のキャッシュ削除

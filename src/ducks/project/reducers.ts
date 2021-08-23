@@ -2,7 +2,7 @@ import { ProjectState, ProjectType } from './types';
 import { ACTION_TYPE } from './actions';
 
 const initialState: ProjectState = {
-    project: 'fugaProject',
+    project: '',
 }
 
 const projectReducer = (state: ProjectState = initialState, action: ProjectType['action']) => {

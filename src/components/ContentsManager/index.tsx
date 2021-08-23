@@ -1,13 +1,12 @@
 import {
   FC,
   useRef,
-  useContext,
   useState,
   useEffect,
   Suspense,
 } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { ProjectContext } from 'contexts/projectContext';
+import { useProject } from 'hooks/useProject';
 import ErrorBoundary from 'ErrorBoundary';
 import getContentsAll from 'services/get-contents-all';
 import { Content } from 'models/content';
@@ -18,7 +17,7 @@ import Spinner from 'components/common/Spinner';
 const ContentsManager: FC = () => {
   const [data, setData] = useState<Content[] | undefined>(undefined);
   const [flg, setFlg] = useState<boolean>(false);
-  const { project } = useContext(ProjectContext);
+  const project = useProject();
   const ebKey = useRef(0);
 
   const changeState = (arg: boolean) => {

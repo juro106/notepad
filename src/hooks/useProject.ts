@@ -1,10 +1,14 @@
-import { useContext } from 'react';
-import { ProjectContext } from 'contexts/projectContext';
+// import { useContext } from 'react';
+// import { ProjectContext } from 'contexts/projectContext';
+import { useSelector } from 'store';
 
 export function useProject(): string {
-  const { project } = useContext(ProjectContext);
+  // const { project } = useContext(ProjectContext);
+  // if (project === null) throw Error("ProjectProvider でラップして下さい。");
+  //
+  // return project;
 
-  if (project === null) throw Error("ProjectProvider でラップして下さい。");
+  const project = useSelector(state => state.project.project);
 
   return project;
 }

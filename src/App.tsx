@@ -2,7 +2,8 @@ import { FC } from 'react';
 import { Routes, Route } from 'react-router';
 // import firebase from 'auth/firebase';
 import { AuthProvider } from 'contexts/authContext';
-import { ProjectProvider } from 'contexts/projectContext';
+import DirectAccessFilter from 'contexts/directAccessFilter';
+// import { ProjectProvider } from 'contexts/projectContext';
 import Layout from 'components/Layout';
 import Login from 'components/Login';
 import About from 'components/FixedPage/About';
@@ -32,7 +33,7 @@ import 'App.css';
 const App: FC = () => {
   return (
     <AuthProvider>
-      <ProjectProvider>
+      <DirectAccessFilter>
         <Layout>
           <Routes>
             <Route path='/hookstest' element={<HooksTest />} />
@@ -59,7 +60,7 @@ const App: FC = () => {
             <Route path='/' element={<PublicHome />} />
           </Routes>
         </Layout >
-      </ProjectProvider>
+      </DirectAccessFilter>
     </AuthProvider>
   );
 }

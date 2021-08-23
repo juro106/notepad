@@ -1,11 +1,8 @@
-import {
-  FC,
-  useContext,
-  // useState
-} from 'react';
-import { ImgSelectContext, useImgSelectContext } from 'contexts/imgSelectContext';
-import { useProject } from 'hooks/useProject';
+import { FC, } from 'react';
 import { useQuery } from 'react-query';
+import { useProject } from 'hooks/useProject';
+import { useSetImage } from 'hooks/useSetImage';
+import { useImageSelector } from 'hooks/useImageSelector';
 import getImages from 'services/get-images';
 import { useCloseModal } from 'hooks/useCloseModal';
 import Overlay from 'components/Modal/Overlay';
@@ -17,11 +14,10 @@ import PageTitle from 'components/Heading/PageTitle';
 import Spinner from 'components/common/Spinner';
 
 const ImageSelector: FC = () => {
-  const ctx = useImgSelectContext();
-  const { show } = useContext(ImgSelectContext);
+  const { selectorState, openImageSelector} = useImageSelector();
 
   const openSelector = () => {
-    ctx.setCurrentState(true);
+    openImageSelector();
   }
 
   return (
@@ -34,32 +30,26 @@ const ImageSelector: FC = () => {
         data-tooltip='select an image&#13;&#10;画像を選択'>
         <ImImages size={30} color={'#666'} />
       </div>
-      {show && <Contents />}
+      {selectorState && <Contents />}
     </>
   );
 }
 
 const Contents: FC = () => {
-  const { show } = useContext(ImgSelectContext);
+  const { selectorState,  closeImageSelector} = useImageSelector();
   const project = useProject();
-  // console.log(show);
-  const ctx = useImgSelectContext();
 
-  const closeSelector = () => {
-    ctx.setCurrentState(false);
-  }
-
-  const { elementRef, closeModal } = useCloseModal(closeSelector);
+  const { elementRef, closeModal } = useCloseModal(closeImageSelector);
 
   const { data } = useQuery(['images-all', project], () => getImages(project));
   // console.log(data);
-  if (show) {
+  if (selectorState) {
     return (
       <Overlay id='image-selector-wrapper' onClose={closeModal}>
         <ModalContents id='image-selector-contents' elRef={elementRef}>
           <PageTitle>画像を選択</PageTitle>
           <Images data={data} />
-          <div className="image-selector-button-close" onClick={closeSelector}>close</div>
+          <div className="image-selector-button-close" onClick={closeImageSelector}>close</div>
         </ModalContents>
       </Overlay>
     );
@@ -68,11 +58,14 @@ const Contents: FC = () => {
   return <></>
 }
 
+
 const Images: FC<{ data: ImageFile[] | undefined }> = ({ data }) => {
-  const ctx = useImgSelectContext();
-  const setImage = (arg: string) => {
-    ctx.setCurrentImgURL(arg);
-    ctx.setCurrentState(false);
+  const setImage = useSetImage();
+  const {closeImageSelector} = useImageSelector();
+
+  const setImageSrc = (arg: string) => {
+    setImage(arg);
+    closeImageSelector();
   }
 
   // const [url, setUrl] = useState<string>('');
@@ -91,7 +84,7 @@ const Images: FC<{ data: ImageFile[] | undefined }> = ({ data }) => {
         <ul className='image-list'>
           {data.map((v, k) => (
             <li key={`img_${k}`} className='image-list-item'>
-              <div className="image-item-box" onClick={() => setImage(v.name)}>
+              <div className="image-item-box" onClick={() => setImageSrc(v.name)}>
                 <img src={v.name} alt={v.name} title={v.name} decoding='async' className='image-item' />
               </div>
               {/* プレビューは不要だと感じたので消去 2021/08/10
