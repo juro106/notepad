@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react';
+import { FC } from 'react';
 import Compressor from 'compressorjs';
 import { useProject } from 'hooks/useProject';
 import { useSetImage } from 'hooks/useSetImage';

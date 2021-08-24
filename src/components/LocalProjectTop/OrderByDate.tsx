@@ -13,7 +13,7 @@ import ContentsListHeader from 'components/common/ContentsListHeader';
 import LocalPageOuter from 'components/Local/LocalPageOuter';
 import Visuallyhidden from 'components/Heading/Visuallyhidden';
 import Spinner from 'components/common/Spinner';
-import { useLayout }  from 'hooks/useLayout';
+import { useLayout } from 'hooks/useLayout';
 
 const OrderByDate: FC = () => {
   const project = useProject();
@@ -34,7 +34,7 @@ const OrderByDate: FC = () => {
 
 const Fetch: FC<{ project: string }> = ({ project }) => {
   const { data } = useQuery(
-    ['contents-all', project, {sort_by: 'created_at', order_by: 'DESC'}], 
+    ['contents-all', project, { sort_by: 'created_at', order_by: 'DESC' }],
     () => getContentsAll(project, true, '?sort_by=created_at')
   );
 
@@ -47,7 +47,7 @@ const Fetch: FC<{ project: string }> = ({ project }) => {
 
 const ListFilter: FC<{ data: Content[], project: string }> = memo(({ data, project }) => {
   const embedDateToArray = useEmbedDateToArray(data, project);
-  const queryKey = ['contents-all', project, {sort_by: 'created_at', order_by: 'DESC', embed: 'date'}]
+  const queryKey = ['contents-all', project, { sort_by: 'created_at', order_by: 'DESC', embed: 'date' }]
   const oldArray = queryClient.getQueryData(queryKey);
   // キャッシュがなければ配列作成
   const memoArray = oldArray ? oldArray as Content[] : embedDateToArray();
@@ -82,6 +82,7 @@ const List: FC<{ list: Content[], deleteItem: (arg: string) => void }> = ({ list
         {list.map(v => (
           <Item key={v.slug} v={v} deleteItem={deleteItem} />
         ))}
+        <li className='splitter'></li>
       </ul>
     )
   } else if (list.length === 0) {
@@ -122,7 +123,7 @@ const Item: FC<{ v: Content, deleteItem: (arg: string) => void }> = ({ v, delete
           deleteFunc={deleteItem}
           grid={grid}
         />
-        <div className={isToast ? 'hidden' : grid ? 'delete-button-grid': 'delete-button'} onClick={() => setIsToast(true)}>
+        <div className={isToast ? 'hidden' : grid ? 'delete-button-grid' : 'delete-button'} onClick={() => setIsToast(true)}>
           <TrashIcon />
         </div>
       </li>

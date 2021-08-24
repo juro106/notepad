@@ -21,9 +21,7 @@ import ImageSelector from 'components/Image/ImageSelector';
 import ImageUploader from 'components/Image/ImageUploader';
 
 const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState }) => {
-  // const [titleText, setTitleText] = useState<string>('');
   const [imgURL, setImgURL] = useState<string | undefined>(undefined);
-  // const [isPostable, setIsPostable] = useState<boolean>(false);
   const { uid } = useContext(AuthContext);
   const project = useProject();
   const refTitle = useRef<HTMLDivElement>(null);
@@ -40,13 +38,16 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
 
   // upload or select で画像をセット
   useEffect(() => {
-    imagePath !== '' && setImgURL(imagePath)
+    if (imagePath !== '') {
+      setImgURL(imagePath)
+      setImage('');
+    }
     // 画像がセットされたら保存してしまう。
     if (refBody.current && imgURL) {
       refBody.current.focus();
       refBody.current.blur();
     }
-  }, [imagePath, imgURL]);
+  }, [imagePath, setImage, imgURL]);
 
   const KeyBinding = (e: React.KeyboardEvent) => {
     if (e.code === 'Enter' && e.altKey) {

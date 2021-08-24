@@ -1,7 +1,8 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { useCloseModal } from 'hooks/useCloseModal';
 import Overlay from 'components/Modal/Overlay';
 import ModalContents from 'components/Modal/ModalContents';
+import { usePushState } from 'hooks/usePushState';
 
 const ImagePreviewer: FC<{
   url: string,
@@ -13,20 +14,7 @@ const ImagePreviewer: FC<{
   closePreview
 }) => {
     const { elementRef, closeModal } = useCloseModal(closePreview);
-
-    useEffect(() => {
-      // プレビューが呼ばれたときに初めて pushState する。
-      if (isPreview) {
-      window.history.pushState(null, '', null);
-      window.addEventListener('popstate',
-        (event: PopStateEvent) => {
-          event.preventDefault();
-          // console.log('browser back');
-          closePreview();
-        },
-        { once: true })
-      }
-    }, [closePreview, isPreview])
+    usePushState(isPreview, closePreview);
 
     if (isPreview) {
       return (

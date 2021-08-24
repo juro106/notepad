@@ -2,20 +2,18 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Content, RelatedContents, RelatedList } from 'models/content';
 import { useLayout } from 'hooks/useLayout';
-import LayoutSwitcher from 'components/Button/LayoutSwitcher';
+import RelatedMenu from 'components/common/RelatedMenu';
 
 // new
 const Related: FC<{ data: RelatedList | undefined }> = ({ data }) => {
   if (data && data.length > 0) {
     return (
-      <>
-        <LayoutSwitcher />
-        <div className="related-contents">
-          {data.map((v, i) => (
-            <ItemBlock key={`block_${i}`} data={v} />
-          ))}
-        </div>
-      </>
+      <div className="related-contents">
+        <RelatedMenu />
+        {data.map((v, i) => (
+          <ItemBlock key={`block_${i}`} data={v} />
+        ))}
+      </div>
     )
   }
 
@@ -36,11 +34,11 @@ const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
               </Link>
             </h3>
             {v[1] &&
-            <ul className={grid ? 'grid-list' : 'related-item-list'}>
-              {v[1].map(x => (
-                <Item key={x.slug} data={x} />
-              ))}
-            </ul>}
+              <ul className={grid ? 'grid-list' : 'related-item-list'}>
+                {v[1].map(x => (
+                  <Item key={x.slug} data={x} />
+                ))}
+              </ul>}
           </div>
         ))}
       </>

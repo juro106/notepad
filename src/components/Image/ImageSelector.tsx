@@ -1,10 +1,11 @@
-import { FC, } from 'react';
+import { FC } from 'react';
 import { useQuery } from 'react-query';
 import { useProject } from 'hooks/useProject';
 import { useSetImage } from 'hooks/useSetImage';
 import { useImageSelector } from 'hooks/useImageSelector';
-import getImages from 'services/get-images';
+import { usePushState } from 'hooks/usePushState';
 import { useCloseModal } from 'hooks/useCloseModal';
+import getImages from 'services/get-images';
 import Overlay from 'components/Modal/Overlay';
 import ModalContents from 'components/Modal/ModalContents';
 // import ImagePreview from 'components/ImagePreview';
@@ -14,7 +15,7 @@ import PageTitle from 'components/Heading/PageTitle';
 import Spinner from 'components/common/Spinner';
 
 const ImageSelector: FC = () => {
-  const { selectorState, openImageSelector} = useImageSelector();
+  const { selectorState, openImageSelector } = useImageSelector();
 
   const openSelector = () => {
     openImageSelector();
@@ -36,7 +37,7 @@ const ImageSelector: FC = () => {
 }
 
 const Contents: FC = () => {
-  const { selectorState,  closeImageSelector} = useImageSelector();
+  const { selectorState, closeImageSelector } = useImageSelector();
   const project = useProject();
 
   const { elementRef, closeModal } = useCloseModal(closeImageSelector);
@@ -58,15 +59,17 @@ const Contents: FC = () => {
   return <></>
 }
 
-
 const Images: FC<{ data: ImageFile[] | undefined }> = ({ data }) => {
   const setImage = useSetImage();
-  const {closeImageSelector} = useImageSelector();
+  const { selectorState, closeImageSelector } = useImageSelector();
 
   const setImageSrc = (arg: string) => {
     setImage(arg);
     closeImageSelector();
   }
+
+  // ブラウザバックで閉じる
+  usePushState(selectorState, closeImageSelector);
 
   // const [url, setUrl] = useState<string>('');
   // const [isPreview, setIsPreview] = useState(false);

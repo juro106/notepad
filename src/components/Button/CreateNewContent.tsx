@@ -4,7 +4,7 @@ import { BsFillPlusSquareFill } from 'react-icons/bs';
 import { useMatch } from 'react-router';
 
 const CreateNewContent: FC = () => {
-  const New = useMatch('/New');
+  const New = useMatch('/local/new-contents');
 
   if (!New) {
     return (

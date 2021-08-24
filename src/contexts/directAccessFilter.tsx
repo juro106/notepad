@@ -33,6 +33,10 @@ const DirectAccessFilter: FC = ({ children }) => {
   // url に 'local' が含まれている場合
   if (pathArray[1] === 'local') {
     // project が url に含まれている場合
+    if (pathArray[2] === 'tags' || pathArray[2] === 'bydate') {
+      setCurrentProject(pathArray[3]);
+      return <>{children}</>;
+    }
     if (pathArray.length > 3) {
       // ユーザーはログインしている前提なので url から project を設定する 
       setCurrentProject(pathArray[2]);

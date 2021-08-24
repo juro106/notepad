@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import ListSwitcher from 'components/common/ListSwitcher';
-import LayoutSwitcher from 'components/Button/LayoutSwitcher';
+import RelatedMenu from 'components/common/RelatedMenu';
 
 const ContentsListHeader: FC = () => {
   return (
     <>
       <ListSwitcher />
-      <LayoutSwitcher />
+      <RelatedMenu />
     </>
   )
 }

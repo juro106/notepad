@@ -3,21 +3,19 @@ import { Link } from 'react-router-dom';
 import { Content, RelatedContents, RelatedList } from 'models/content';
 import { useParams } from 'react-router';
 import { useLayout } from 'hooks/useLayout';
-import LayoutSwitcher from 'components/Button/LayoutSwitcher';
+import RelatedMenu from 'components/common/RelatedMenu';
 
 // local
 const Related: FC<{ data: RelatedList | undefined, project: string, }> = ({ data, project, }) => {
 
   if (data && data.length > 0) {
     return (
-      <>
-      <LayoutSwitcher />
       <div className='related-contents'>
+        <RelatedMenu />
         {data.map((v, i) => (
           <ItemBlock key={`block_${i}`} data={v} project={project} />
         ))}
       </div>
-      </>
     )
   }
 
