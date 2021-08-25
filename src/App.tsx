@@ -27,6 +27,7 @@ import LocalHomeRedirect from 'components/LocalHomeRedirect';
 //
 import HooksTest from 'components/HooksTest';
 import TestRedux from 'components/TestRedux';
+import TestReduxContentsList from 'components/TestReduxContentsList';
 
 import 'App.css';
 
@@ -38,6 +39,7 @@ const App: FC = () => {
           <Routes>
             <Route path='/hookstest' element={<HooksTest />} />
             <Route path='/local/public/test-redux' element={<TestRedux />} />
+            <Route path='/local/public/test-redux-contents-list' element={<TestReduxContentsList />} />
             {/**/}
             <Route path='/home' element={<LocalHomeRedirect />} />
             <Route path='/example' element={<ContentEditable />} />

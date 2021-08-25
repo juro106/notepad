@@ -81,14 +81,12 @@ const Item: FC<{ data: Content, deleteItem: (arg: string) => void }> = ({ data, 
             {content.slice(0, 80)}
           </div>
         </Link>
-        <MiniToastWarning
-          itemName={title}
+        {isToast && 
+          <MiniToastWarning
           slug={slug}
-          isToast={isToast}
           closeToast={closeToast}
           deleteFunc={deleteItem}
-          grid={grid}
-        />
+        />}
         <div className={isToast ? 'hidden' : grid ? 'delete-button-grid': 'delete-button'} onClick={() => setIsToast(true)}>
           <TrashIcon />
         </div>

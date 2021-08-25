@@ -28,6 +28,10 @@ const Menu: FC = () => {
       name: '*Test Redux',
       url: '/local/public/test-redux'
     },
+    {
+      name: '*Test Redux Contents List',
+      url: '/local/public/test-redux-contents-list'
+    },
   ];
 
   return (

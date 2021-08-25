@@ -1,3 +1,8 @@
+export interface DateItem {
+  created_at: string,
+  format_type?: string,
+}
+
 export type Content = {
   user: string;
   title: string;

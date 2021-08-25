@@ -80,14 +80,7 @@ const Item: FC<{ tag: TagNum, deleteItem: (arg: string) => void }> = memo(({ tag
       </Link>
       {tag.number === 0 &&
         <>
-          <MiniToastWarning
-            itemName={tag.name}
-            slug={tag.name}
-            isToast={isToast}
-            closeToast={closeToast}
-            deleteFunc={deleteItem}
-            grid={grid}
-          />
+          {isToast && <MiniToastWarning slug={tag.name} closeToast={closeToast} deleteFunc={deleteItem} />}
           <div className={isToast ? 'hidden' : grid ? 'delete-button-grid' : 'delete-button'} onClick={() => setIsToast(true)}>
             <TrashIcon />
           </div>

@@ -3,6 +3,8 @@ import layoutReducer from './layout';
 import projectReducer from './project';
 import modalReducer from './modal';
 import imageReducers from './image';
+import toastReducers from './toast';
+import contentsReducers from './contents';
 
 const fugaState = {
   msg: 'Hello world State'
@@ -18,5 +20,7 @@ export const reducers = combineReducers({
   project: projectReducer,
   modal: modalReducer,
   image: imageReducers,
+  toast: toastReducers,
+  contents: contentsReducers,
 });
 
