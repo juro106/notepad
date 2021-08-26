@@ -1,21 +1,17 @@
 import { FC, useState, memo, Suspense } from 'react';
 import { Link } from 'react-router-dom'
-import { useQuery } from 'react-query';
 import { Content } from 'models/content';
-import getContentsAll from 'services/get-contents-all';
 import { useLayout } from 'hooks/useLayout';
 import { useProject } from 'hooks/useProject';
-import TrashIcon from 'components/Button/TrashIcon';
 import MiniToastWarning from 'components/Local/MiniToastWarning';
 
 import ContentsListHeader from 'components/common/ContentsListHeader';
 import Spinner from 'components/common/Spinner';
 
 // additional
-import { useSelector } from 'store';
-import { useDispatch } from 'react-redux';
-import { initContents } from 'ducks/contents/actions';
 import { useDeleteItem } from 'hooks/useDeleteItem';
+import TrashAndCancel from 'components/Button/TrashAndCancel';
+import { useFetch } from 'hooks/useFetch';
 
 
 /* 
@@ -23,42 +19,17 @@ import { useDeleteItem } from 'hooks/useDeleteItem';
  * 
 */
 const TestReduxContentsList: FC = memo(() => {
+  const data = useFetch('contentsAll');
+
   return (
     <main>
       <ContentsListHeader />
       <Suspense fallback={<Spinner />}>
-        <ContentsList />
+       {data && <List list={data} />}
       </Suspense>
     </main>
   );
 });
-
-const ContentsList: FC = () => {
-  const project = useProject();
-  // const [list, setList] = useState<Content[] | undefined>(undefined);
-  //
-  // まずは store のデータを見に行く。
-  const initData: Content[] = useSelector(state => state.contents.contents);
-
-  // DB の取得もする（1回取得すればキャッシュしてくれる）
-  const { data } = useQuery(['contents-all----', project], () => getContentsAll(project, true));
-
-  // storeにデータがない && DB のデータがあるなら store へ dispatch 
-  const dispatch = useDispatch();
-  if (initData.length < 1 && data) dispatch(initContents(data));
-
-  console.log('dispatch, initContents');
-  console.log('select, initData');
-
-  if (initData && initData.length > 0) {
-    console.log('use store data.');
-    return <List list={initData} />
-  } else if (data) {
-    return <List list={data} />
-  }
-
-  return <></>
-}
 
 const List: FC<{ list: Content[] }> = ({ list }) => {
   const { grid } = useLayout();
@@ -89,14 +60,11 @@ const Item: FC<{ data: Content }> = ({ data }) => {
   const currentProject = useProject();
   const projectDir = project ? project : currentProject;
 
-  const [isToast, setIsToast] = useState(false);
-  const closeToast = () => {
-    setIsToast(false);
-  }
+  const [isCancel, setIsCancel] = useState(false);
 
   // 自分が消すボタンに変身すれば良い。
-  // deletefuncも 子が slug さえ貰えば良い話なので、ここで親から渡す必要はない？
-  const deleteItem = useDeleteItem(slug);
+  // deletefuncも 子が slug さえ貰えば良い話なので、ここで親から渡す必要はない？ まだ必要
+  const deleteItem = useDeleteItem();
 
   if (tags && tags.length > 0) {
     return (
@@ -113,16 +81,15 @@ const Item: FC<{ data: Content }> = ({ data }) => {
             {content.slice(0, 80)}
           </div>
         </Link>
-        {isToast && <MiniToastWarning slug={slug} closeToast={closeToast} deleteFunc={deleteItem} />}
-        <div className={isToast ? 'hidden' : grid ? 'delete-button-grid' : 'delete-button'} onClick={() => setIsToast(true)}>
-          <TrashIcon />
-        </div>
+        {isCancel && <MiniToastWarning slug={slug} deleteFunc={deleteItem} />}
+        <TrashAndCancel isCancel={isCancel} setIsCancel={setIsCancel} />
       </li>
     );
   }
 
   return <></>;
 }
+// <div className={isToast ? 'hidden' : grid ? 'delete-button-grid' : 'delete-button'} onClick={() => setIsToast(!isToast)}>
 
 export default TestReduxContentsList;
 

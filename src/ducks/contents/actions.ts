@@ -1,10 +1,16 @@
 import { Content } from 'models/content';
 // Actions
-export const SET_CONTENTS = 'SET_IMAGE'  as const;
+export const SET_CONTENTS = 'SET_CONTENTS'  as const;
+export const SET_CONTENTS_BYDATE = 'SET_CONTENTS_BYDATE'  as const;
 export const INIT_CONTENTS = 'INIT_CONTENTS'  as const;
+export const INIT_CONTENTS_BYDATE = 'INIT_CONTENTS_BYDATE'  as const;
 export const DELETE_CONTENTS = 'DELETE_CONTENTS'  as const;
 
 // Action Creators
+export const initContents = () => ({
+  type: INIT_CONTENTS,
+});
+
 export const setContents = (contents: Content[]) => ({
   type: SET_CONTENTS,
   payload: {
@@ -12,12 +18,17 @@ export const setContents = (contents: Content[]) => ({
   } 
 });
 
-export const initContents = (contents: Content[]) => ({
-  type: INIT_CONTENTS,
+export const setContentsByDate = (contents: Content[]) => ({
+  type: SET_CONTENTS_BYDATE,
   payload: {
     contents,
   } 
 });
+
+export const initContentsByDate = () => ({
+  type: INIT_CONTENTS_BYDATE,
+});
+
 
 export const deleteContents = (slug: string) => ({
   type: DELETE_CONTENTS,
@@ -26,5 +37,11 @@ export const deleteContents = (slug: string) => ({
   } 
 });
 
-export type Actions = ReturnType<typeof setContents | typeof initContents | typeof deleteContents>;
+export type Actions = ReturnType<
+  typeof setContents 
+  | typeof initContents
+  | typeof setContentsByDate 
+  | typeof initContentsByDate
+  | typeof deleteContents
+  >;
 

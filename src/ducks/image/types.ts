@@ -1,4 +1,4 @@
-import { Actions } from './actions';
+import { ImageActions } from './actions';
 
 // store の state の型
 export type RootStateType = {
@@ -21,7 +21,7 @@ export type ImageSelectorState = {
 
 // project の action の型
 export type ImageAction = {
-  type: keyof Actions;
+  type: keyof ImageActions;
   payload: ImageState; // ProjectState {project: string}
 }
 

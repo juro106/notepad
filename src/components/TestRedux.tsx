@@ -6,10 +6,12 @@ import getContentsAll from 'services/get-contents-all';
 
 import { toggleLayout } from 'ducks/layout/actions';
 import { setProject } from 'ducks/project/actions';
-import { toggleToast } from 'ducks/toast/actions';
-import { initContents } from 'ducks/contents/actions';
+// import { toggleToast } from 'ducks/toast/actions';
+import { setContents } from 'ducks/contents/actions';
 
 import { Content } from 'models/content';
+
+import { useFetch } from 'hooks/useFetch';
 
 const TestRedux: FC = () => {
   const fuga = useSelector(state => state.fuga);
@@ -18,17 +20,19 @@ const TestRedux: FC = () => {
   const dispatch = useDispatch();
   const newProject = 'I am new Project';
   const anotherProject = 'シン・プロジェクト';
-  const slug1 = 'radiohead';
-  const slug2 = 'beatles';
-  const toastState = useSelector(state => state.toast);
+  // const slug1 = 'radiohead';
+  // const slug2 = 'beatles';
+  // const toastState = useSelector(state => state.toast);
 
   const { data } = useQuery(['contents-all-test'], () => getContentsAll(project, true));
 
+  useFetch('contentsAll');
+
   useEffect(() => {
-    data && dispatch(initContents(data))
+    data && dispatch(setContents(data))
   }, [data, dispatch]);
 
-  const reduxData = useSelector(state => state.contents.contents);
+  const reduxData = useSelector(state => state.contents.list);
   console.log('reduxData', reduxData);
 
 
@@ -38,16 +42,6 @@ const TestRedux: FC = () => {
 
     const newData = data.filter(item => item.slug === 'image');
     console.log(newData);
-  }
-
-  const checkToastState = (slug: string) => {
-    if (slug === toastState.slug) {
-      if (toastState.isToast) {
-        return 'True';
-      } else {
-        return 'False';
-      }
-    }
   }
 
   return (
@@ -62,23 +56,6 @@ const TestRedux: FC = () => {
 
       <p>現在のプロジェクト名: {project}</p>
       <Child />
-      <div>
-        <h2>Toast</h2>
-        <div>
-          <span>
-            radiohead: {toastState.slug}.
-            isToast:{checkToastState('radiohead')}
-          </span>
-          <button onClick={() => dispatch(toggleToast(slug1))}>toggle</button>
-        </div>
-        <div>
-          <span>
-            beatles: {toastState.slug}.
-            isToast:{checkToastState('beatles')}
-          </span>
-          <button onClick={() => dispatch(toggleToast(slug2))}>toggle</button>
-        </div>
-      </div>
     </main>
   )
 }

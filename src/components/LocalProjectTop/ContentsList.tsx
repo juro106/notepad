@@ -1,45 +1,31 @@
-import { FC, useState, useEffect, useCallback } from 'react';
+import { FC, useState } from 'react';
 import { Link } from 'react-router-dom'
-import { useQuery } from 'react-query';
 import { Content } from 'models/content';
-import deleteContent from 'services/delete-content';
-import getContentsAll from 'services/get-contents-all';
 import { useLayout } from 'hooks/useLayout';
+import { useFetch } from 'hooks/useFetch';
 import { useProject } from 'hooks/useProject';
-import TrashIcon from 'components/Button/TrashIcon';
 import MiniToastWarning from 'components/Local/MiniToastWarning';
+import { useDeleteItem } from 'hooks/useDeleteItem';
+import TrashAndCancel from 'components/Button/TrashAndCancel';
 
 const ContentsList: FC<{ project: string }> = ({ project }) => {
-  const [list, setList] = useState<Content[] | undefined>(undefined);
-  const { data } = useQuery(['contents-all', project], () => getContentsAll(project, true));
-
-  useEffect(() => {
-    setList(data);
-  }, [data])
-
-  // console.log(param);
-  const deleteItem = useCallback(async (slug: string) => {
-    console.log(`delete: ${slug}`);
-    list && setList(list.filter(item => item.slug !== slug));
-    const msg = await deleteContent(project, slug);
-    console.log(msg);
-  }, [list, setList, project]);
+  const list = useFetch('contents-all');
 
   if (list) {
-    return <List list={list} deleteItem={deleteItem} />
+    return <List list={list} />
   }
 
   return <></>
 }
 
-const List: FC<{ list: Content[], deleteItem: (arg: string) => void }> = ({ list, deleteItem }) => {
+const List: FC<{ list: Content[] }> = ({ list }) => {
   const { grid } = useLayout();
 
   if (list.length > 0) {
     return (
       <ul className={grid ? 'grid-list' : "item-list"}>
         {list.map(v => (
-          <Item key={v.slug} data={v} deleteItem={deleteItem} />
+          <Item key={v.slug} data={v} />
         ))}
       </ul>
     )
@@ -55,16 +41,14 @@ const List: FC<{ list: Content[], deleteItem: (arg: string) => void }> = ({ list
   return <></>
 }
 
-const Item: FC<{ data: Content, deleteItem: (arg: string) => void }> = ({ data, deleteItem }) => {
+const Item: FC<{ data: Content }> = ({ data }) => {
   const { title, slug, updated_at, tags, project, content } = data;
   const { grid } = useLayout();
-  const currentProject = useProject(); 
+  const currentProject = useProject();
   const projectDir = project ? project : currentProject;
 
-  const [isToast, setIsToast] = useState(false);
-  const closeToast = () => {
-    setIsToast(false);
-  }
+  const [isCancel, setIsCancel] = useState(false);
+  const deleteItem = useDeleteItem();
 
   if (tags && tags.length > 0) {
     return (
@@ -77,19 +61,12 @@ const Item: FC<{ data: Content, deleteItem: (arg: string) => void }> = ({ data, 
             ))}
           </ul>
           <div className="item-dscr">
-            {updated_at ? `${updated_at.slice(0, 10)}: ` : ''}
+            {updated_at && `${updated_at.slice(0, 10)}: `}
             {content.slice(0, 80)}
           </div>
         </Link>
-        {isToast && 
-          <MiniToastWarning
-          slug={slug}
-          closeToast={closeToast}
-          deleteFunc={deleteItem}
-        />}
-        <div className={isToast ? 'hidden' : grid ? 'delete-button-grid': 'delete-button'} onClick={() => setIsToast(true)}>
-          <TrashIcon />
-        </div>
+        {isCancel && <MiniToastWarning slug={slug} deleteFunc={deleteItem} />}
+        <TrashAndCancel isCancel={isCancel} setIsCancel={setIsCancel} />
       </li>
     );
   }

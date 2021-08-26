@@ -1,8 +1,3 @@
-export interface DateItem {
-  created_at: string,
-  format_type?: string,
-}
-
 export type Content = {
   user: string;
   title: string;
@@ -31,6 +26,14 @@ export type TagNum = {
   project: string;
 }
 
+export type DayMap = { [key: string]: Content[] }
+export type MonthMap = Map<string, DayMap>
+
+export interface DateItem {
+  created_at: string,
+  format_type?: string,
+}
+
 export type RelatedContents = {[s: string]: Content[]};
 
 export type RelatedList = RelatedContents[]
@@ -54,6 +57,17 @@ const isContent = (arg: unknown): arg is Content => {
 const isContentsList = (arg: unknown[]): arg is Content[] =>
   !arg.some((arg) => !isContent(arg)); // return を 省略している
 
+const isTagNum = (arg: unknown): arg is TagNum => {
+  const t = arg as TagNum;
+  return (
+    typeof t?.name === 'string' &&
+    typeof t?.number === 'number' &&
+    typeof t?.project === 'string'
+  );
+}
+
+const isTagNumList = (arg: unknown[]): arg is TagNum[] =>
+  !arg.some((arg) => !isTagNum(arg)); // return を 省略している
 // const isRelated = (arg: unknown): arg is Related => {
 //   const c = arg as Related;
 //   return (
@@ -64,5 +78,5 @@ const isContentsList = (arg: unknown[]): arg is Content[] =>
 // const isRelatedList = (arg: unknown[]): arg is Related[] =>
 //   !arg.some((arg) => !isRelated(arg)); // return を 省略している
 
-export { isContent, isContentsList };
+export { isContent, isContentsList, isTagNum, isTagNumList };
 

@@ -2,9 +2,9 @@ import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Content } from 'models/content';
 import deleteContent from 'services/delete-content';
-import TrashIcon from 'components/Button/TrashIcon';
 import MiniToastWarning from 'components/Local/MiniToastWarning';
 import Spinner from 'components/common/Spinner';
+import TrashAndCancel from 'components/Button/TrashAndCancel';
 
 const Page: FC<{ data: Content[] | undefined, project: string, changeState: (flg: boolean) => void, }> = ({ data, project, changeState, }) => {
 
@@ -40,10 +40,7 @@ const Item: FC<{ data: Content, changeState: (arg: boolean) => void }> = ({ data
     changeState(true);
   }
 
-  const [isToast, setIsToast] = useState(false);
-  const closeToast = () => {
-    setIsToast(false);
-  }
+  const [isCancel, setIsCancel] = useState(false);
 
   return (
     <>
@@ -53,18 +50,8 @@ const Item: FC<{ data: Content, changeState: (arg: boolean) => void }> = ({ data
             <div className="item-title">{title}</div>
             <div className="item-dscr">{created_at.slice(0, 10)}: {content.slice(0, 100)}</div>
           </Link>
-          <MiniToastWarning
-            itemName={title}
-            slug={slug}
-            isToast={isToast}
-            closeToast={closeToast}
-            deleteFunc={deleteItem}
-          />
-          <div className="edit-delete">
-            <div className={isToast ? 'hidden' : 'delete-button'} onClick={() => setIsToast(true)}>
-              <TrashIcon />
-            </div>
-          </div>
+          {isCancel && <MiniToastWarning slug={slug} deleteFunc={deleteItem} />}
+          <TrashAndCancel isCancel={isCancel} setIsCancel={setIsCancel} />
         </li>
         : ''}
     </>

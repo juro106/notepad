@@ -5,6 +5,7 @@ import modalReducer from './modal';
 import imageReducers from './image';
 import toastReducers from './toast';
 import contentsReducers from './contents';
+import tagsReducers from './tags';
 
 const fugaState = {
   msg: 'Hello world State'
@@ -15,12 +16,13 @@ const fugaReducer = (state = fugaState) => {
 }
 
 export const reducers = combineReducers({
-  fuga: fugaReducer,
-  layout: layoutReducer,
   project: projectReducer,
-  modal: modalReducer,
-  image: imageReducers,
-  toast: toastReducers,
+  layout: layoutReducer,
   contents: contentsReducers,
+  tags: tagsReducers,
+  image: imageReducers,
+  modal: modalReducer,
+  toast: toastReducers,
+  fuga: fugaReducer,
 });
 

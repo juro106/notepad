@@ -34,7 +34,7 @@ const DirectAccessFilter: FC = ({ children }) => {
   if (pathArray[1] === 'local') {
     // project が url に含まれている場合
     if (pathArray[2] === 'tags' || pathArray[2] === 'bydate') {
-      setCurrentProject(pathArray[3]);
+      if (!project) setCurrentProject(pathArray[3]);
       return <>{children}</>;
     }
     if (pathArray.length > 3) {

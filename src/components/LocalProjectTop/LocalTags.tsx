@@ -1,58 +1,39 @@
 import { FC, memo, useState } from 'react';
-import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
-import getTags from 'services/get-tags';
-import deleteContent from 'services/delete-content';
 import { TagNum } from 'models/content';
-import { useProject } from 'hooks/useProject';
 import ContentsListHeader from 'components/common/ContentsListHeader';
 import LocalPageOuter from 'components/Local/LocalPageOuter';
-import TrashIcon from 'components/Button/TrashIcon';
 import MiniToastWarning from 'components/Local/MiniToastWarning';
 import Visuallyhidden from 'components/Heading/Visuallyhidden';
 import { useLayout } from 'hooks/useLayout';
+import { useFetchTags } from 'hooks/useFetchTags';
+import { useDeleteTags } from 'hooks/useDeleteTags';
+import TrashAndCancel from 'components/Button/TrashAndCancel';
 
-const LocalTags: FC = () => {
+const LocalTags: FC = memo(() => {
   const title = 'タグ一覧';
+  const data = useFetchTags();
 
   return (
     <LocalPageOuter title={title} suspense={true}>
       <main>
         <Visuallyhidden children={title} />
         <ContentsListHeader />
-        <Fetch />
+        {/* <Fetch />*/}
+        {data && <List list={data} />}
       </main>
     </LocalPageOuter>
   );
-}
+});
 
-const Fetch: FC = () => {
-  const project = useProject();
-  const { data } = useQuery(['tags-all', project, { sort_by: 'name', order_by: 'ASC' }], () => getTags(project));
-
-  if (data) {
-    return <ContentsList project={project} data={data} />
-  }
-
-  return <></>
-}
-
-const ContentsList: FC<{ project: string, data: TagNum[] }> = ({ project, data }) => {
-  const [list, setList] = useState<TagNum[]>(data);
+const List: FC<{ list: TagNum[] }> = memo(({ list }) => {
   const { grid } = useLayout();
-
-  const deleteItem = async (slug: string) => {
-    console.log('deleteItem!!!!');
-    setList(list.filter(item => item.name !== slug));
-    const msg = await deleteContent(project, slug);
-    console.log(msg);
-  }
 
   if (list && list.length > 0) {
     return (
       <ul className={grid ? 'grid-list' : "item-list"}>
         {list.map(tag => (
-          <Item key={`${tag.name}`} tag={tag} deleteItem={deleteItem} />
+          <Item key={`${tag.name}`} tag={tag} />
         ))}
       </ul>
     )
@@ -63,14 +44,12 @@ const ContentsList: FC<{ project: string, data: TagNum[] }> = ({ project, data }
       </div>
     );
   }
-}
+});
 
-const Item: FC<{ tag: TagNum, deleteItem: (arg: string) => void }> = memo(({ tag, deleteItem }) => {
+const Item: FC<{ tag: TagNum }> = memo(({ tag }) => {
   const { grid } = useLayout();
-  const [isToast, setIsToast] = useState(false);
-  const closeToast = () => {
-    setIsToast(false);
-  }
+  const [isCancel, setIsCancel] = useState(false);
+  const deleteItem = useDeleteTags();
 
   return (
     <li className={grid ? 'grid-list-item' : 'edit-list-item'}>
@@ -80,10 +59,8 @@ const Item: FC<{ tag: TagNum, deleteItem: (arg: string) => void }> = memo(({ tag
       </Link>
       {tag.number === 0 &&
         <>
-          {isToast && <MiniToastWarning slug={tag.name} closeToast={closeToast} deleteFunc={deleteItem} />}
-          <div className={isToast ? 'hidden' : grid ? 'delete-button-grid' : 'delete-button'} onClick={() => setIsToast(true)}>
-            <TrashIcon />
-          </div>
+          {isCancel && <MiniToastWarning slug={tag.name} deleteFunc={deleteItem} />}
+          <TrashAndCancel isCancel={isCancel} setIsCancel={setIsCancel} />
         </>
       }
     </li>

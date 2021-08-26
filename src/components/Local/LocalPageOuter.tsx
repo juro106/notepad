@@ -1,11 +1,4 @@
-import {
-  FC,
-  useRef,
-  Suspense,
-  useContext,
-  useState,
-  useEffect,
-} from 'react';
+import { FC, useRef, Suspense, useContext, useState, useEffect, } from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { AuthContext } from 'contexts/authContext';

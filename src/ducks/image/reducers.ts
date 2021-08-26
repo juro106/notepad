@@ -1,5 +1,5 @@
 import { ImageState, ImageSelectorState } from './types';
-import { Actions, SET_IMAGE, OPEN_SELECTOR, CLOSE_SELECTOR } from './actions';
+import { ImageActions, SET_IMAGE, OPEN_SELECTOR, CLOSE_SELECTOR } from './actions';
 import { combineReducers } from 'redux'
 
 const initialState: ImageState = {
@@ -10,7 +10,7 @@ const initialStateSelector: ImageSelectorState = {
   selector: false,
 }
 
-const imageStateReducer = (state: ImageState = initialState, action: Actions) => {
+const imageStateReducer = (state: ImageState = initialState, action: ImageActions) => {
   switch (action.type) {
     case SET_IMAGE:
       const { path } = action.payload;
@@ -20,7 +20,7 @@ const imageStateReducer = (state: ImageState = initialState, action: Actions) =>
   }
 }
 
-const imageSelectorReducer = (state: ImageSelectorState = initialStateSelector, action: Actions) => {
+const imageSelectorReducer = (state: ImageSelectorState = initialStateSelector, action: ImageActions) => {
   switch (action.type) {
     case OPEN_SELECTOR:
       return { ...state, selector: true, }

@@ -26,5 +26,5 @@ export const closeSelector = () => ({
   } 
 });
 
-export type Actions = ReturnType<typeof setImage | typeof openSelector | typeof closeSelector>
+export type ImageActions = ReturnType<typeof setImage | typeof openSelector | typeof closeSelector>
 

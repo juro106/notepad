@@ -1,6 +1,6 @@
 import ky, { Options } from 'ky';
 import { DEFAULT_API_OPTIONS } from './config';
-import { TagNum } from 'models/content';
+import { TagNum, isTagNumList } from 'models/content';
 
 const getTags = async (
   project: string,
@@ -21,7 +21,7 @@ const getTags = async (
 
   const results = (await response.json()) as unknown[];
 
-  if (!Array.isArray(results)) {
+  if (!isTagNumList(results)) {
     throw Error('API type error');
   }
   // console.log('get-content=>', results);

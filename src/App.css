@@ -433,6 +433,7 @@ button:hover {
     color: var(--normal-red);
     width: 50%;
     white-space: nowrap;
+    user-select: none;
 }
 .button-no-grid { /* do cancel  */
     padding: 10px;
@@ -440,6 +441,7 @@ button:hover {
     color: var(--link-blue);
     width: 50%;
     white-space: nowrap;
+    user-select: none;
 }
 .button-yes-grid:hover,
 .button-no-grid:hover {
@@ -1095,6 +1097,7 @@ table {
     text-align: center;
     color: var(--normal-red);
     white-space: nowrap;
+    user-select: none;
 }
 .button-no { /* do cancel  */
     padding: 10px 20px;
@@ -1103,6 +1106,7 @@ table {
     text-align: center;
     color: var(--link-blue);
     white-space: nowrap;
+    user-select: none;
 }
 .button-yes:hover,
 .button-no:hover {
@@ -1229,6 +1233,7 @@ table {
     margin: 0;
     padding: 0;
     list-style-type: none;
+    flex-wrap: wrap;
 }
 .tag-item {
     margin: 0 10px 0 0;

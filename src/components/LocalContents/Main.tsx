@@ -7,7 +7,7 @@ import { useImage } from 'hooks/useImage';
 import { useSetImage } from 'hooks/useSetImage';
 import postContent from 'services/post-content'
 import deleteContent from 'services/delete-content';
-import { removeQueries } from 'services/removeQueries'
+import { useResetData } from 'hooks/useResetData';
 import { Content, ContentForUpload } from 'models/content';
 // import { Message } from 'models/message';
 import ImageComponent from 'components/Image/ImageComponent';
@@ -61,6 +61,7 @@ const Main: FC<{ data: Content, setTagsState: (tags: string[]) => void, }> = mem
     }
   }, [slug]);
 
+  const dispatchReset = useResetData();
   const update = async () => {
     if (refTitle && refTitle.current && refBody && refBody.current && uid && project) {
       if (refTitle.current.innerText.length === 0) return; // タイトルがなければ登録しない
@@ -78,7 +79,7 @@ const Main: FC<{ data: Content, setTagsState: (tags: string[]) => void, }> = mem
       };
 
       const res = await postContent(data);
-      removeQueries(project, slug);
+      dispatchReset(slug);
       console.log(res);
     }
   }

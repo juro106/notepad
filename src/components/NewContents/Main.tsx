@@ -13,12 +13,13 @@ import { useImage } from 'hooks/useImage';
 import { useSetImage } from 'hooks/useSetImage';
 import postContent from 'services/post-content';
 import { generateUuid } from 'services/functions';
-import { removeQueries } from 'services/removeQueries'
 import { ContentForUpload } from 'models/content';
 
 import ImageComponent from 'components/Image/ImageComponent';
 import ImageSelector from 'components/Image/ImageSelector';
 import ImageUploader from 'components/Image/ImageUploader';
+
+import { useResetData } from 'hooks/useResetData';
 
 const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState }) => {
   const [imgURL, setImgURL] = useState<string | undefined>(undefined);
@@ -62,6 +63,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
     }
   }
 
+  const dispatchReset = useResetData();
   // 初回投稿のみ使われる
   const setPost = async () => {
     if (refTitle && refTitle.current && refBody && refBody.current && refTags && refTags.current && uid) {
@@ -81,7 +83,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
       };
 
       await postContent(data);
-      removeQueries(project);
+      dispatchReset();
       navigate(`/local/${project}/${data.slug}`);
     }
   }

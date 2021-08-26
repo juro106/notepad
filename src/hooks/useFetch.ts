@@ -1,18 +1,29 @@
-import { useContext } from 'react';
 import { useQuery } from 'react-query';
-import { useProject } from 'hooks/useProject';
+import { useSelector } from 'store';
 import { useDispatch } from 'react-redux';
-import { setContents } from 'ducks/contents/acitons';
-import { AuthContext } from 'contexts/authContext';
-import getContentsAll from 'services/get-contents-all';
+import { useSelectDataType } from 'hooks/useSelectDataType';
 
-const useFetch = async() => {
-  const project = useProject();
-  const { isLoggedIn } = useContext(AuthContext);
-  const { data } = await useQuery(['contents-all', project, isLoggedIn ? "local" : 'public'], () => getContentsAll(project, !isLoggedIn ));
-  
-  return data;
+export const useFetch = (dataType: string) => {
+  const { query, action, func } = useSelectDataType(dataType);
+  const dispatch = useDispatch();
+
+  // まずは store のデータを見に行く。
+  const storeData = useSelector(state => state.contents.list);
+
+  // DB の取得もする（1回取得すればキャッシュしてくれる）
+  const { data } = useQuery(query, () => func);
+
+  // // storeにデータがない && DB のデータがあるなら store へ dispatch 
+  if (!storeData || storeData.length === 0) {
+    if (data) {
+      dispatch(action(data));
+    }
+  }
+
+  if (storeData && storeData.length > 0) { // 2回目以降
+    return storeData;
+  } else if (data && data.length > 0) { // 初回
+    return data;
+  }
 }
-
-export default useFetch;
 
