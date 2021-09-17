@@ -12,19 +12,21 @@ export const useDateMap = (data: Content[], project: string) => {
     data.forEach(v => {
       const YYYYmm = v.created_at.slice(0, 7);
       const YYYYmmdd = v.created_at.slice(0, 10);
-      let dayArray: Content[] | undefined = dayMap.get(YYYYmmdd);
-      let monthArray: MonthMap | undefined = monthMap.get(YYYYmm);
+      const dayArray: Content[] | undefined = dayMap.get(YYYYmmdd);
+      const monthArray: MonthMap | undefined = monthMap.get(YYYYmm);
 
-      if (!dayArray) { // 
+      if (!dayArray) { // 新規 
         dayMap.set(YYYYmmdd, [v]);
-      } else {
+      } else { // 追加
         dayArray.push(v);
       }
 
-      if (monthArray && dayArray) {
-        monthArray[YYYYmmdd] = dayArray;
-      } else if (!monthArray && dayArray) {
+      if (!monthArray && !dayArray) { // 新規
+        monthMap.set(YYYYmm, { [YYYYmmdd]: [v] })
+      } else if (!monthArray && dayArray) { // 日毎はあるが月毎がない
         monthMap.set(YYYYmm, { [YYYYmmdd]: dayArray })
+      } else if (monthArray && dayArray) { // 追加
+        monthArray[YYYYmmdd] = dayArray;
       }
     });
 

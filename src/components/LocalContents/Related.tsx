@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Content, RelatedContents, RelatedList } from 'models/content';
 import { useParams } from 'react-router';
 import { useLayout } from 'hooks/useLayout';
+import { useProject } from 'hooks/useProject';
 import RelatedMenu from 'components/common/RelatedMenu';
 
 // local
@@ -39,7 +40,7 @@ const ItemBlock: FC<{ data: RelatedContents, project: string }> = ({ data, proje
             <ul className={grid ? 'grid-list' : 'related-item-list'}>
               {v[1].map(x => (
                 x.slug !== slug
-                  ? <Item key={x.slug} data={x} />
+                  ? <ListItem key={x.slug} data={x} />
                   : ''
               ))}
             </ul>
@@ -52,16 +53,19 @@ const ItemBlock: FC<{ data: RelatedContents, project: string }> = ({ data, proje
   return <></>
 }
 
-const Item: FC<{ data: Content }> = ({ data }) => {
-  const { title, project, slug, updated_at, content } = data;
+const ListItem: FC<{ data: Content }> = ({ data }) => {
+  const { title, slug, updated_at, content } = data;
   const { grid } = useLayout();
+  const project = useProject();
 
   return (
     <>
       <li key={`li_${title}`} className={grid ? 'grid-list-item' : 'item-arrow'}>
         <Link to={`/local/${project}/${slug.trim()}`} className={grid ? 'grid-item-link' : 'item-link'}>
-          <div className='item-title'>{title}</div>
-          <div className='item-dscr'>{updated_at}: {content.slice(0, 80)}</div>
+          <div className={grid ? 'item-content-grid' : 'item-content'}>
+            <div className='item-title'>{title}</div>
+            <div className='item-dscr'>{updated_at}: {content.slice(0, 80)}</div>
+          </div>
         </Link>
       </li>
     </>

@@ -2,13 +2,13 @@ import { useProject } from 'hooks/useProject';
 import { QueryKey } from 'react-query';
 import { Content } from 'models/content';
 import { keyItems } from 'constants/my-queries';
-import { setContents} from 'ducks/contents/actions';
+import { setContents, setContentsByDate} from 'ducks/contents/actions';
 import getContentsAll from 'services/get-contents-all';
 
 type obj = {
   query: QueryKey;
   func: Promise<Content[]>;
-  action: typeof setContents;
+  action: typeof setContents | typeof setContentsByDate;
 }
 
 export const useSelectDataType = (dataType: string): obj => {
@@ -20,7 +20,7 @@ export const useSelectDataType = (dataType: string): obj => {
       return {
         query: [contentsAll, project, { sort_by: created_at, order_by: DESC, embed: date }],
         func: getContentsAll(project, true, '?sort_by=created_at'),
-        action: setContents,
+        action: setContentsByDate,
       }
     default: // 全コンテンツ
       return {

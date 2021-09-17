@@ -8,18 +8,18 @@ import {
 } from 'react';
 import { useNavigate } from 'react-router';
 import { AuthContext } from 'contexts/authContext';
+import { ContentForUpload } from 'models/content';
 import { useProject } from 'hooks/useProject';
 import { useImage } from 'hooks/useImage';
 import { useSetImage } from 'hooks/useSetImage';
+import { useResetData } from 'hooks/useResetData';
 import postContent from 'services/post-content';
 import { generateUuid } from 'services/functions';
-import { ContentForUpload } from 'models/content';
 
 import ImageComponent from 'components/Image/ImageComponent';
 import ImageSelector from 'components/Image/ImageSelector';
 import ImageUploader from 'components/Image/ImageUploader';
-
-import { useResetData } from 'hooks/useResetData';
+import Editable from 'components/Local/Editable';
 
 const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState }) => {
   const [imgURL, setImgURL] = useState<string | undefined>(undefined);
@@ -31,6 +31,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
   const navigate = useNavigate();
   const imagePath = useImage();
   const setImage = useSetImage();
+  const dispatchReset = useResetData();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -63,7 +64,6 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
     }
   }
 
-  const dispatchReset = useResetData();
   // 初回投稿のみ使われる
   const setPost = async () => {
     if (refTitle && refTitle.current && refBody && refBody.current && refTags && refTags.current && uid) {
@@ -78,7 +78,7 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
         slug: tagSlug ? tagSlug : generateUuid(), // <- ここが通常のページと違う
         project: project,
         tags: tagText === '_istag' ? [] : tagText.length === 0 ? ['_notag'] : tagText.split(",").filter(v => v !== ''),
-        content: refBody.current.innerText.replaceAll('\n\n', '\n'),
+        content: refBody.current.innerText.replaceAll('\n\n\n', '\n\n'),
         image: imagePath,
       };
 
@@ -97,31 +97,22 @@ const Main: FC<{ setTagsState: (arg: string[]) => void }> = memo(({ setTagsState
   return (
     <div className='content'>
       <main className="editable" onKeyDown={(e) => KeyBinding(e)} >
-        <div className='content-title'
-          contentEditable={true}
-          suppressContentEditableWarning={true}
-          spellCheck={false}
+        <Editable className='content-title'
           ref={refTitle}
-          data-text="Title"
+          dataText="Title"
         // onInput={characterCount}
-        ></div>
-        <div className='content-tags'
-          contentEditable={true}
-          suppressContentEditableWarning={true}
-          spellCheck={false}
+        />
+        <Editable className='content-tags'
           ref={refTags}
-          data-text="[ Tags ]"
+          dataText="[ Tags ]"
           onBlur={setTags}
-        ></div>
-        <div className={imgURL ? 'content-body' : 'content-body-new'}
-          tabIndex={0}
-          contentEditable={true}
-          suppressContentEditableWarning={true}
-          spellCheck={false}
+        />
+        <Editable className={imgURL ? 'content-body' : 'content-body-new'}
           ref={refBody}
-          data-text="Content"
+          dataText={'Content'}
           onBlur={setPost}
-        ></div>
+          tabIndex={0}
+        />
         <ImageComponent imgURL={imgURL} DeleteImage={DeleteImage} />
         <div className='editable-option'>
           <ImageUploader isSetter={true} />

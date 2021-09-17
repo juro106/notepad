@@ -1,26 +1,29 @@
 import { FC, useContext, useRef, useState, useEffect, memo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { AuthContext } from 'contexts/authContext';
+import { Content, ContentForUpload } from 'models/content';
 import { useProject } from 'hooks/useProject';
 import { useSetMeta } from 'hooks/useSetMeta';
 import { useImage } from 'hooks/useImage';
 import { useSetImage } from 'hooks/useSetImage';
-import postContent from 'services/post-content'
-import deleteContent from 'services/delete-content';
 import { useResetData } from 'hooks/useResetData';
-import { Content, ContentForUpload } from 'models/content';
+import { useDeleteContentsOnEditor } from 'hooks/useDeleteContentsOnEditor';
+import postContent from 'services/post-content';
 // import { Message } from 'models/message';
 import ImageComponent from 'components/Image/ImageComponent';
 import ImageUploader from 'components/Image/ImageUploader';
 import ImageSelector from 'components/Image/ImageSelector';
 // import ResponseMessage from './ResponseMessage';
 import ToastWarning from 'components/Local/ToastWarning';
-import TrashIcon from 'components/Button/TrashIcon'
+import TrashIcon from 'components/Button/TrashIcon';
+import Editable from 'components/Local/Editable';
+
+import { useWarning } from 'hooks/useWarning';
 
 const Main: FC<{ data: Content, setTagsState: (tags: string[]) => void, }> = memo(({ data, setTagsState }) => {
   const { title, tags, content, slug, created_at, updated_at, image } = data;
   const [imgURL, setImgURL] = useState<string | undefined>(image);
-  const [isToast, setIsToast] = useState(false);
+  // const [isToast, setIsToast] = useState(false);
   const { uid } = useContext(AuthContext);
   const project = useProject();
   const setImage = useSetImage();
@@ -28,6 +31,8 @@ const Main: FC<{ data: Content, setTagsState: (tags: string[]) => void, }> = mem
   const refTitle = useRef<HTMLDivElement>(null);
   const refTags = useRef<HTMLDivElement>(null);
   const refBody = useRef<HTMLDivElement>(null);
+  const dispatchReset = useResetData();
+  const deleteContents = useDeleteContentsOnEditor();
 
   const KeyBinding = (e: React.KeyboardEvent) => {
     if (e.code === 'Enter' && e.altKey) {
@@ -61,7 +66,6 @@ const Main: FC<{ data: Content, setTagsState: (tags: string[]) => void, }> = mem
     }
   }, [slug]);
 
-  const dispatchReset = useResetData();
   const update = async () => {
     if (refTitle && refTitle.current && refBody && refBody.current && uid && project) {
       if (refTitle.current.innerText.length === 0) return; // タイトルがなければ登録しない
@@ -73,7 +77,11 @@ const Main: FC<{ data: Content, setTagsState: (tags: string[]) => void, }> = mem
         title: refTitle.current.innerText.trim(),
         slug: slug,
         project: project,
-        tags: tagText === '_istag' ? [] : tagText.length === 0 ? ['_notag'] : tagText.split(",").filter(v => v !== ''),
+        tags: tagText === '_istag'
+          ? []
+          : tagText.length === 0
+            ? ['_notag']
+            : tagText.split(",").filter(v => v !== ''),
         content: refBody.current.innerText.replaceAll('\n\n\n', '\n\n'),
         image: imgURL,
       };
@@ -103,9 +111,7 @@ const Main: FC<{ data: Content, setTagsState: (tags: string[]) => void, }> = mem
     window.scrollTo(0, 0);
   }
 
-  const closeToast = () => {
-    setIsToast(false);
-  }
+  const { isOpen, dispatchOpen } = useWarning();
 
   return (
     <>
@@ -119,24 +125,18 @@ const Main: FC<{ data: Content, setTagsState: (tags: string[]) => void, }> = mem
           {created_at ? <time dateTime={created_at}>{created_at.slice(0, 10)}</time> : ''}
           {updated_at ? <time dateTime={updated_at} className='time-updated_at'>↺ {updated_at.slice(0, 10)}</time> : ''}
         </div>
-        <h1 className='content-title'
-          contentEditable={true}
-          suppressContentEditableWarning={true}
-          spellCheck={false}
+        <Editable className='content-title'
           ref={refTitle}
-          data-text="Title"
+          dataText="Title"
           onBlur={update}
         >
           {title}
-        </h1>
+        </Editable>
         {tags && tags.length > 0
           ?
-          <div className='content-tags'
-            contentEditable={true}
-            suppressContentEditableWarning={true}
-            spellCheck={false}
+          <Editable className='content-tags'
             ref={refTags}
-            data-text="[ Tags ]"
+            dataText="[ Tags ]"
             onBlur={setTags}
           >
             {tags.map((v, k) => (
@@ -144,35 +144,27 @@ const Main: FC<{ data: Content, setTagsState: (tags: string[]) => void, }> = mem
                 tags.slice(-1)[0] === v ? `${v}` : `${v}, `
                 : ''
             ))}
-          </div> : ''}
-        <div className='content-body'
-          contentEditable={true}
-          suppressContentEditableWarning={true}
-          spellCheck={false}
+          </Editable>
+          : ''}
+        <Editable className='content-body'
           ref={refBody}
-          data-text="Content"
+          dataText="Content"
           tabIndex={0}
           onBlur={update}
         >
           {content}
-        </div>
+        </Editable>
         <ImageComponent imgURL={imgURL} DeleteImage={DeleteImage} />
         <div className='editable-option'>
           <ImageUploader isSetter={true} />
           <ImageSelector />
           {/*message && <ResponseMessage data={message} />*/}
-          <div role='button' className='content-edit-trash-icon' onClick={() => setIsToast(true)}>
-            <TrashIcon />
-          </div>
-          <ToastWarning
-            mode={'content'}
-            project={project}
-            slug={slug}
-            itemName={title}
-            isToast={isToast}
-            closeToast={closeToast}
-            deleteFunc2={deleteContent}
-          />
+          {tags && tags.length > 0
+            ?
+            <div role='button' className='content-edit-trash-icon' onClick={() => dispatchOpen()}>
+              <TrashIcon />
+            </div> : ''}
+          {isOpen && <ToastWarning slug={slug} tags={tags} itemName={title} deleteFunc={deleteContents} />}
           {/*saved && <div className='toast-saved'>saved</div>*/}
         </div>
       </main>

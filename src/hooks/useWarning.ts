@@ -1,17 +1,25 @@
 import { useCallback } from 'react';
 import { useSelector } from 'store';
 import { useDispatch } from 'react-redux';
-import { toggleToast } from 'ducks/toast/actions';
+import { toggleToast, openToast, closeToast } from 'ducks/toast/actions';
 
-export const useWarning = (targetSlug: string) => {
-  const stateSlug = useSelector(state => state.toast.toasts.slug);
-
+export const useWarning = () => {
+  const { isOpen, source } = useSelector(state => state.toast);
   const dispatch = useDispatch();
 
-  const dispatchToggleToast = useCallback(() => {
-    dispatch(toggleToast(targetSlug));
+  const dispatchToggle = useCallback(() => {
+    dispatch(toggleToast());
   }, [dispatch]);
 
-  return dispatchToggleToast;
+  const dispatchOpen = useCallback((arg?: string) => {
+    const item = arg ? arg : '';
+    dispatch(openToast(item));
+  }, [dispatch]);
+
+  const dispatchClose = useCallback(() => {
+    dispatch(closeToast());
+  }, [dispatch]);
+
+  return { source, isOpen, dispatchToggle, dispatchOpen, dispatchClose };
 }
 

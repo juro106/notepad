@@ -3,13 +3,11 @@ import { useLayout } from 'hooks/useLayout';
 
 const MiniToastWarning: FC<{
   slug: string,
-  changeState?: (arg: boolean) => void
   deleteFunc: (arg: string) => void,
-}> = ({ slug, changeState, deleteFunc, }) => {
+}> = ({ slug, deleteFunc }) => {
   const { grid } = useLayout();
   const handleDelete = async (arg: string) => {
     deleteFunc(arg);
-    changeState && changeState(true); // 処理が終わったら再描写させる
   }
 
   return (

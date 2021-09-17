@@ -6,8 +6,11 @@ const TrashAndCancel: FC<{ isCancel: boolean, setIsCancel: (arg: boolean) => voi
   const { grid } = useLayout();
 
   return (
-    <div className={grid ? 'delete-button-grid' : 'delete-button'} onClick={() => setIsCancel(!isCancel)}>
-      {isCancel ? <div className='button-no'>cancel</div> : <TrashIcon />}
+    <div className={isCancel && grid ? 'delete-button-cancel' : grid ? 'delete-button-grid' : 'delete-button-default'}
+      onClick={() => setIsCancel(!isCancel)}>
+      {isCancel
+        ? <div className={grid ? 'button-no-grid' : 'button-no'}>cancel</div>
+        : <div className={grid ? 'button-trash-grid' : 'button-trash'}><TrashIcon /></div>}
     </div>
   );
 }

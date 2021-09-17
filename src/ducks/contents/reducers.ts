@@ -40,8 +40,10 @@ const contentsReducer = (state: contentsState = initialState, action: Actions) =
       });
     case DELETE_CONTENTS:
       const filteredContents = filterContents(state.list, action.payload.slug);
+      const filteredContentsByDate = filterContents(state.list_bydate, action.payload.slug);
       return Object.assign({}, state, {
         list: filteredContents,
+        list_bydate: filteredContentsByDate,
       });
 
     default:

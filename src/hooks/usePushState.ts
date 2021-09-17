@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export const usePushState = (flg: boolean, closeFunc: () => void): void => {
+export const usePushState = (closeFunc: () => void, flg?: boolean): void => {
   // モーダルが開いたときなど、強制的に1つ履歴を作ってブラウザバックで閉じれるようにする
   useEffect(() => {
     // モーダルが呼ばれたときに初めて pushState する。
@@ -10,11 +10,11 @@ export const usePushState = (flg: boolean, closeFunc: () => void): void => {
         (event: PopStateEvent) => {
           event.preventDefault();
           window.history.go(1);
-          closeFunc();
           // window.history.pushState(null, "", null);
           // window.history.go(-3);
+          closeFunc();
         },
-        { once: true })
+        { once: true });
     }
   }, [flg, closeFunc])
 }

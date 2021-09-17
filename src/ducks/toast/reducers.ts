@@ -1,35 +1,37 @@
-import { Actions, TOGGLE_TOAST } from './actions';
+import { Actions, OPEN_TOAST, CLOSE_TOAST, TOGGLE_TOAST } from './actions';
 
 interface toastState {
-  slug: string,
-  isToast: boolean,
+  isOpen: boolean,
+  source: string,
 }
 
-interface toastList {
-  toasts: {[key: string]: toastState,},
-}
-
-const initialState: toastList = {
-  toasts: {},
+const initialState: toastState = {
+  isOpen: false,
+  source: '',
 }
 
 
-const toastReducer = (state: toastList = initialState, action: Actions) => {
+const toastReducer = (state: toastState = initialState, action: Actions) => {
   switch (action.type) {
     case TOGGLE_TOAST:
-      // if (state.slug !== action.payload.slug) {
-      //   return state
-      // }
       return Object.assign({}, state, {
-        isToast: !state.toasts.slug.isToast,
-        slug: action.payload.slug,
+        isOpen: !state.isOpen,
+      });
+    case OPEN_TOAST:
+      return Object.assign({}, state, {
+        isOpen: true,
+        source: action.payload.source,
+      });
+    case CLOSE_TOAST:
+      return Object.assign({}, state, {
+        isOpen: false,
+        source: '',
       });
 
     default:
       return state;
   }
 }
-
 
 export default toastReducer;
 

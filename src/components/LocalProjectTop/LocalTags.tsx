@@ -54,8 +54,10 @@ const Item: FC<{ tag: TagNum }> = memo(({ tag }) => {
   return (
     <li className={grid ? 'grid-list-item' : 'edit-list-item'}>
       <Link to={`/local/${tag.project}/${tag.name}`} className={grid ? 'grid-item-link-tag' : "edit-item-link-tag"}>
-        <div className="edit-list-tag-title">{tag.name}</div>
-        <div className="edit-list-tag-number">({tag.number})</div>
+        <div className={grid ? 'item-content-tag-grid' : 'item-content-tag'}>
+          <div className="edit-list-tag-title">{tag.name}</div>
+          <div className="edit-list-tag-number">({tag.number})</div>
+        </div>
       </Link>
       {tag.number === 0 &&
         <>

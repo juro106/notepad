@@ -15,18 +15,16 @@ import PageTitle from 'components/Heading/PageTitle';
 import Spinner from 'components/common/Spinner';
 
 const ImageSelector: FC = () => {
-  const { selectorState, openImageSelector } = useImageSelector();
-
-  const openSelector = () => {
-    openImageSelector();
-  }
+  const { selectorState, openImageSelector, closeImageSelector } = useImageSelector();
+  // ブラウザバックで閉じる
+  usePushState(closeImageSelector, selectorState);
 
   return (
     <>
       <div
         className='image-selector-icon'
         role='button'
-        onClick={openSelector}
+        onClick={() =>openImageSelector()}
         data-html={true}
         data-tooltip='select an image&#13;&#10;画像を選択'>
         <ImImages size={30} color={'#666'} />
@@ -61,15 +59,12 @@ const Contents: FC = () => {
 
 const Images: FC<{ data: ImageFile[] | undefined }> = ({ data }) => {
   const setImage = useSetImage();
-  const { selectorState, closeImageSelector } = useImageSelector();
+  const { closeImageSelector } = useImageSelector();
 
   const setImageSrc = (arg: string) => {
     setImage(arg);
     closeImageSelector();
   }
-
-  // ブラウザバックで閉じる
-  usePushState(selectorState, closeImageSelector);
 
   // const [url, setUrl] = useState<string>('');
   // const [isPreview, setIsPreview] = useState(false);

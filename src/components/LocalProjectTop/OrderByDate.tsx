@@ -1,11 +1,13 @@
 import { Fragment, FC, Suspense, useState, useEffect, memo } from 'react';
 import { Link } from 'react-router-dom';
+import { keyItems } from 'constants/my-queries';
 import { Content, DayMap, MonthMap } from 'models/content';
 import { queryClient } from 'index';
 import { useProject } from 'hooks/useProject';
 import { useDateMap } from 'hooks/useDateMap';
 import { useLayout } from 'hooks/useLayout';
 import { useFetchByDate } from 'hooks/useFetchByDate';
+// import { useFetch } from 'hooks/useFetch';
 import ContentsListHeader from 'components/common/ContentsListHeader';
 import LocalPageOuter from 'components/Local/LocalPageOuter';
 import Visuallyhidden from 'components/Heading/Visuallyhidden';
@@ -16,6 +18,7 @@ import Spinner from 'components/common/Spinner';
 const OrderByDate: FC = () => {
   const title = 'コンテンツ一覧（日付順）';
   const data = useFetchByDate();
+  //  const data = useFetch('sort_by=created_at');
 
   return (
     <LocalPageOuter title={title} suspense={true}>
@@ -30,10 +33,12 @@ const OrderByDate: FC = () => {
   );
 }
 
+// リストを日付順・月毎・日毎にバラした Map型(not map)に組み直す
 const ListFilter: FC<{ data: Content[] }> = memo(({ data }) => {
+  const { contentsAllByDate } = keyItems;
   const project = useProject();
   const DateMap = useDateMap(data, project);
-  const queryKey = ['contents-all-use-type-Map', project, { sort_by: 'created_at', order_by: 'DESC', embed: 'date' }]
+  const queryKey = [contentsAllByDate, project]
   const oldArray = queryClient.getQueryData(queryKey);
   // キャッシュがなければ配列作成
   const memoArray = oldArray ? oldArray as MonthMap : DateMap();
@@ -83,7 +88,6 @@ const DayList: FC<{ data: DayMap }> = ({ data }) => {
   );
 }
 
-
 const DateList: FC<{ list: Content[], deleteItem?: (arg: string) => void }> = ({ list, deleteItem }) => {
   const { grid } = useLayout();
   if (list.length > 0) {
@@ -119,10 +123,12 @@ const ListItem: FC<{ v: Content }> = ({ v }) => {
     return (
       <li className={grid ? 'grid-list-item' : 'edit-list-item'}>
         <Link to={`/local/${project}/${slug.trim()}`} className={grid ? 'grid-item-link' : "edit-item-link"}>
-          <div className="item-title">{title}</div>
-          <div className="item-dscr">
-            {created_at ? `${created_at.slice(0, 10)}: ` : ''}
-            {content.slice(0, 80)}
+          <div className={grid ? 'item-content-grid' : 'item-content'}>
+            <div className="item-title">{title}</div>
+            <div className="item-dscr">
+              {created_at ? `${created_at.slice(0, 10)}: ` : ''}
+              {content.slice(0, 80)}
+            </div>
           </div>
         </Link>
       </li>

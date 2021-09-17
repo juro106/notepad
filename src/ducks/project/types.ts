@@ -13,6 +13,8 @@ export type ProjectType = {
 // project の state の型
 export type ProjectState = {
   project: string;
+  item: string;
+  list: string[];
 }
 
 // project の action の型

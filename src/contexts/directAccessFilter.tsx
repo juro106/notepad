@@ -24,6 +24,7 @@ const DirectAccessFilter: FC = ({ children }) => {
   // 公開ディレクトリへのアクセス。url に 'local' が含まれていないのであれば、何もせずそのまま children を返す。
   if (pathArray[1] !== 'local' // not local
     || pathname === '/local/new-project' // not need to select a project
+    || pathname === '/local/project-manager' //TODO********* not need to select a project
     // || pathname === '/local/home'
   ) return <>{children}</>;
 

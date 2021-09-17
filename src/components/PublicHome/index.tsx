@@ -44,10 +44,12 @@ const ContentsList: FC = () => {
             ?
             <li key={`p_${k}`} className={grid ? 'grid-list-item' : 'item'}>
               <Link to={`/${v.slug.trim()}`} className={grid ? 'grid-item-link' : "item-link"}>
-                <div className="item-title">{v.title}</div>
-                <div className="item-dscr">
-                  {v.updated_at ? `${v.updated_at.slice(0, 10)}: ` : ''}
-                  {v.content.slice(0, 80)}
+                <div className={grid ? 'item-content-grid' : 'item-content'}>
+                  <div className="item-title">{v.title}</div>
+                  <div className="item-dscr">
+                    {v.updated_at ? `${v.updated_at.slice(0, 10)}: ` : ''}
+                    {v.content.slice(0, 80)}
+                  </div>
                 </div>
               </Link>
             </li>

@@ -4,14 +4,18 @@ import Compressor from 'compressorjs';
 // import { useImgSelectContext } from 'contexts/imgSelectContext';
 import { useProject } from 'hooks/useProject';
 import { useSetImage } from 'hooks/useSetImage';
+import { useInitImages } from 'hooks/useInitImages';
 import { generateUuid } from 'services/functions';
 import { ImFilePicture } from 'react-icons/im';
+import { keyItems } from 'constants/my-queries';
 
 // if new or edit contents -> mode isSetter
 // else if image manager -> mode off
-const ImageUploader: FC<{ isSetter?: boolean, changeState?: (arg: boolean) => void }> = ({ isSetter, changeState }) => {
+const ImageUploader: FC<{ isSetter?: boolean }> = ({ isSetter }) => {
   const project = useProject();
   const setImage = useSetImage();
+  const initImages = useInitImages();
+  const {imagesAll} = keyItems;
 
   const imageHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files === null) {
@@ -58,9 +62,9 @@ const ImageUploader: FC<{ isSetter?: boolean, changeState?: (arg: boolean) => vo
         }).then(() => {
           isSetter
             ? setImage(`/images/${project}/${lastFileName}`)
-            : changeState && changeState(true); // 全体の画像を更新する
+            : initImages(); // store のデータをクリア
         }).then(() => {
-          queryClient.removeQueries(['images-all', project]); // 画像一覧のキャッシュ削除
+          queryClient.removeQueries([imagesAll, project]); // 画像一覧のキャッシュ削除
         });
       },
       error(err: Error): void {

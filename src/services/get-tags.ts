@@ -21,6 +21,10 @@ const getTags = async (
 
   const results = (await response.json()) as unknown[];
 
+  if (results === null) {
+    return [];
+  }
+
   if (!isTagNumList(results)) {
     throw Error('API type error');
   }

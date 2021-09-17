@@ -4,33 +4,34 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { useProject } from 'hooks/useProject';
 import { useSetProject } from 'hooks/useSetProject';
+import { useResetData } from 'hooks/useResetData';
 import getProjects from 'services/get-projects';
 
 type Props = {
   data?: string[] | undefined;
   refer?: string;
-  changeState?: (arg: boolean) => void;
 }
 
-const ProjectSelector: FC<Props> = memo(({ refer, changeState }) => {
+const ProjectSelector: FC<Props> = memo(({ refer }) => {
   const { data } = useQuery(['projects'], () => getProjects());
 
   return (
     <div className='projects-block'>
-      <ProjectList data={data} refer={refer} changeState={changeState} />
+      <ProjectList data={data} refer={refer} />
     </div>
   );
 });
 
-const ProjectList: FC<Props> = memo(({ data, refer, changeState }) => {
+const ProjectList: FC<Props> = memo(({ data, refer }) => {
   const project = useProject();
   const setCurrentProject = useSetProject();
   const navigate = useNavigate();
+  const dispatchReset = useResetData();
 
   const handleClick = (arg: string) => {
-    setCurrentProject(arg); // Context(現在のProject)の値を更新
+    setCurrentProject(arg); // redux (現在のProject)の値を更新
     refer && navigate(`/${refer}`);
-    changeState && changeState(true); // flg=ture <-再読込 & setIsEmptyProject=false <-自明なので問答無用で処理
+    dispatchReset();
   }
 
   if (data && data.length > 0) {

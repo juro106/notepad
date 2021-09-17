@@ -22,7 +22,6 @@ const Related: FC<{ data: RelatedList | undefined }> = ({ data }) => {
 }
 
 const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
-  const { grid } = useLayout();
   if (data) {
     return (
       <>
@@ -33,9 +32,7 @@ const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
                 {v[0]}
               </Link>
             </h3>
-            <ul className={grid ? 'grid-list' : 'related-item-list'}>
-              <Item data={v[1]} />
-            </ul>
+            <List data={v[1]} />
           </div>
         ))}
       </>
@@ -45,28 +42,39 @@ const ItemBlock: FC<{ data: RelatedContents }> = ({ data }) => {
   return <></>
 }
 
-const Item: FC<{ data: Content[] }> = ({ data }) => {
-  const { slug } = useParams();
+const List: FC<{ data: Content[] }> = ({ data }) => {
   const { grid } = useLayout();
+  const { slug } = useParams();
 
   if (data && data.length > 0) {
     return (
-      <>
+      <ul className={grid ? 'grid-list' : 'related-item-list'}>
         {data.map(v => (
           slug !== v.slug ?
-            <li key={`li_${v.title}`} className={grid ? 'grid-list-item' : 'item-arrow'}>
-              <Link to={`/${v.slug.trim()}`} className={grid ? 'grid-item-link' : 'item-link'}>
-                <div className='item-title'>{v.title}</div>
-                <div className='item-dscr'>{v.content.slice(0, 80)}</div>
-              </Link>
-            </li>
+            <Item data={v} />
             : ''
         ))}
-      </>
-    )
+      </ul>
+    );
   }
+  return <></>;
+}
 
-  return <></>
+
+const Item: FC<{ data: Content }> = ({ data }) => {
+  const { title, slug, content } = data
+  const { grid } = useLayout();
+
+  return (
+    <li key={`li_${title}`} className={grid ? 'grid-list-item' : 'item-arrow'}>
+      <Link to={`/${slug.trim()}`} className={grid ? 'grid-item-link' : 'item-link'}>
+        <div className={grid ? 'item-content-grid' : 'item-content'}>
+          <div className='item-title'>{title}</div>
+          <div className='item-dscr'>{content.slice(0, 80)}</div>
+        </div>
+      </Link>
+    </li>
+  )
 }
 
 export default Related;

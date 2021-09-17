@@ -2,7 +2,6 @@ import ky, { Options } from 'ky';
 import { DEFAULT_API_OPTIONS } from './config';
 import { Content, isContent } from 'models/content';
 
-
 const getContent = async (
   Authorization: {
     idToken: string;

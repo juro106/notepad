@@ -67,8 +67,17 @@ h1, h2, h3, h4, h5 ,h6 {
     padding: 0;
     border: 0;
 }
+.date-header {
+    display: flex;
+    align-items: center;
+    margin: 20px 0 5px;
+}
 .YYYYmm-heading { margin: 10px 0;}
-.YYYYmmdd-heading {font-size: 16px; color: #333; margin: 20px 0 5px;}
+.YYYYmmdd-heading {
+    font-size: 16px;
+    color: #333;
+    margin: 0 0 0 5px;
+}
 time {
     margin: 0 5px 0 0;
     font-size: 14px;
@@ -275,7 +284,7 @@ button:hover {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin: 10px 0;
+    margin: 0 0 10px;
 }
 .item-block {
     margin: 0 0 20px;
@@ -352,6 +361,16 @@ button:hover {
 .item-link:hover .item-title {
     color: var(--link-red);
 }
+.item-content {
+    margin: 0;
+    padding: 0;
+}
+.item-content-tag {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 5px;
+}
 .item-title {
     color: #333;
     font-weight: bold; 
@@ -394,18 +413,52 @@ button:hover {
 .grid-item-link {
     display: block; 
     height: 170px;
-    padding: 10px 10px 0;
-    margin: 0 0 10px;
+    padding: 0;
     overflow: hidden;
     text-decoration: none;
 }
 .grid-item-link-tag {
-    height: 50px;
+    height: 60px;
+}
+.item-content-tag-grid {
+    padding: 5px 10px;
+}
+/* grid-layout content*/
+.item-content-grid {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: calc(100% - 10px);
+}
+.item-content-grid .item-title {
+    padding: 10px 10px 0;
+    line-height: 21px;
+}
+.item-content-grid .tag-list {
+    padding: 0 10px;
+}
+.item-content-grid .item-dscr {
+    padding: 0 10px;
+    line-height: 21px;
 }
 .splitter {
     width: 100%;
     height: 30px;
     margin: 0;
+}
+.delete-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f00; 
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0 10px;
+    white-space: nowrap;
+    box-sizing: border-box;
+    border: 0;
+    background: inherit;
+    /* background: var(--hobo-white); */
 }
 .delete-button-grid {
     position: absolute;
@@ -414,6 +467,7 @@ button:hover {
     padding: 0;
     /* background: var(--hobo-white); */
 }
+.delete-button:hover,
 .delete-button-grid:hover {
     cursor: pointer;
 }
@@ -422,31 +476,38 @@ button:hover {
     bottom: 0;
     right: 0;
     display: flex;
-    font-weight: bold;
     justify-content: space-between;
     width: 100%;
     background: var(--hobo-white);
 }
+.delete-button-cancel {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 50%;
+}
 .button-yes-grid { /* do delete */
-    padding: 10px;
+    padding: 10px 0;
     text-align: center;
     color: var(--normal-red);
     width: 50%;
     white-space: nowrap;
     user-select: none;
+    font-weight: bold;
 }
 .button-no-grid { /* do cancel  */
-    padding: 10px;
+    padding: 10px 0;
     text-align: center;
     color: var(--link-blue);
-    width: 50%;
     white-space: nowrap;
     user-select: none;
+    font-weight: bold;
 }
 .button-yes-grid:hover,
 .button-no-grid:hover {
+    box-sizing: border-box;
     cursor: pointer; 
-    background: #eee;
+    text-decoration: underline;
 }
 
 .time-updated_at {
@@ -742,17 +803,6 @@ button:hover {
     font-size: 20px;
     margin: 20px 0;
 }
-.button-delete-project {
-    display: flex;
-    align-items: center;
-    margin: 0 0 0 auto;
-    color: var(--link-red);
-    font-weight: bold;
-}
-.button-delete-project:hover {
-    background: #eee;
-    cursor: pointer;
-}
 
 [contentEditable=true]:empty:not(:focus)::before {
     content:attr(data-text);
@@ -791,11 +841,9 @@ table {
 }
 /* edit-list tag */
 .edit-item-link-tag {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
+    display: block;
     width: 100%;
-    padding: 10px 5px;
+    text-decoration: none;
 }
 .edit-item-link-tag:hover {
     background: #eee;
@@ -817,7 +865,8 @@ table {
     background: #eee;
 }
 
-.delete-button {
+.button-trash-grid,
+.button-trash {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -830,7 +879,11 @@ table {
     border: 0;
     background: inherit;
 }
-.delete-button:hover {
+.button-trash-grid {
+    padding: 5px;
+}
+.button-trash-grid:hover,
+.button-trash:hover {
     cursor: pointer; 
 }
 .trash-icon {
@@ -1085,7 +1138,6 @@ table {
 .select-box {
     display: flex;
     justify-content: center;
-    font-weight: bold;
     user-select: none;
     min-height: 100%;
     user-select: none;
@@ -1098,6 +1150,7 @@ table {
     color: var(--normal-red);
     white-space: nowrap;
     user-select: none;
+    font-weight: bold;
 }
 .button-no { /* do cancel  */
     padding: 10px 20px;
@@ -1107,6 +1160,7 @@ table {
     color: var(--link-blue);
     white-space: nowrap;
     user-select: none;
+    font-weight: bold;
 }
 .button-yes:hover,
 .button-no:hover {
@@ -1277,58 +1331,58 @@ table {
 
 /* suspense fallback */
 @keyframes blink {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+    0% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
 @keyframes circular-rotate {
-  100% { transform: rotate(360deg); }
+    100% { transform: rotate(360deg); }
 }
 
 @keyframes circular-dash {
-  0% {
-    stroke-dasharray: 1px 200px;
-    stroke-dashoffset: 0;
-  }
+    0% {
+        stroke-dasharray: 1px 200px;
+        stroke-dashoffset: 0;
+    }
 
-  50% {
-    stroke-dasharray: 100px 200px;
-    stroke-dashoffset: -15px;
-  }
+    50% {
+        stroke-dasharray: 100px 200px;
+        stroke-dashoffset: -15px;
+    }
 
-  100% {
-    stroke-dasharray: 100px 200px;
-    stroke-dashoffset: -125px;
-  }
+    100% {
+        stroke-dasharray: 100px 200px;
+        stroke-dashoffset: -125px;
+    }
 }
 
 .spinner-outer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 50vh;
-  -webkit-animation: 0s linear 0.5s forwards makeVisible;
-  animation: 0s linear 0.5s forwards makeVisible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50vh;
+    -webkit-animation: 0s linear 0.5s forwards makeVisible;
+    animation: 0s linear 0.5s forwards makeVisible;
 }
 
 .spinner-inner {
-  width: 40px;
-  height: 40px;
-  animation: circular-rotate 0.5s linear infinite;
+    width: 40px;
+    height: 40px;
+    animation: circular-rotate 0.5s linear infinite;
 }
 
 .spinner-svg {
-  display: block;
+    display: block;
 }
 
 .spinner-circle {
-  stroke: #aaa;
-  animation: circular-dash 1s ease-in-out infinite;
+    stroke: #aaa;
+    animation: circular-dash 1s ease-in-out infinite;
 }
 
 .fallback {
-  animation: blink 1s ease-in-out infinite alternate;
+    animation: blink 1s ease-in-out infinite alternate;
 }
 
 @media only screen and (min-width: 415px) {

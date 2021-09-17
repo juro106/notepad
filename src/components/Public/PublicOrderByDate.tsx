@@ -99,10 +99,12 @@ const Item: FC<{ v: Content }> = ({ v }) => {
     return (
       <li key={`p_${slug}`} className={grid ? 'grid-list-item' : 'edit-list-item'}>
         <Link to={`/${slug.trim()}`} className={grid ? 'grid-item-link' : "edit-item-link"}>
-          <div className="item-title">{title}</div>
-          <div className="item-dscr">
-            {created_at ? `${created_at.slice(0, 10)}: ` : ''}
-            {content.slice(0, 80)}
+          <div className={grid ? 'item-content-grid' : 'item-content'}>
+            <div className="item-title">{title}</div>
+            <div className="item-dscr">
+              {created_at ? `${created_at.slice(0, 10)}: ` : ''}
+              {content.slice(0, 80)}
+            </div>
           </div>
         </Link>
       </li>

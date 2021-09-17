@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router';
 import createTable from 'services/create-table';
 import PageTitle from 'components/Heading/PageTitle';
 
+import { useHandleProject } from 'hooks/useHandleProject';
+import { useResetData } from 'hooks/useResetData';
+
 const NewProcject: FC = () => {
   console.log('render newproject');
   const [value, setValue] = useState('');
@@ -10,6 +13,8 @@ const NewProcject: FC = () => {
   const [NG, setNG] = useState(false);
 
   const navigate = useNavigate();
+  const { //addProject, 
+    initProjects } = useHandleProject();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -21,13 +26,18 @@ const NewProcject: FC = () => {
     return (/^[a-zA-z0-9_]+$/.test(str));
   }
 
+  const resetData = useResetData();
+
   const submit = () => {
     if (hasLowerCase(value)) {
       (async () => {
         const msg = await createTable({ name: value });
         console.log(msg);
         if (msg.message === 'success') {
-          navigate('/home');
+          initProjects();
+          resetData();
+          navigate('/local/home');
+          // window.location.reload();
         } else {
           setNG(true);
           setProjectName(msg.message.slice(11));
