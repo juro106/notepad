@@ -19,15 +19,6 @@ const Menu: FC = () => {
       name: '新規メモ作成',
       url: '/local/new-contents'
     },
-    {
-      name: 'public contents',
-      url: '/'
-    },
-    // test
-    {
-      name: '*Test Redux',
-      url: '/local/public/test-redux'
-    },
   ];
 
   return (

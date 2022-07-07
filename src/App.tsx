@@ -25,8 +25,8 @@ import LocalContents from 'components/LocalContents';
 import ContentEditable from 'components/ContentEditable';
 import LocalHomeRedirect from 'components/LocalHomeRedirect';
 //
-import HooksTest from 'components/HooksTest';
-import TestRedux from 'components/TestRedux';
+// import HooksTest from 'components/HooksTest';
+// import TestRedux from 'components/TestRedux';
 
 import 'App.css';
 
@@ -36,9 +36,10 @@ const App: FC = () => {
       <DirectAccessFilter>
         <Layout>
           <Routes>
+            {/*
             <Route path='/hookstest' element={<HooksTest />} />
             <Route path='/local/public/test-redux' element={<TestRedux />} />
-            {/**/}
+              */}
             <Route path='/home' element={<LocalHomeRedirect />} />
             <Route path='/example' element={<ContentEditable />} />
             <Route path='/editor' element={<MyEditor />} />
